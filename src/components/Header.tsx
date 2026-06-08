@@ -1,4 +1,4 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { navItems } from "@/lib/nav";
 import { LanguageToggle } from "@/components/LanguageToggle";
@@ -6,6 +6,7 @@ import { MobileNav } from "@/components/MobileNav";
 
 export async function Header() {
   const t = await getTranslations();
+  const locale = await getLocale();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/80">
@@ -14,7 +15,15 @@ export async function Header() {
           href="/"
           className="min-w-0 text-sm font-semibold leading-tight text-brand sm:text-base"
         >
-          <span className="line-clamp-2">{t("common.siteName")}</span>
+          <span
+            className={
+              locale === "ur"
+                ? "leading-relaxed break-words"
+                : "line-clamp-2 leading-tight"
+            }
+          >
+            {t("common.siteName")}
+          </span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex lg:gap-2">

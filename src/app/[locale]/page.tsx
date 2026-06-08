@@ -3,6 +3,7 @@ import { BookOpen, GraduationCap, Mic } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -64,7 +65,12 @@ export default async function HomePage({ params }: Props) {
           />
         </div>
         <div className="text-center md:text-start">
-          <h1 className="text-2xl font-semibold text-brand sm:text-3xl lg:text-4xl">
+          <h1
+            className={cn(
+              "text-2xl font-semibold text-brand sm:text-3xl lg:text-4xl",
+              locale === "ur" && "leading-relaxed"
+            )}
+          >
             {t("common.siteName")}
           </h1>
           <p className="mt-3 text-base text-muted-foreground sm:text-lg">

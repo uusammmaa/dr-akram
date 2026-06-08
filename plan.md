@@ -1,7 +1,7 @@
 # Website Plan — Prof. Dr. Mian Muhammad Akram
 
-> **Status:** **Phase 0 complete** — repo bootstrapped (Next.js 15.5.19). Next: **§9 Phase 1.1** (bilingual site shell). Contact details, photo & books still use placeholders until Phase 2.  
-> **Last updated:** 8 June 2026 — Phase 0 built; includes **§9 verifiable build phases**, Content Studio §5.5, Q&A & AI §5.4, domain §7, Shared Media Enhancer §5.2, CMS Help §5.3, Recommended Reading, dual upload paths, logo tools, **Handover Notes §12**.
+> **Status:** **Phase 1 complete** — bilingual EN/UR site shell live (`/en`, `/ur`). Next: **§9 Phase 1b** (Sanity `siteSettings`). Contact, photo & books still placeholders until Phase 2.  
+> **Last updated:** 8 June 2026 — Phase 1 built + mobile nav polish (hamburger, sheet layout, Urdu clipping); includes **§9 verifiable build phases**, Content Studio §5.5, Q&A & AI §5.4, domain §7, Shared Media Enhancer §5.2, CMS Help §5.3, Recommended Reading, dual upload paths, logo tools, **Handover Notes §12**.
 
 ---
 
@@ -1329,6 +1329,8 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 **Phase 1 exit:** Full nav works EN/UR. Home + About + Contact shell done. No CMS. No animations beyond CSS.
 
+> **Done (8 June 2026):** All tasks 1.1–1.12 verified. `npm run build` passes; `/` → `/en`; 22 static pages. Shared JS ~115 kB. Default locale: `en`. **Post-Phase 1 polish:** (P1) desktop hamburger hidden — `md:hidden` wrapper on `MobileNav`; (P2) mobile sheet — `pe-12`/`pt-5` title, `SheetFooter` language strip; (P3) Urdu name clipping — no `line-clamp` on Nastaliq, `.font-urdu` `line-height: 1.8`. Sanity dashboard project still **pending** (before 1b).
+
 ### Phase 1b — Sanity connection (read-only)
 
 **Goal:** Sanity project exists; site reads `siteSettings` for contact + tagline.
@@ -1840,7 +1842,22 @@ Phase 6   → Weekly briefs (private)
 | 0.2 | 8 Jun 2026 | build | `src/components/`, `src/lib/`, `messages/` + `[locale]/layout.tsx` passthrough |
 | 0.3 | 8 Jun 2026 | grep + file check | `.env.example` with commented keys; `.gitignore` has `.env*` + `!.env.example`. Sanity project on dashboard: pending |
 | 0.4 | 8 Jun 2026 | manual | `README.md` (dev commands + link to plan). Git commit skipped — developer commits when ready |
-| 1.1 | | | |
+| 1.1 | 8 Jun 2026 | build | next-intl, typography, shadcn deps, lucide, sonner, vaul, sharp |
+| 1.2 | 8 Jun 2026 | build | shadcn v4 init + button, card, input, label, textarea, select, tabs, accordion, dialog, sheet |
+| 1.3 | 8 Jun 2026 | build | `src/lib/fonts.ts` — Inter + Noto Nastaliq Urdu (400) |
+| 1.4 | 8 Jun 2026 | dev | middleware, i18n routing, `messages/en.json` + `ur.json`, `/` → `/en` |
+| 1.5 | 8 Jun 2026 | dev | RTL `dir` on `/ur`, `LanguageToggle` in header |
+| 1.6 | 8 Jun 2026 | visual | Design tokens green/gold/off-white, typography plugin, `.tap-target` |
+| 1.7 | 8 Jun 2026 | dev | Header, Footer, MobileBottomBar, ContactDrawer (vaul) |
+| 1.8 | 8 Jun 2026 | build | Home hero, services cards, roles strip |
+| 1.9 | 8 Jun 2026 | build | About prose bio + static timeline |
+| 1.10 | 8 Jun 2026 | dev | Contact form UI + sonner toast; no Resend API |
+| 1.11 | 8 Jun 2026 | dev | Empty-state shells: books, lectures, honors, services, afkar, questions |
+| 1.12 | 8 Jun 2026 | build | No motion libs; shared JS ~115 kB |
+| 1.P1 | 8 Jun 2026 | visual | Fix: hamburger visible on desktop — wrap `Sheet` in `div.md:hidden` |
+| 1.P2 | 8 Jun 2026 | visual | Fix: mobile sheet title/close spacing; language toggle in `SheetFooter` |
+| 1.P3 | 8 Jun 2026 | visual | Fix: Urdu name clipping — remove `line-clamp` on Nastaliq; `line-height: 1.8` |
+| 1b.1 | | | |
 | … | | | |
 
 *Copy a row per completed task. If Verify failed, note fix before marking done.*
@@ -1862,11 +1879,13 @@ Phase 6   → Weekly briefs (private)
 
 ## 11. Next Step
 
-**Phase 0 complete.** Begin **§9 Phase 1.1** — install core dependencies (`next-intl`, typography, shadcn subset, etc.).
+**Phase 1 complete.** Begin **§9 Phase 1b.1** — install Sanity Studio package and connect `siteSettings`.
 
-Before **Phase 1b:** create empty Sanity project at [sanity.io/manage](https://sanity.io/manage) and add `NEXT_PUBLIC_SANITY_PROJECT_ID` to `.env.local`.
+**Before 1b:** create empty Sanity project at [sanity.io/manage](https://sanity.io/manage) and add `NEXT_PUBLIC_SANITY_PROJECT_ID` to `.env.local`.
 
-Photo, phone & contact numbers can stay as placeholders until Phase 2 (see **§9 Pre-flight**). Books and videos plug in during **§9 Phase 2**.
+Run locally: `npm run dev` → [http://localhost:3000/en](http://localhost:3000/en) or `/ur`.
+
+Photo, phone & contact numbers stay as placeholders until Phase 2 (see **§9 Pre-flight**). Books and videos plug in during **§9 Phase 2**. Optional pre-launch polish still open: condensed desktop nav, richer footer, shorter header brand name.
 
 ---
 

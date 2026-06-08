@@ -114,5 +114,6 @@
   }
   .font-urdu {
     font-family: var(--font-urdu), serif;
+    line-height: 1.8;
   }
 }
