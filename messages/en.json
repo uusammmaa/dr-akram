@@ -29,7 +29,38 @@
     "economics": "Islamic Economics",
     "economicsDesc": "Guidance on Islamic finance, economics, and recommended reading.",
     "speaking": "Speaking Engagements",
-    "speakingDesc": "Lectures and talks — in person or online — by invitation."
+    "speakingDesc": "Lectures and talks — in person or online — by invitation.",
+    "heroCardTitle": "Welcome",
+    "heroCtaContact": "Contact",
+    "heroCtaBooks": "Books",
+    "aboutLabel": "About",
+    "credentialsTitle": "Education & Qualifications",
+    "experienceLabel": "Experience",
+    "experienceTitle": "Career Journey",
+    "experienceDesc": "A lifetime of teaching, leadership, and service in Islamic economics and education.",
+    "ctaBandTitle": "Dars-e-Quran & Lecture Invitations",
+    "ctaBandDesc": "Available for Quranic lessons, Islamic economics guidance, and speaking engagements — in person or online.",
+    "ctaBandButton": "Get in Touch",
+    "featuredLabel": "Featured",
+    "featuredTitle": "Books & Honors",
+    "featuredBooks": "My Books",
+    "featuredHonors": "Honors & Awards",
+    "latestLabel": "Latest",
+    "latestTitle": "Lectures & Q&A",
+    "latestLectures": "Lectures & Media",
+    "latestQuestions": "Questions & Answers",
+    "latestAfkar": "Afkar-e-Muallim",
+    "contactSectionTitle": "Ready to Connect?",
+    "contactSectionDesc": "Reach out for Dars-e-Quran, Islamic economics advice, or lecture invitations.",
+    "viewAll": "View all",
+    "readMore": "Read more",
+    "scrollDown": "Scroll down",
+    "watchLectures": "Watch lectures"
+  },
+  "credentials": {
+    "phd": "Ph.D. in Economics — specialization in Islamic Economics",
+    "msc": "M.Sc. in Economics",
+    "ma": "M.A. in Islamic Studies"
   },
   "about": {
     "title": "About",
@@ -65,8 +96,11 @@
     "retired": "Retired Principal — Govt. College of Science, Lahore"
   },
   "timeline": {
-    "2020": "Retired as Principal, Government College of Science, Lahore",
+    "headDept": "Former Head of Economics Department, Government College of Science, Lahore",
     "textbook": "Co-authored \"Islamic Economics\" textbook with Prof. Abdul Hameed Dar",
-    "afaq": "Chairman / Director, AFAQ (Association for Academic Quality)"
+    "afaq": "Chairman / Director, AFAQ (Association for Academic Quality)",
+    "afkar": "Chief Editor — Afkar-e-Muallim monthly magazine",
+    "punjab": "Lecturer in Islamic Economics, University of the Punjab",
+    "2020": "Retired as Principal, Government College of Science, Lahore"
   }
 }

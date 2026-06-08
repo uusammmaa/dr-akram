@@ -116,4 +116,60 @@
     font-family: var(--font-urdu), serif;
     line-height: 1.8;
   }
+  .home-section {
+    @apply py-16 sm:py-24;
+  }
+  .dot-pattern {
+    background-image: radial-gradient(
+      circle at 1px 1px,
+      color-mix(in oklch, var(--brand) 12%, transparent) 1px,
+      transparent 0
+    );
+    background-size: 20px 20px;
+  }
+  .hero-circles {
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-circles::before,
+  .hero-circles::after {
+    content: "";
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid color-mix(in oklch, var(--gold) 25%, transparent);
+    animation: hero-circle-float 12s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .hero-circles::before {
+    width: 280px;
+    height: 280px;
+    top: 10%;
+    inset-inline-end: -60px;
+    opacity: 0.4;
+  }
+  .hero-circles::after {
+    width: 180px;
+    height: 180px;
+    bottom: 20%;
+    inset-inline-start: -40px;
+    opacity: 0.3;
+    animation-delay: -4s;
+  }
+}
+
+@keyframes hero-circle-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-16px) scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-circles::before,
+  .hero-circles::after {
+    animation: none;
+  }
 }
