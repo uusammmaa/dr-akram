@@ -1,7 +1,7 @@
 # Website Plan — Prof. Dr. Mian Muhammad Akram
 
-> **Status:** **Phase 1 complete** — bilingual EN/UR site shell live (`/en`, `/ur`). **Next:** **§9 Phase 1c** (Techwind personal home redesign), then **Phase 1b** (Sanity `siteSettings`). Contact, photo & books still placeholders until Phase 2.  
-> **Last updated:** 8 June 2026 — Phase 1 built + mobile nav polish (hamburger, sheet layout, Urdu clipping); **design policy:** premium animations & motion on all devices (no old-phone performance gating — see §5.1, §6); Techwind `index-personal.html` as homepage layout reference; includes **§9 verifiable build phases**, Content Studio §5.5, Q&A & AI §5.4, domain §7, Shared Media Enhancer §5.2, CMS Help §5.3, Recommended Reading, dual upload paths, logo tools, **Handover Notes §12**.
+> **Status:** **Phases 1, 1c, 1b complete** — premium animated home live; Sanity Studio at `/studio` (`siteSettings` → hero tagline/portrait, contact page, mobile bar). **Next:** **§9 Phase 2.0** (`aboutPage` schema + About CMS wiring), then Phase 2 content schemas. Books/honors/lectures/Q&A still placeholders until Phase 2.  
+> **Last updated:** 8 June 2026 — Phase 1c home (8 sections, Framer/Lenis/parallax); Phase 1b Sanity (`5ce34emc`, `next-sanity@9`); root layout `<html>`/`<body>` fix for `/studio`; `npm run build` uses webpack (Turbopack incompatible with embedded Studio). **Manual:** add `http://localhost:3000` CORS origin in Sanity API settings; publish `siteSettings` in Studio.
 
 ---
 
@@ -71,6 +71,8 @@
 **Mobile:** **Responsive & touch-friendly** — must look and feel premium on phones and desktop (see §5.1). Animations, parallax, smooth scroll, and rich hero effects are **encouraged on all viewports** — no stripping motion for low-end devices.
 
 **Maintenance:** **Prof. Dr. Akram should be able to update content himself** (books, lectures, honors, Q&A, etc.) via an admin panel — not developer-dependent. **Guided tour on first login + permanent Help desk** so he always knows what to do where (§5.3).
+
+**SEO & discoverability:** Site must rank and preview well for searches like *Islamic economics Lahore*, *Prof. Dr. Mian Muhammad Akram*, and individual Q&A topics — in **both Urdu and English**. Google, Bing, and WhatsApp link previews must show correct title, description, image, and locale. Full technical spec: **§5.6**; build tasks: **§9 Phase 3.7**.
 
 ---
 
@@ -228,7 +230,7 @@ npm install @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-p
 #### Next.js patterns (mandatory)
 
 - **`"use client"`** only on: motion wrappers, carousel, lenis, contact drawer, theme toggle, 3D hero
-- **Server Components** for: all page shells, bio text, book/lecture data from Sanity, SEO metadata
+- **Server Components** for: all page shells, bio text, book/lecture data from Sanity, SEO metadata (§5.6)
 - **`next/font` + `next/image`** over third-party equivalents — always
 - **Dynamic import** heavy libs: `const Hero3D = dynamic(() => import('./Hero3D'), { ssr: false })`
 - **Progressive enhancement:** core content readable without JS; **motion is a first-class feature**, not desktop-only
@@ -477,6 +479,10 @@ export const maxDuration = 10; // Hobby hard cap — do not raise without Pro
 | `autoEnhancedPortrait` | boolean | Prevents accidental re-processing |
 | `taglineEn` / `taglineUr` | string | Site taglines |
 | `phone` / `whatsapp` / `email` | string | Contact details |
+| `metaDescriptionEn` / `metaDescriptionUr` | text | Default meta description for home + fallback *(§5.6)* |
+| `ogImage` | image | Optional dedicated social preview image; falls back to `portrait` |
+
+**Studio hint on SEO fields:** *"یہ متن گوگل اور WhatsApp لنک پیش نظارہ میں دکھتا ہے — مختصر اور واضح رکھیں"*
 
 #### CMS schema: `aboutPage` singleton *(About — biography & career timeline)*
 
@@ -978,6 +984,160 @@ Monday → Email to YOU: full research + script (2 topics)
 
 **No one else reads or approves the brief before you.**
 
+### 5.6 SEO & Discoverability
+
+> **Goal:** Every public page is indexable, locale-aware, and shareable — correct title/description in Google **and** WhatsApp. Bilingual hreflang so EN and UR rank independently without duplicate-content penalties. Build tasks: **§9 Phase 3.7** (foundation) + **§9 Phase 4.3** (Q&A detail pages).
+
+#### Principles
+
+| Rule | Why |
+|---|---|
+| **Server-rendered metadata** | `generateMetadata` in App Router — no client-side `<head>` hacks |
+| **Locale in every URL** | `/en/...` and `/ur/...` — matches `next-intl` routing; never mix locales on one URL |
+| **Canonical per locale** | Each page canonical points to itself in that locale; cross-locale via `alternates.languages` |
+| **CMS-driven defaults** | `siteSettings` supplies fallback description + OG image; page-level overrides in code/i18n |
+| **Structured data** | JSON-LD for `Person`, `WebSite`, `FAQPage` (Q&A), `BreadcrumbList` — validate in Rich Results Test |
+| **No index for private routes** | `/studio`, `/api/*` — `robots.txt` + `noindex` on Studio layout |
+
+#### Environment
+
+| Variable | Example | Use |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | `https://drmianakram.pk` | Canonical URLs, OG `url`, sitemap `loc`, JSON-LD `@id` |
+
+Set in Vercel for preview + production. **Never** hardcode `localhost` or `*.vercel.app` in metadata once domain is live.
+
+#### File structure (Phase 3.7)
+
+```
+src/lib/seo/
+  metadata.ts      # buildPageMetadata(), locale alternates, OG/Twitter helpers
+  json-ld.ts       # Person, WebSite, FAQPage, BreadcrumbList builders
+  routes.ts        # PUBLIC_ROUTES list for sitemap (static pages)
+src/app/
+  sitemap.ts       # Dynamic sitemap — all locales + published faqEntry slugs (Phase 4)
+  robots.ts        # Allow /en, /ur; disallow /studio, /api
+```
+
+#### Per-page metadata map
+
+| Route | `title` source | `description` source | OG image |
+|---|---|---|---|
+| `/[locale]` (home) | i18n `metadata.home.title` | `siteSettings.metaDescription*` or i18n fallback | `siteSettings.ogImage` → `portrait` |
+| `/[locale]/about` | i18n | `aboutPage.bio*` excerpt (first ~155 chars) or i18n | `portrait` |
+| `/[locale]/books` | i18n | i18n | `portrait` or featured book `cover` |
+| `/[locale]/lectures` | i18n | i18n | `portrait` or featured lecture thumbnail |
+| `/[locale]/honors` | i18n | i18n | `portrait` or featured honor `image` |
+| `/[locale]/services` | i18n | i18n | `portrait` |
+| `/[locale]/afkar` | i18n | i18n | latest issue `cover` or `portrait` |
+| `/[locale]/contact` | i18n | i18n | `portrait` |
+| `/[locale]/questions` | i18n | i18n | `portrait` |
+| `/[locale]/questions/[slug]` | `faqEntry.question*` | `faqEntry.answer*` excerpt | `portrait` *(Phase 4.3)* |
+
+**Title template:** `{pageTitle} | Prof. Dr. Mian Muhammad Akram` — Urdu pages use Urdu page title + Urdu name from i18n.
+
+#### hreflang & alternates (mandatory)
+
+Every `generateMetadata` return must include:
+
+```ts
+alternates: {
+  canonical: `${siteUrl}/${locale}${path}`,
+  languages: {
+    en: `${siteUrl}/en${path}`,
+    ur: `${siteUrl}/ur${path}`,
+    'x-default': `${siteUrl}/en${path}`,
+  },
+},
+```
+
+`path` is locale-neutral (e.g. `/about`, `/questions/what-is-riba`). Middleware already redirects `/` → `/en`.
+
+#### Open Graph & Twitter
+
+| Tag | Value |
+|---|---|
+| `og:type` | `website` (pages) · `article` (Q&A detail) |
+| `og:locale` | `en_PK` · `ur_PK` |
+| `og:locale:alternate` | other locale |
+| `og:image` | Absolute URL via `urlForImage()` — **1200×630** crop recommended |
+| `twitter:card` | `summary_large_image` |
+| `twitter:title` / `twitter:description` | Same as OG |
+
+Use Next.js `metadata.openGraph` + `metadata.twitter` — not manual `<meta>` tags.
+
+#### JSON-LD structured data
+
+| Page | Schema | Key fields |
+|---|---|---|
+| **All pages** (layout or page) | `WebSite` | `name`, `url`, `inLanguage` [`en`,`ur`] |
+| **Home + About** | `Person` | `name` (EN+UR), `jobTitle`, `alumniOf`, `knowsAbout`: Islamic Economics, `image`, `sameAs` (AFAQ, TAPAK links) |
+| **`/questions`** | `FAQPage` | `mainEntity[]` — each published `faqEntry` as `Question` + `acceptedAnswer` |
+| **`/questions/[slug]`** | `QAPage` | Single question + answer |
+| **Inner pages** | `BreadcrumbList` | Home → section *(optional v1 — add if time in 3.7e)* |
+
+Inject via `<script type="application/ld+json">` in Server Component — `src/components/seo/JsonLd.tsx`.
+
+#### Sitemap & robots
+
+**`sitemap.ts`:**
+- Static routes × 2 locales (`en`, `ur`)
+- After Phase 4: dynamic `faqEntry` slugs where `status == "published"` × 2 locales
+- `lastModified` from Sanity `_updatedAt` where available
+- `priority`: home `1.0`, main nav `0.8`, Q&A detail `0.6`
+
+**`robots.ts`:**
+```
+User-agent: *
+Allow: /
+Disallow: /studio
+Disallow: /api
+Sitemap: https://drmianakram.pk/sitemap.xml
+```
+
+#### i18n metadata keys
+
+Add to `messages/en.json` + `messages/ur.json`:
+
+```json
+"metadata": {
+  "home": { "title": "...", "description": "..." },
+  "about": { "title": "...", "description": "..." },
+  "books": { ... },
+  ...
+}
+```
+
+CMS `metaDescription*` overrides home description when set. Other pages: i18n defaults until father requests CMS overrides post-launch.
+
+#### Search Console & analytics (post-deploy)
+
+| Step | Who | When |
+|---|---|---|
+| Add `drmianakram.pk` property | Son | Phase 3.10 deploy |
+| Submit `sitemap.xml` | Son | After 3.7d |
+| Add `.com` redirect property if registered | Son | §7 |
+| Monitor Coverage + Core Web Vitals | Son | Ongoing via Search Console + Vercel Speed Insights |
+
+Father does **not** need Search Console access for v1.
+
+#### SEO verification checklist (before public launch)
+
+- [ ] View source on `/en` and `/ur` — unique `<title>`, `<meta name="description">`, `link rel="canonical"`, `hreflang` links
+- [ ] [opengraph.xyz](https://www.opengraph.xyz) or Meta Sharing Debugger — title + image on home and one Q&A URL
+- [ ] WhatsApp share preview — correct Urdu title on `/ur/questions/...`
+- [ ] `https://drmianakram.pk/sitemap.xml` lists all nav pages in both locales
+- [ ] `https://drmianakram.pk/robots.txt` blocks `/studio`
+- [ ] Google Rich Results Test — `Person` + `FAQPage` valid
+- [ ] Lighthouse SEO score ≥ 90 on home (mobile)
+
+#### What stays out of v1
+
+- Blog/article SEO *(deferred — §10)*
+- Per-book detail URLs *(list page only unless added later)*
+- Google Analytics *(unless requested — §3.8)*
+- Paid SEO tools / rank tracking
+
 ### What stays in code (rarely changes)
 - Site layout, design, navigation
 - About page **layout** (timeline UI, sections) — **copy lives in CMS** (`aboutPage` singleton)
@@ -1157,6 +1317,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 - [ ] **Honors photos** — shields, trophies, certificates *(phone photos OK — §5.2)*
 - [ ] **Organization logos** — AFAQ, Tanzeem, Hamdard, Punjab University *(optional — §5.2 logo preset)*
 - [ ] **Seed FAQ entries** — 5–10 common questions + answers to launch Q&A page *(ask father — Islamic economics, Dars, books)*
+- [ ] **SEO meta descriptions** — short EN + UR blurbs for Google/WhatsApp previews in **Site Settings** *(§5.6; son can draft from bio for father’s approval)*
 
 ### Nice-to-have (can add after launch)
 - [ ] CV / resume PDF download
@@ -1188,7 +1349,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | Books list | Books page content | Yes — 1–2 sample books in Sanity |
 | Honors photos | Honors gallery | Yes — skip gallery until Phase 2a |
 | Domain | Production URL | Yes — use `*.vercel.app` until Phase 3 |
-| Sanity project | Phase 1b data fetching | Create empty project in Phase 0 |
+| Sanity project | Phase 1b data fetching | **Done** — project `5ce34emc`; CORS + publish `siteSettings` manual |
 
 **Verify pre-flight:** You have read **§4** (site structure) and **§5** (stack). You know which pages exist in nav.
 
@@ -1216,7 +1377,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | `.env.example` with commented keys: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `SANITY_API_TOKEN`, `RESEND_API_KEY`, `MEDIA_ENHANCE_SECRET` |
+| **Build** | `.env.example` with commented keys: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `SANITY_API_TOKEN`, `RESEND_API_KEY`, `MEDIA_ENHANCE_SECRET`, `NEXT_PUBLIC_SITE_URL` *(§5.6 — canonical + OG)* |
 | **Verify** | `.env.local` gitignored; `.env.example` committed |
 | **Do not** | Put real secrets in `.env.example` |
 
@@ -1230,7 +1391,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 **Phase 0 exit:** `npm run build` succeeds. No i18n, no CMS, no custom UI.
 
-> **Done (8 June 2026):** All tasks 0.1–0.4 verified. `npm run build` passes; `/` returns default page. `.env.example` committed; `.env.local` gitignored. Initial git commit deferred to developer. Sanity dashboard project still **pending** (manual — before Phase 1b).
+> **Done (8 June 2026):** All tasks 0.1–0.4 verified. `npm run build` passes; `/` returns default page. `.env.example` committed; `.env.local` gitignored. Initial git commit deferred to developer. Sanity project **`5ce34emc`** created (Phase 1b).
 
 ### Phase 1 — Foundation (public site shell)
 
@@ -1334,7 +1495,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 **Phase 1 exit:** Full nav works EN/UR. Home + About + Contact shell done. No CMS. **Phase 1 used minimal CSS motion only** — full Techwind + animation pass is **Phase 1c** (below).
 
-> **Done (8 June 2026):** All tasks 1.1–1.12 verified. `npm run build` passes; `/` → `/en`; 22 static pages. Shared JS ~115 kB. Default locale: `en`. **Post-Phase 1 polish:** (P1) desktop hamburger hidden — `md:hidden` wrapper on `MobileNav`; (P2) mobile sheet — `pe-12`/`pt-5` title, `SheetFooter` language strip; (P3) Urdu name clipping — no `line-clamp` on Nastaliq, `.font-urdu` `line-height: 1.8`. Sanity dashboard project still **pending** (before 1b).
+> **Done (8 June 2026):** All tasks 1.1–1.12 verified. `npm run build` passes; `/` → `/en`; 22 static pages. Shared JS ~115 kB. Default locale: `en`. **Post-Phase 1 polish:** (P1) desktop hamburger hidden — `md:hidden` wrapper on `MobileNav`; (P2) mobile sheet — `pe-12`/`pt-5` title, `SheetFooter` language strip; (P3) Urdu name clipping — no `line-clamp` on Nastaliq, `.font-urdu` `line-height: 1.8`.
 
 ### Phase 1c — Techwind personal home redesign
 
@@ -1490,6 +1651,8 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 **Phase 1c exit:** Premium animated home live. Ready for Phase 1b to swap tagline/portrait from Sanity.
 
+> **Done (8 June 2026):** All tasks 1c.1–1c.13 verified. `src/components/home/` (8 sections + `SectionHeading`, `WaveDivider`, `HomeMotionShell`); `src/components/motion/` (`FadeIn`, `LenisProvider`); `src/lib/home-data.ts`; extended `messages/` keys. Home First Load JS ~276 kB. `embla-carousel-react` installed; featured grid is static (carousel deferred Phase 2).
+
 #### Future Techwind borrows (not Phase 1c)
 
 | Techwind file | Use when | Target page |
@@ -1515,7 +1678,7 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 | | |
 |---|---|
-| **Build** | Fields: `taglineEn`, `taglineUr`, `phone`, `whatsapp`, `email`, `portrait` (image, optional) |
+| **Build** | Fields: `taglineEn`, `taglineUr`, `phone`, `whatsapp`, `email`, `portrait` (image, optional); optional `metaDescriptionEn`/`metaDescriptionUr`, `ogImage` *(§5.6 — wired in Phase 3.7)* |
 | **Verify** | Create singleton in Studio; fill test values; publish |
 | **Do not** | Portrait enhancer fields (`rawPortrait`, `portraitSource`) until Phase 2b |
 
@@ -1528,6 +1691,8 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 | **Do not** | Hardcode contact numbers in components if Sanity has data |
 
 **Phase 1b exit:** Studio publishes; site displays live contact/tagline from CMS.
+
+> **Done (8 June 2026):** All tasks 1b.1–1b.3 verified. Packages: `next-sanity@9`, `@sanity/client`, `@sanity/image-url`, `sanity@3`, `styled-components`. Studio at `/studio`; `sanity/schemas/siteSettings.ts` singleton; `getSiteSettings()` (React `cache`, 60s revalidate) wired to home, contact, `MobileBottomBar`. Lazy Sanity client — build passes without env. **`1b.P1`:** root `layout.tsx` gets `<html>`/`<body>`; `LocaleHtmlAttributes` sets `lang`/`dir` on locale routes (fixes `/studio` runtime error). **`1b.P2`:** `npm run build` → webpack only (drop `--turbopack`). **Manual:** CORS origin `http://localhost:3000` (credentials) in Sanity API tab.
 
 ### Phase 2 — Content types & pages (no enhancer yet)
 
@@ -1773,13 +1938,59 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 | **Verify** | Lazy chunk loads; hero still usable if WebGL fails; mobile shows same design intent |
 | **Do not** | Block launch on 3D hero — skip only if visually broken, not for bundle size alone |
 
-#### 3.7 — SEO + OG
+#### 3.7 — SEO & discoverability (§5.6)
+
+> **Depends on:** Phase 1b `siteSettings` (portrait, tagline). **Full spec:** §5.6.
+
+##### 3.7a — SEO foundation
 
 | | |
 |---|---|
-| **Build** | `generateMetadata` per page; OG image from `siteSettings.portrait` |
-| **Verify** | [opengraph.xyz](https://www.opengraph.xyz) or WhatsApp debugger shows title + image |
-| **Do not** | Wrong domain in OG URL (use env `NEXT_PUBLIC_SITE_URL`) |
+| **Build** | `src/lib/seo/metadata.ts`, `routes.ts`; add `NEXT_PUBLIC_SITE_URL` to `.env.example`; extend `siteSettings` with `metaDescriptionEn` / `metaDescriptionUr` + optional `ogImage`; i18n `metadata.*` keys in `messages/en.json` + `ur.json` |
+| **Verify** | `buildPageMetadata({ locale, path, title, description })` returns canonical + hreflang object; grep confirms env used — no hardcoded domain |
+| **Do not** | Client-side `next/head` or duplicate `<title>` in components |
+
+##### 3.7b — Per-page `generateMetadata`
+
+| | |
+|---|---|
+| **Build** | Export `generateMetadata` on every `[locale]/*` page: home, about, books, lectures, honors, services, afkar, contact, questions (list). Home pulls `metaDescription*` from Sanity when set |
+| **Verify** | `/en/about` and `/ur/about` view-source show distinct titles/descriptions in correct language |
+| **Do not** | Single static `metadata` export in `[locale]/layout.tsx` only — layout keeps site-name default; pages override |
+
+##### 3.7c — Open Graph + Twitter cards
+
+| | |
+|---|---|
+| **Build** | OG image from `siteSettings.ogImage` → `portrait` via `urlForImage()`; `openGraph` + `twitter` in `buildPageMetadata`; `og:locale` / `og:locale:alternate` |
+| **Verify** | [opengraph.xyz](https://www.opengraph.xyz) on `/en` shows title, description, 1200×630 image |
+| **Do not** | Relative image URLs; wrong domain in `og:url` |
+
+##### 3.7d — `sitemap.ts` + `robots.ts`
+
+| | |
+|---|---|
+| **Build** | `src/app/sitemap.ts` — static routes × `en` + `ur`; `src/app/robots.ts` — allow `/`, disallow `/studio` + `/api`; `Sitemap:` line uses `NEXT_PUBLIC_SITE_URL` |
+| **Verify** | Dev: `/sitemap.xml` and `/robots.txt` load; sitemap includes `/en/contact` and `/ur/contact` |
+| **Do not** | Index `/studio` or API routes |
+
+##### 3.7e — JSON-LD structured data
+
+| | |
+|---|---|
+| **Build** | `src/lib/seo/json-ld.ts` + `JsonLd` component; `Person` + `WebSite` on home/about; `BreadcrumbList` on inner pages *(optional if tight on time)* |
+| **Verify** | Google Rich Results Test on `/en` — `Person` valid, no errors |
+| **Do not** | Fake `aggregateRating` or review schema |
+
+##### 3.7f — Search Console prep
+
+| | |
+|---|---|
+| **Build** | Document GSC steps in README; after 3.10 deploy, son submits sitemap |
+| **Verify** | GSC property added; sitemap status “Success” within 48h of launch |
+| **Do not** | Block Phase 3 exit on GSC indexing — submit only, indexing takes days |
+
+**Phase 3.7 exit:** All static pages have locale-correct metadata, hreflang, OG previews, sitemap, robots, and core JSON-LD. Q&A detail metadata added in **Phase 4.3**.
 
 #### 3.8 — Analytics
 
@@ -1813,7 +2024,7 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 | **Verify** | HTTPS works; both locales work on production domain |
 | **Do not** | Change primary from `.pk` without explicit decision |
 
-**Phase 3 exit:** Site on Vercel (+ domain if ready). Father completes guided tour on production Studio. Contact form sends email. **Soft launch** — Q&A page may still be empty until Phase 4.
+**Phase 3 exit:** Site on Vercel (+ domain if ready). Father completes guided tour on production Studio. Contact form sends email. **SEO foundation live** (§5.6 / 3.7). **Soft launch** — Q&A page may still be empty until Phase 4.
 
 ### Phase 4 — Q&A & public launch (§5.4)
 
@@ -1831,17 +2042,17 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 | | |
 |---|---|
-| **Build** | Accordion list; topic filter chips; only `status: published` |
-| **Verify** | Pending/private entries never appear on public page |
+| **Build** | Accordion list; topic filter chips; only `status: published`; `FAQPage` JSON-LD listing all visible entries |
+| **Verify** | Pending/private entries never appear on public page; Rich Results Test on `/en/questions` shows `FAQPage` |
 | **Do not** | AI search or chat |
 
-#### 4.3 — Individual Q&A routes
+#### 4.3 — Individual Q&A routes + SEO
 
 | | |
 |---|---|
-| **Build** | `/questions/[slug]` with `generateStaticParams` or ISR |
-| **Verify** | Shared link opens correct Q&A; metadata correct EN/UR |
-| **Do not** | Index private slugs |
+| **Build** | `/questions/[slug]` with `generateStaticParams` or ISR; `generateMetadata` from `questionEn`/`questionUr` + answer excerpt; `og:type: article`; `QAPage` JSON-LD; add published slugs to `sitemap.ts` (both locales) |
+| **Verify** | Shared WhatsApp link shows Urdu question title on `/ur/questions/...`; Rich Results Test validates `QAPage`; private/pending slugs return 404 |
+| **Do not** | Index private slugs; omit hreflang on detail pages |
 
 #### 4.4 — Ask question form
 
@@ -1872,7 +2083,7 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 | | |
 |---|---|
 | **Build** | Walkthrough: Site Settings, add 1 book, 1 honor (enhance), answer 1 test question |
-| **Verify** | Father completes tasks using Help only; §12 handover sent |
+| **Verify** | Father completes tasks using Help only; §12 handover sent; §5.6 SEO verification checklist passed (OG preview, sitemap, hreflang on home + 1 Q&A) |
 | **Do not** | Launch without mobile test on real Android if available |
 
 #### 4.8 — Seed content minimum
@@ -1982,6 +2193,7 @@ Before coding, confirm:
 - [ ] **`faqEntry.status`** is only `pending` · `published` · `private`
 - [ ] **Display field** is always `portrait` / `cover` / `logo` / `image` on frontend — never `raw*`
 - [ ] **`prefers-reduced-motion`:** Lenis + heavy Framer disabled when user prefers reduced motion
+- [ ] **SEO (§5.6):** `NEXT_PUBLIC_SITE_URL` set; `generateMetadata` per page; hreflang on both locales; no hardcoded preview domain
 - [ ] **Verify step** from current task completed before next task
 
 ### Build order summary
@@ -1997,7 +2209,7 @@ Phase 2a  → Honor enhancer (Vercel Hobby–safe)
 Phase 2b  → Portrait enhancer
 Phase 2c  → Cover enhancer
 Phase 2d  → Logo enhancer
-Phase 3   → Help, tour, SEO, Resend, Vercel, domain (+ Techwind contact/blog patterns)
+Phase 3   → Help, tour, SEO (§5.6: metadata, hreflang, sitemap, JSON-LD), Resend, Vercel, domain (+ Techwind contact/blog patterns)
 Phase 4   → Q&A + public launch
 Phase 5   → AI (when corpus large enough)
 Phase 6   → Weekly briefs (private)
@@ -2009,7 +2221,7 @@ Phase 6   → Weekly briefs (private)
 |---------|------|-------------|-------|
 | 0.1 | 8 Jun 2026 | build + dev | Next.js 15.5.19, App Router, TS, Tailwind, ESLint, `src/`, `@/*`. Scaffolded via temp dir (`plan.md` blocked direct `create-next-app .`) |
 | 0.2 | 8 Jun 2026 | build | `src/components/`, `src/lib/`, `messages/` + `[locale]/layout.tsx` passthrough |
-| 0.3 | 8 Jun 2026 | grep + file check | `.env.example` with commented keys; `.gitignore` has `.env*` + `!.env.example`. Sanity project on dashboard: pending |
+| 0.3 | 8 Jun 2026 | grep + file check | `.env.example` with commented keys; `.gitignore` has `.env*` + `!.env.example`. Sanity project `5ce34emc` created (Phase 1b) |
 | 0.4 | 8 Jun 2026 | manual | `README.md` (dev commands + link to plan). Git commit skipped — developer commits when ready |
 | 1.1 | 8 Jun 2026 | build | next-intl, typography, shadcn deps, lucide, sonner, vaul, sharp |
 | 1.2 | 8 Jun 2026 | build | shadcn v4 init + button, card, input, label, textarea, select, tabs, accordion, dialog, sheet |
@@ -2024,12 +2236,23 @@ Phase 6   → Weekly briefs (private)
 | 1.11 | 8 Jun 2026 | dev | Empty-state shells: books, lectures, honors, services, afkar, questions |
 | 1.12 | 8 Jun 2026 | build | Phase 1 shipped without motion libs (~115 kB shared); **policy updated same day** — full animations OK on all devices (§5.1) |
 | 1.P0 | 8 Jun 2026 | plan | **Design policy:** remove old-phone performance gating; Techwind `index-personal.html` as home layout ref; motion on all viewports |
-| 1c.* | | | Techwind personal home redesign — see Phase 1c tasks |
+| 1c.1 | 8 Jun 2026 | build | framer-motion, lenis, auto-animate, react-scroll-parallax, embla-carousel-react |
+| 1c.2 | 8 Jun 2026 | build | `home.*`, `credentials.*`, extended `timeline.*` in EN+UR; `src/lib/home-data.ts` |
+| 1c.3 | 8 Jun 2026 | build | `FadeIn`, `LenisProvider`, `SectionHeading`, `WaveDivider`, `.home-section` utilities |
+| 1c.4–1c.10 | 8 Jun 2026 | build | `HomeHero` … `HomeContactCta` — 8 sections composed in `HomeMotionShell` |
+| 1c.11 | 8 Jun 2026 | build | `page.tsx` thin composer; home-only Lenis + ParallaxProvider |
+| 1c.12 | 8 Jun 2026 | build | `tagline?`, `portraitSrc?` props on hero/credentials |
+| 1c.13 | 8 Jun 2026 | build | `/en` + `/ur` home; 22 static pages; no freelancer copy |
 | 1.P1 | 8 Jun 2026 | visual | Fix: hamburger visible on desktop — wrap `Sheet` in `div.md:hidden` |
 | 1.P2 | 8 Jun 2026 | visual | Fix: mobile sheet title/close spacing; language toggle in `SheetFooter` |
 | 1.P3 | 8 Jun 2026 | visual | Fix: Urdu name clipping — remove `line-clamp` on Nastaliq; `line-height: 1.8` |
-| 1b.1 | | | |
-| … | | | |
+| 1b.1 | 8 Jun 2026 | dev | `next-sanity@9`, Studio `/studio`, `sanity.config.ts`, dynamic `NextStudio` |
+| 1b.2 | 8 Jun 2026 | studio | `siteSettings` singleton schema (tagline, contact, portrait) |
+| 1b.3 | 8 Jun 2026 | build | `src/lib/sanity/*`, `localized()`, contact page + bottom bar wired |
+| 1b.P1 | 8 Jun 2026 | fix | Root layout `<html>`/`<body>`; `LocaleHtmlAttributes` for locale `lang`/`dir` |
+| 1b.P2 | 8 Jun 2026 | build | `next build` without Turbopack (Sanity Studio bundle) |
+| 1b.P3 | 8 Jun 2026 | manual | Sanity API → CORS: `http://localhost:3000` + allow credentials |
+| 2.0 | | | |
 
 *Copy a row per completed task. If Verify failed, note fix before marking done.*
 
@@ -2050,13 +2273,17 @@ Phase 6   → Weekly briefs (private)
 
 ## 11. Next Step
 
-**Phase 1 complete.** Begin **§9 Phase 1b.1** — install Sanity Studio package and connect `siteSettings`.
+**Phases 1, 1c, 1b complete.** Begin **§9 Phase 2.0** — `aboutPage` singleton + wire About page to CMS.
 
-**Before 1b:** create empty Sanity project at [sanity.io/manage](https://sanity.io/manage) and add `NEXT_PUBLIC_SANITY_PROJECT_ID` to `.env.local`.
+**Sanity (father / developer):**
+1. **API → CORS origins:** add `http://localhost:3000` (allow credentials). Add production URL before deploy.
+2. **Studio** → [http://localhost:3000/studio](http://localhost:3000/studio) → **Site Settings** → fill tagline, phone, WhatsApp, email, portrait → **Publish**.
 
-Run locally: `npm run dev` → [http://localhost:3000/en](http://localhost:3000/en) or `/ur`.
+**Env** (`.env.local`): `NEXT_PUBLIC_SANITY_PROJECT_ID=5ce34emc`, `NEXT_PUBLIC_SANITY_DATASET=production`.
 
-Photo, phone & contact numbers stay as placeholders until Phase 2 (see **§9 Pre-flight**). Books and videos plug in during **§9 Phase 2**. Optional pre-launch polish still open: condensed desktop nav, richer footer, shorter header brand name.
+Run locally: `npm run dev` → `/en`, `/ur`, or `/studio`. Production build: `npm run build` (webpack).
+
+Books, honors, lectures, and Q&A plug in during **§9 Phase 2**. Contact form email (Resend) is **Phase 3.9**.
 
 ---
 
@@ -2093,7 +2320,7 @@ You update content yourself in **Sanity** (admin panel). No need to call the dev
 
 | Section | What it updates on the live site |
 |---|---|
-| **Site Settings** (ترتیبات) | Your photo, phone, WhatsApp, email, tagline |
+| **Site Settings** (ترتیبات) | Your photo, phone, WhatsApp, email, tagline, Google/WhatsApp preview text (SEO description) |
 | **About Page** (میرے بارے میں) | Biography (Urdu + English) and career timeline |
 | **Books → My Books** (میری کتابیں) | Textbooks & works you wrote |
 | **Books → Recommended Reading** (مطالعہ کی تجویز) | Books you suggest others read |
@@ -2131,7 +2358,8 @@ Many uploads offer **two paths**. Pick the right one:
 **Where:** Site Settings (ترتیبات)
 
 - **Photo:** Professional file already good? → direct upload. Event/office photo with clutter? → Enhance → pick portrait style → preview → Save.  
-- **Phone / WhatsApp / Email:** Edit → Save. Shows on Contact page and mobile Call/WhatsApp buttons.
+- **Phone / WhatsApp / Email:** Edit → Save. Shows on Contact page and mobile Call/WhatsApp buttons.  
+- **SEO description (Urdu + English):** Short summary of who you are — appears when someone shares the website link on WhatsApp or Google. Keep under ~2 lines each language.
 
 #### Update your biography or career timeline
 **Where:** About Page (میرے بارے میں)
@@ -2298,7 +2526,7 @@ If something breaks or you’re unsure → **Help** in admin **or** WhatsApp son
 ### After launch checklist (for you)
 
 - [ ] Complete first-login tour  
-- [ ] Update Site Settings — photo, phone, WhatsApp, email  
+- [ ] Update Site Settings — photo, phone, WhatsApp, email, SEO descriptions (EN + UR)  
 - [ ] Update About Page — biography + career timeline  
 - [ ] Add at least 3 honors (Enhance photos)  
 - [ ] Add 5–10 **seed FAQ** entries (common questions you often get)  

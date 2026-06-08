@@ -1,9 +1,18 @@
 import type { ReactNode } from "react";
+import { inter, notoNastaliqUrdu } from "@/lib/fonts";
+import "./globals.css";
 
 type Props = {
   children: ReactNode;
 };
 
 export default function RootLayout({ children }: Props) {
-  return children;
+  return (
+    <html
+      lang="en"
+      className={`${inter.variable} ${notoNastaliqUrdu.variable}`}
+    >
+      <body className="min-h-screen antialiased">{children}</body>
+    </html>
+  );
 }

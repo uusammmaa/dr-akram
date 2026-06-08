@@ -5,12 +5,12 @@ import { hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { Toaster } from "sonner";
 import { routing } from "@/i18n/routing";
-import { inter, notoNastaliqUrdu } from "@/lib/fonts";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { ContactDrawerProvider } from "@/components/ContactDrawerProvider";
-import "../globals.css";
+import { LocaleHtmlAttributes } from "@/components/LocaleHtmlAttributes";
+import { getSiteSettings } from "@/lib/sanity/queries";
 
 export const metadata: Metadata = {
   title: "Prof. Dr. Mian Muhammad Akram",
@@ -37,26 +37,27 @@ export default async function LocaleLayout({
 
   setRequestLocale(locale);
   const messages = await getMessages();
+  const settings = await getSiteSettings();
 
   return (
-    <html
-      lang={locale}
-      dir={locale === "ur" ? "rtl" : "ltr"}
-      className={`${inter.variable} ${notoNastaliqUrdu.variable}`}
-    >
-      <body
-        className={`flex min-h-screen flex-col antialiased ${locale === "ur" ? "font-urdu" : "font-sans"}`}
+    <>
+      <LocaleHtmlAttributes locale={locale} />
+      <div
+        className={`flex min-h-screen flex-col ${locale === "ur" ? "font-urdu" : "font-sans"}`}
       >
         <NextIntlClientProvider messages={messages}>
           <ContactDrawerProvider>
             <Header />
             <main className="flex-1 pb-20 md:pb-0">{children}</main>
             <Footer />
-            <MobileBottomBar />
+            <MobileBottomBar
+              phone={settings?.phone}
+              whatsapp={settings?.whatsapp}
+            />
             <Toaster richColors position="top-center" />
           </ContactDrawerProvider>
         </NextIntlClientProvider>
-      </body>
-    </html>
+      </div>
+    </>
   );
 }
