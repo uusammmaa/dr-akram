@@ -1,5 +1,7 @@
+import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { PORTRAIT_SRC } from "@/lib/site-images";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -25,6 +27,16 @@ export default async function AboutPage({ params }: Props) {
       <h1 className="text-2xl font-semibold text-brand sm:text-3xl">
         {t("about.title")}
       </h1>
+
+      <div className="relative mx-auto mt-6 aspect-[5/6] w-full max-w-xs overflow-hidden rounded-2xl border border-border bg-muted shadow-sm">
+        <Image
+          src={PORTRAIT_SRC}
+          alt={t("common.siteName")}
+          fill
+          sizes="(max-width: 768px) 80vw, 320px"
+          className="object-cover object-[center_28%]"
+        />
+      </div>
 
       <article
         className="prose prose-lg mt-6 max-w-none text-foreground prose-headings:text-brand"

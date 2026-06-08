@@ -3,6 +3,7 @@ import { BookOpen, GraduationCap, Mic } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { PORTRAIT_SRC } from "@/lib/site-images";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -56,12 +57,12 @@ export default async function HomePage({ params }: Props) {
       <section className="grid items-center gap-8 md:grid-cols-2 md:gap-12">
         <div className="relative mx-auto aspect-[5/6] w-full max-w-sm overflow-hidden rounded-2xl border border-border bg-muted shadow-sm">
           <Image
-            src="/images/placeholder-portrait.svg"
+            src={PORTRAIT_SRC}
             alt={t("common.siteName")}
             fill
             priority
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover"
+            className="object-cover object-[center_28%]"
           />
         </div>
         <div className="text-center md:text-start">
