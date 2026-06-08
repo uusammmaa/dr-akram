@@ -15,12 +15,16 @@ import { WaveDivider } from "@/components/home/WaveDivider";
 export function HomeHero({
   tagline,
   portraitSrc,
+  portraitBlur,
   locale,
 }: HomeHeroProps) {
   const t = useTranslations();
   const prefersReducedMotion = useReducedMotion();
   const resolvedTagline = tagline ?? t("common.tagline");
   const resolvedPortrait = portraitSrc ?? PORTRAIT_SRC;
+  const imageProps = portraitBlur
+    ? { placeholder: "blur" as const, blurDataURL: portraitBlur }
+    : {};
 
   return (
     <section className="hero-circles relative min-h-[90vh] overflow-hidden">
@@ -33,6 +37,7 @@ export function HomeHero({
             priority
             sizes="100vw"
             className="object-cover object-[center_28%]"
+            {...imageProps}
           />
         ) : (
           <Parallax speed={-12} className="relative h-[115%] w-full">
@@ -43,6 +48,7 @@ export function HomeHero({
               priority
               sizes="100vw"
               className="object-cover object-[center_28%]"
+              {...imageProps}
             />
           </Parallax>
         )}

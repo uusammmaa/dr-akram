@@ -1,7 +1,7 @@
 # Website Plan — Prof. Dr. Mian Muhammad Akram
 
-> **Status:** **Phases 1, 1c, 1b complete** — premium animated home live; Sanity Studio at `/studio` (`siteSettings` → hero tagline/portrait, contact page, mobile bar). **Next:** **§9 Phase 2.0** (`aboutPage` schema + About CMS wiring), then Phase 2 content schemas. Books/honors/lectures/Q&A still placeholders until Phase 2.  
-> **Last updated:** 8 June 2026 — **pnpm** (`pnpm-lock.yaml`, `packageManager: pnpm@10.15.0`); Phase 1c home (8 sections, Framer/Lenis/parallax); Phase 1b Sanity (`5ce34emc`, `next-sanity@9`); root layout `<html>`/`<body>` fix for `/studio`; `pnpm build` uses webpack (Turbopack incompatible with embedded Studio). **Manual:** add `http://localhost:3000` CORS origin in Sanity API settings; publish `siteSettings` in Studio.
+> **Status:** **Phases 1, 1c, 1b, 2 complete** — all main content pages wired to Sanity (`aboutPage`, `book`, `readingRecommendation`, `lecture`, `honor`, `organization`, `afkarIssue`); home featured grid + latest lectures from CMS; `/questions` still placeholder until Phase 4. **Next:** **§9 Phase 2a** (honor photo enhancer) or seed CMS content in Studio; then Phase 3 (SEO, Resend, deploy).  
+> **Last updated:** 8 June 2026 — **Phase 2** (tasks 2.0–2.8): 8 content schemas + GROQ queries; `/about`, `/books`, `/lectures`, `/honors`, `/services`, `/afkar` live; `plaiceholder` blur on key images; YouTube tap-to-load facade; honors pagination + lightbox. **pnpm** (`pnpm-lock.yaml`); `pnpm build` passes (22 static pages, home ~280 kB). **Manual:** publish content in Studio (bio, books, honors, lectures, orgs, Afkar issues).
 
 ---
 
@@ -501,7 +501,7 @@ export const maxDuration = 10; // Hobby hard cap — do not raise without Pro
 | `descriptionEn` / `descriptionUr` | text | Optional detail |
 | `order` | number | Sort order (oldest first on timeline) |
 
-**Studio:** single **About Page (میرے بارے میں)** entry under Site Settings group. Phase 1 uses placeholder copy; Phase **2.0** wires live CMS data.
+**Studio:** single **About Page (میرے بارے میں)** entry under Site Settings group. **Phase 2.0 (done):** live CMS data on `/about` and home timeline.
 
 #### CMS schema: `lecture` document *(Lectures & Media)*
 
@@ -1182,7 +1182,7 @@ Father does **not** need Search Console access for v1.
 | 7 | Latest lectures / Q&A teasers | `HomeLatestSection` | `lecture` + `faqEntry` (Phase 2 / 4) |
 | 8 | Contact CTA strip | `HomeContactCta` | `siteSettings` phone/WhatsApp (1b) |
 
-*Phase 1c ships rows 1–5 + 8 with placeholders for 6–7. Phase 2 replaces placeholders with real CMS carousels/grids.*
+*Phase 1c shipped rows 1–5 + 8 with placeholders for 6–7. Phase 2 (done) wired rows 4, 6–7 to CMS; Q&A teasers in row 7 deferred to Phase 4.*
 
 **Books page design:**
 - **Two tabs** at top — large, thumb-friendly: **میری کتابیں / My Books** · **مطالعہ کی تجویز / Recommended Reading**
@@ -1772,6 +1772,8 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 **Phase 2 exit:** All content pages work with standard Sanity image uploads. Father can add content without enhancer.
 
+> **Done (8 June 2026):** All tasks 2.0–2.8 verified. Schemas: `aboutPage`, `book`, `readingRecommendation`, `lecture`, `honor`, `organization`, `afkarIssue` (+ `careerMilestone` object). Studio sidebar reorganized. Queries in `src/lib/sanity/queries.ts`. Pages: About (bio/timeline/orgs), Books (tabs + filters + `?tab=recommendations`), Lectures (`YouTubeFacade`), Honors (filter/pagination/lightbox), Services (i18n + books link), Afkar (Embla carousel). Home: `HomeFeaturedGrid`, `HomeLatestSection` (lectures; Q&A deferred Phase 4), `HomeTimeline` from CMS. `plaiceholder` + `getBlurDataUrl`. `/questions` remains `EmptyState`. `pnpm build` passes.
+
 ### Phase 2a — Media Enhancer: Honors (§5.2)
 
 **Goal:** Father can enhance honor photos in Studio.
@@ -2252,7 +2254,15 @@ Phase 6   → Weekly briefs (private)
 | 1b.P1 | 8 Jun 2026 | fix | Root layout `<html>`/`<body>`; `LocaleHtmlAttributes` for locale `lang`/`dir` |
 | 1b.P2 | 8 Jun 2026 | build | `next build` without Turbopack (Sanity Studio bundle) |
 | 1b.P3 | 8 Jun 2026 | manual | Sanity API → CORS: `http://localhost:3000` + allow credentials |
-| 2.0 | | | |
+| 2.0 | 8 Jun 2026 | build | `aboutPage` schema; `getAboutPage()`; About + `HomeTimeline` CMS wiring |
+| 2.1 | 8 Jun 2026 | studio | `book` + `readingRecommendation` schemas (plain `cover` upload) |
+| 2.2 | 8 Jun 2026 | dev | `/books` tabs, filters, `BookCard`, `?tab=recommendations` deep link |
+| 2.3 | 8 Jun 2026 | studio | `lecture`, `honor`, `organization`, `afkarIssue` schemas |
+| 2.4 | 8 Jun 2026 | dev | `/lectures` grid; `YouTubeFacade` tap-to-load (no iframe until click) |
+| 2.5 | 8 Jun 2026 | dev | `/honors` type filter, 12-item pagination, Dialog lightbox |
+| 2.6 | 8 Jun 2026 | dev | `/services` i18n sections; `/afkar` carousel; About orgs grid |
+| 2.7 | 8 Jun 2026 | build | Home featured books/honors + latest lectures from CMS |
+| 2.8 | 8 Jun 2026 | build | `plaiceholder` blur; `img.youtube.com` in `next.config.ts`; `pnpm build` OK |
 
 *Copy a row per completed task. If Verify failed, note fix before marking done.*
 
@@ -2273,17 +2283,23 @@ Phase 6   → Weekly briefs (private)
 
 ## 11. Next Step
 
-**Phases 1, 1c, 1b complete.** Begin **§9 Phase 2.0** — `aboutPage` singleton + wire About page to CMS.
+**Phases 1, 1c, 1b, 2 complete.** Seed CMS content in Studio, then begin **§9 Phase 2a** (honor enhancer) or **Phase 3** (SEO, guided tour, Resend, deploy).
 
-**Sanity (father / developer):**
-1. **API → CORS origins:** add `http://localhost:3000` (allow credentials). Add production URL before deploy.
-2. **Studio** → [http://localhost:3000/studio](http://localhost:3000/studio) → **Site Settings** → fill tagline, phone, WhatsApp, email, portrait → **Publish**.
+**Sanity (father / developer) — seed content:**
+1. **Site Settings** → tagline, phone, WhatsApp, email, portrait → **Publish**
+2. **About Page** → bio EN+UR, career milestones → **Publish**
+3. **My Books** + **Recommended Reading** — at least 1 each (with covers)
+4. **Lectures** — YouTube URLs; mark `featured` if desired
+5. **Honors** — photos via plain upload (12+ to test pagination)
+6. **Organizations** — logos + roles (AFAQ, Tanzeem, Punjab Uni)
+7. **Afkar Issues** — covers + PDF or external link
+8. Toggle `featured: true` on 1 book + 1 honor → home grid updates after revalidate
 
 **Env** (`.env.local`): `NEXT_PUBLIC_SANITY_PROJECT_ID=5ce34emc`, `NEXT_PUBLIC_SANITY_DATASET=production`.
 
 Run locally: `pnpm dev` → `/en`, `/ur`, or `/studio`. Production build: `pnpm build` (webpack).
 
-Books, honors, lectures, and Q&A plug in during **§9 Phase 2**. Contact form email (Resend) is **Phase 3.9**.
+`/questions` (Q&A) is **Phase 4**. Contact form email (Resend) is **Phase 3.9**.
 
 ---
 

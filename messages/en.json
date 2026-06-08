@@ -14,6 +14,7 @@
     "language": "Language",
     "languageToggle": "اردو",
     "comingSoon": "Coming soon",
+    "noContentYet": "Content will appear here once added in the admin panel.",
     "siteName": "Prof. Dr. Mian Muhammad Akram",
     "tagline": "Professor of Economics · Islamic Economics · Education",
     "call": "Call",
@@ -66,6 +67,54 @@
     "title": "About",
     "bio": "Prof. Dr. Mian Muhammad Akram holds a Ph.D. in Economics with specialization in Islamic Economics. He is a retired Professor of Economics and former Principal of Government College of Science, Wahdat Road, Lahore (retired 14 October 2020). He continues to lecture on Islamic Economics at the University of the Punjab. He is co-author of the textbook \"Islamic Economics\" with Prof. Abdul Hameed Dar.",
     "timelineTitle": "Career Timeline"
+  },
+  "books": {
+    "title": "Books",
+    "myBooks": "My Books",
+    "recommended": "Recommended Reading",
+    "allLevels": "All levels",
+    "allTopics": "All topics",
+    "emptyBooks": "No books added yet. Check back soon.",
+    "emptyRecommendations": "No reading recommendations yet. Check back soon.",
+    "recommendedBadge": "Recommended",
+    "loading": "Loading…"
+  },
+  "lectures": {
+    "title": "Lectures & Media",
+    "allCategories": "All categories",
+    "emptyLectures": "No lectures published yet. Check back soon.",
+    "watchVideo": "Play video"
+  },
+  "honors": {
+    "title": "Honors & Awards",
+    "allTypes": "All types",
+    "emptyHonors": "No honors added yet. Check back soon.",
+    "loadMore": "Load more",
+    "honor": "Honor"
+  },
+  "services": {
+    "title": "Services",
+    "intro": "Prof. Dr. Akram offers the following services by appointment and invitation.",
+    "darsTitle": "Dars-e-Quran",
+    "darsDesc": "Quranic lessons available for individuals and groups. Contact to arrange a suitable time.",
+    "economicsTitle": "Islamic Economics Consultation",
+    "economicsDesc": "Guidance on Islamic finance, economics, and recommended reading for students and visitors.",
+    "economicsLink": "Browse recommended reading",
+    "speakingTitle": "Speaking Engagements",
+    "speakingDesc": "Lectures and talks — in person or online — by invitation for events, seminars, and institutions.",
+    "contactCta": "Contact for services"
+  },
+  "afkar": {
+    "title": "Afkar-e-Muallim",
+    "description": "Afkar-e-Muallim (افکار معلم) is a monthly Urdu magazine. Browse recent issues below.",
+    "emptyIssues": "No issues published yet. Check back soon.",
+    "viewIssue": "View issue",
+    "downloadPdf": "PDF available"
+  },
+  "organizations": {
+    "title": "Leadership & Affiliations",
+    "current": "Current",
+    "former": "Former"
   },
   "contact": {
     "title": "Contact",
