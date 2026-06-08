@@ -1,7 +1,7 @@
 # Website Plan — Prof. Dr. Mian Muhammad Akram
 
-> **Status:** Plan finalized — ready to build once contact details, photo & books are provided.  
-> **Last updated:** 8 June 2026 — includes **§9 verifiable build phases**, Content Studio §5.5, Q&A & AI §5.4, domain §7, Shared Media Enhancer §5.2, CMS Help §5.3, Recommended Reading, dual upload paths, logo tools, **Handover Notes §12**.
+> **Status:** **Phase 0 complete** — repo bootstrapped (Next.js 15.5.19). Next: **§9 Phase 1.1** (bilingual site shell). Contact details, photo & books still use placeholders until Phase 2.  
+> **Last updated:** 8 June 2026 — Phase 0 built; includes **§9 verifiable build phases**, Content Studio §5.5, Q&A & AI §5.4, domain §7, Shared Media Enhancer §5.2, CMS Help §5.3, Recommended Reading, dual upload paths, logo tools, **Handover Notes §12**.
 
 ---
 
@@ -1225,6 +1225,8 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 **Phase 0 exit:** `npm run build` succeeds. No i18n, no CMS, no custom UI.
 
+> **Done (8 June 2026):** All tasks 0.1–0.4 verified. `npm run build` passes; `/` returns default page. `.env.example` committed; `.env.local` gitignored. Initial git commit deferred to developer. Sanity dashboard project still **pending** (manual — before Phase 1b).
+
 ### Phase 1 — Foundation (public site shell)
 
 **Goal:** Bilingual mobile-first site with static/placeholder content. No Sanity until Phase 1b.
@@ -1834,7 +1836,11 @@ Phase 6   → Weekly briefs (private)
 
 | Task ID | Date | Verified by | Notes |
 |---------|------|-------------|-------|
-| 0.1 | | | |
+| 0.1 | 8 Jun 2026 | build + dev | Next.js 15.5.19, App Router, TS, Tailwind, ESLint, `src/`, `@/*`. Scaffolded via temp dir (`plan.md` blocked direct `create-next-app .`) |
+| 0.2 | 8 Jun 2026 | build | `src/components/`, `src/lib/`, `messages/` + `[locale]/layout.tsx` passthrough |
+| 0.3 | 8 Jun 2026 | grep + file check | `.env.example` with commented keys; `.gitignore` has `.env*` + `!.env.example`. Sanity project on dashboard: pending |
+| 0.4 | 8 Jun 2026 | manual | `README.md` (dev commands + link to plan). Git commit skipped — developer commits when ready |
+| 1.1 | | | |
 | … | | | |
 
 *Copy a row per completed task. If Verify failed, note fix before marking done.*
@@ -1856,11 +1862,11 @@ Phase 6   → Weekly briefs (private)
 
 ## 11. Next Step
 
-**We are ready to start building** as soon as you say go. Begin with **§9 Phase 0.1**.
+**Phase 0 complete.** Begin **§9 Phase 1.1** — install core dependencies (`next-intl`, typography, shadcn subset, etc.).
 
-You can send photo + contact numbers now or use placeholders (see **§9 Pre-flight**). Books and videos plug in during **§9 Phase 2**.
+Before **Phase 1b:** create empty Sanity project at [sanity.io/manage](https://sanity.io/manage) and add `NEXT_PUBLIC_SANITY_PROJECT_ID` to `.env.local`.
 
-Say **"start building"** when ready.
+Photo, phone & contact numbers can stay as placeholders until Phase 2 (see **§9 Pre-flight**). Books and videos plug in during **§9 Phase 2**.
 
 ---
 

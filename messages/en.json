@@ -1,0 +1,71 @@
+{
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "books": "Books",
+    "afkar": "Afkar-e-Muallim",
+    "lectures": "Lectures",
+    "honors": "Honors & Awards",
+    "services": "Services",
+    "questions": "Q&A",
+    "contact": "Contact"
+  },
+  "common": {
+    "languageToggle": "اردو",
+    "comingSoon": "Coming soon",
+    "siteName": "Prof. Dr. Mian Muhammad Akram",
+    "tagline": "Professor of Economics · Islamic Economics · Education",
+    "call": "Call",
+    "whatsapp": "WhatsApp",
+    "menu": "Menu"
+  },
+  "home": {
+    "intro": "Retired Professor of Economics and former Principal of Government College of Science, Lahore. Chairman of AFAQ and Chief Editor of Afkar-e-Muallim magazine.",
+    "servicesTitle": "Services",
+    "rolesTitle": "Roles & Affiliations",
+    "dars": "Dars-e-Quran",
+    "darsDesc": "Quranic lessons available by appointment for individuals and groups.",
+    "economics": "Islamic Economics",
+    "economicsDesc": "Guidance on Islamic finance, economics, and recommended reading.",
+    "speaking": "Speaking Engagements",
+    "speakingDesc": "Lectures and talks — in person or online — by invitation."
+  },
+  "about": {
+    "title": "About",
+    "bio": "Prof. Dr. Mian Muhammad Akram holds a Ph.D. in Economics with specialization in Islamic Economics. He is a retired Professor of Economics and former Principal of Government College of Science, Wahdat Road, Lahore (retired 14 October 2020). He continues to lecture on Islamic Economics at the University of the Punjab. He is co-author of the textbook \"Islamic Economics\" with Prof. Abdul Hameed Dar.",
+    "timelineTitle": "Career Timeline"
+  },
+  "contact": {
+    "title": "Contact",
+    "phone": "Phone",
+    "email": "Email",
+    "phonePlaceholder": "+92 XXX XXXXXXX",
+    "emailPlaceholder": "contact@example.com",
+    "formTitle": "Send an Invitation",
+    "name": "Name",
+    "phoneField": "Phone",
+    "city": "City",
+    "type": "Type of inquiry",
+    "message": "Message",
+    "preferredDate": "Preferred date (optional)",
+    "submit": "Send message",
+    "notConfigured": "Contact form not configured yet",
+    "required": "Please fill in all required fields",
+    "typeDars": "Dars-e-Quran",
+    "typeLecture": "Lecture invitation",
+    "typeFinance": "Islamic economics advice",
+    "typeOther": "Other",
+    "openForm": "Open contact form"
+  },
+  "roles": {
+    "afaq": "Chairman / Director — AFAQ",
+    "afkar": "Chief Editor — Afkar-e-Muallim",
+    "punjab": "Lecturer — University of the Punjab",
+    "retired": "Retired Principal — Govt. College of Science, Lahore"
+  },
+  "timeline": {
+    "2020": "Retired as Principal, Government College of Science, Lahore",
+    "textbook": "Co-authored \"Islamic Economics\" textbook with Prof. Abdul Hameed Dar",
+    "afaq": "Chairman / Director, AFAQ (Association for Academic Quality)"
+  }
+}

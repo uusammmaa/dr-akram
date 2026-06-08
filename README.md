@@ -27,7 +27,7 @@ npm start
 
 Full build phases, schemas, and scope: [plan.md](./plan.md).
 
-**Current status:** Phase 0 complete (repository bootstrap). Phase 1 adds the bilingual site shell with `next-intl`.
+**Current status:** Phase 1 complete (bilingual site shell). Visit `/en` or `/ur`. Phase 1b connects Sanity CMS.
 
 ## Environment
 
