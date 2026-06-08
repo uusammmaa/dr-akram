@@ -1,7 +1,7 @@
 # Website Plan — Prof. Dr. Mian Muhammad Akram
 
 > **Status:** **Phases 1, 1c, 1b complete** — premium animated home live; Sanity Studio at `/studio` (`siteSettings` → hero tagline/portrait, contact page, mobile bar). **Next:** **§9 Phase 2.0** (`aboutPage` schema + About CMS wiring), then Phase 2 content schemas. Books/honors/lectures/Q&A still placeholders until Phase 2.  
-> **Last updated:** 8 June 2026 — Phase 1c home (8 sections, Framer/Lenis/parallax); Phase 1b Sanity (`5ce34emc`, `next-sanity@9`); root layout `<html>`/`<body>` fix for `/studio`; `npm run build` uses webpack (Turbopack incompatible with embedded Studio). **Manual:** add `http://localhost:3000` CORS origin in Sanity API settings; publish `siteSettings` in Studio.
+> **Last updated:** 8 June 2026 — **pnpm** (`pnpm-lock.yaml`, `packageManager: pnpm@10.15.0`); Phase 1c home (8 sections, Framer/Lenis/parallax); Phase 1b Sanity (`5ce34emc`, `next-sanity@9`); root layout `<html>`/`<body>` fix for `/studio`; `pnpm build` uses webpack (Turbopack incompatible with embedded Studio). **Manual:** add `http://localhost:3000` CORS origin in Sanity API settings; publish `siteSettings` in Studio.
 
 ---
 
@@ -160,20 +160,20 @@ Home
 
 ```bash
 # Core styling & components
-npm install tailwindcss @tailwindcss/typography tailwind-merge clsx class-variance-authority
-npm install lucide-react sonner vaul embla-carousel-react
-npm install framer-motion lenis @formkit/auto-animate
-npm install plaiceholder sharp
-npm install @imgly/background-removal-node   # Shared Media Enhancer — server-side only (§5.2)
-npm install driver.js                          # CMS first-login tour for father (§5.3)
-npm install next-themes
-npm install @vercel/analytics @vercel/speed-insights
+pnpm add tailwindcss @tailwindcss/typography tailwind-merge clsx class-variance-authority
+pnpm add lucide-react sonner vaul embla-carousel-react
+pnpm add framer-motion lenis @formkit/auto-animate
+pnpm add plaiceholder sharp
+pnpm add @imgly/background-removal-node   # Shared Media Enhancer — server-side only (§5.2)
+pnpm add driver.js                          # CMS first-login tour for father (§5.3)
+pnpm add next-themes
+pnpm add @vercel/analytics @vercel/speed-insights
 
 # shadcn/ui — init via CLI, pulls in @radix-ui/* per component
-npx shadcn@latest init
+pnpm dlx shadcn@latest init
 
 # Optional “wow” (3D hero, extra parallax — lazy-loaded, all viewports)
-npm install @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-parallax
+pnpm add @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-parallax
 ```
 
 #### Library → project mapping
@@ -813,7 +813,7 @@ Father may save a draft answer while still `pending`; only **Publish** moves to 
 
 ```bash
 # Phase 5 — add when corpus is ready
-npm install ai @ai-sdk/openai          # Vercel AI SDK
+pnpm add ai @ai-sdk/openai          # Vercel AI SDK
 # + vector DB client (Pinecone etc.) — TBD at Phase 5
 ```
 
@@ -1361,8 +1361,8 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | `npx create-next-app@latest` with: App Router, TypeScript, Tailwind, ESLint, `src/` optional, import alias `@/*`. Pin **Next.js 15.x** *(upgrade to 16 before Oct 2026 EOL — §5)* |
-| **Verify** | `npm run dev` → `http://localhost:3000` shows default page |
+| **Build** | `pnpm create next-app@latest` with: App Router, TypeScript, Tailwind, ESLint, `src/` optional, import alias `@/*`. Pin **Next.js 15.x** *(upgrade to 16 before Oct 2026 EOL — §5)* |
+| **Verify** | `pnpm dev` → `http://localhost:3000` shows default page |
 | **Do not** | Install Sanity, shadcn, or motion libraries yet |
 
 #### 0.2 — Folder structure
@@ -1370,7 +1370,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | | |
 |---|---|
 | **Build** | Create empty dirs: `src/components/`, `src/lib/`, `src/app/[locale]/`, `messages/` |
-| **Verify** | `ls` shows structure; `npm run build` still passes |
+| **Verify** | `ls` shows structure; `pnpm build` still passes |
 | **Do not** | Add pages beyond `[locale]/layout.tsx` placeholder |
 
 #### 0.3 — Environment template
@@ -1389,9 +1389,9 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | **Verify** | `git status` clean after first commit (if repo initialized) |
 | **Do not** | Document features not built yet |
 
-**Phase 0 exit:** `npm run build` succeeds. No i18n, no CMS, no custom UI.
+**Phase 0 exit:** `pnpm build` succeeds. No i18n, no CMS, no custom UI.
 
-> **Done (8 June 2026):** All tasks 0.1–0.4 verified. `npm run build` passes; `/` returns default page. `.env.example` committed; `.env.local` gitignored. Initial git commit deferred to developer. Sanity project **`5ce34emc`** created (Phase 1b).
+> **Done (8 June 2026):** All tasks 0.1–0.4 verified. `pnpm build` passes; `/` returns default page. `.env.example` committed; `.env.local` gitignored. Initial git commit deferred to developer. Sanity project **`5ce34emc`** created (Phase 1b).
 
 ### Phase 1 — Foundation (public site shell)
 
@@ -1402,14 +1402,14 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | | |
 |---|---|
 | **Build** | Install: `next-intl`, `tailwindcss` (if not present), `@tailwindcss/typography`, `tailwind-merge`, `clsx`, `class-variance-authority`, `lucide-react`, `sonner`, `vaul`, `sharp` |
-| **Verify** | `npm run build` passes; `package.json` lists versions |
+| **Verify** | `pnpm build` passes; `package.json` lists versions |
 | **Do not** | Install `framer-motion`, `gsap`, `lenis`, R3F, `@imgly/background-removal-node` yet |
 
 #### 1.2 — shadcn/ui init
 
 | | |
 |---|---|
-| **Build** | `npx shadcn@latest init` — add only: `button`, `card`, `input`, `label`, `textarea`, `select`, `tabs`, `accordion`, `dialog`, `sheet` |
+| **Build** | `pnpm dlx shadcn@latest init` — add only: `button`, `card`, `input`, `label`, `textarea`, `select`, `tabs`, `accordion`, `dialog`, `sheet` |
 | **Verify** | Import `<Button>` in a test page renders without error |
 | **Do not** | Add every shadcn component — add on demand per task |
 
@@ -1495,7 +1495,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 **Phase 1 exit:** Full nav works EN/UR. Home + About + Contact shell done. No CMS. **Phase 1 used minimal CSS motion only** — full Techwind + animation pass is **Phase 1c** (below).
 
-> **Done (8 June 2026):** All tasks 1.1–1.12 verified. `npm run build` passes; `/` → `/en`; 22 static pages. Shared JS ~115 kB. Default locale: `en`. **Post-Phase 1 polish:** (P1) desktop hamburger hidden — `md:hidden` wrapper on `MobileNav`; (P2) mobile sheet — `pe-12`/`pt-5` title, `SheetFooter` language strip; (P3) Urdu name clipping — no `line-clamp` on Nastaliq, `.font-urdu` `line-height: 1.8`.
+> **Done (8 June 2026):** All tasks 1.1–1.12 verified. `pnpm build` passes; `/` → `/en`; 22 static pages. Shared JS ~115 kB. Default locale: `en`. **Post-Phase 1 polish:** (P1) desktop hamburger hidden — `md:hidden` wrapper on `MobileNav`; (P2) mobile sheet — `pe-12`/`pt-5` title, `SheetFooter` language strip; (P3) Urdu name clipping — no `line-clamp` on Nastaliq, `.font-urdu` `line-height: 1.8`.
 
 ### Phase 1c — Techwind personal home redesign
 
@@ -1549,8 +1549,8 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 | | |
 |---|---|
-| **Build** | `npm install framer-motion lenis @formkit/auto-animate react-scroll-parallax embla-carousel-react` |
-| **Verify** | `npm run build` passes; packages in `package.json` |
+| **Build** | `pnpm add framer-motion lenis @formkit/auto-animate react-scroll-parallax embla-carousel-react` |
+| **Verify** | `pnpm build` passes; packages in `package.json` |
 | **Do not** | Install GSAP/R3F yet (About page timeline — Phase 3.5); do not copy Techwind `node_modules` |
 
 #### 1c.2 — i18n keys (EN + UR)
@@ -1630,7 +1630,7 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 | | |
 |---|---|
 | **Build** | Replace current simple home grid with full-bleed sections; wrap locale layout or home-only client boundary with `LenisProvider` (smooth scroll); respect `prefers-reduced-motion` (disable Lenis + reduce Framer) |
-| **Verify** | Home scrolls smoothly; reduced-motion media query shows static behavior; `npm run build` succeeds |
+| **Verify** | Home scrolls smoothly; reduced-motion media query shows static behavior; `pnpm build` succeeds |
 | **Do not** | Remove `Header` / `Footer` / `MobileBottomBar`; do not convert site to one-page anchor nav only |
 
 #### 1c.12 — Sanity-ready hooks (optional, no CMS yet)
@@ -1670,7 +1670,7 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 | | |
 |---|---|
-| **Build** | `npm install next-sanity @sanity/client @sanity/image-url`; `sanity.config.ts`; Studio at `/studio` |
+| **Build** | `pnpm add next-sanity @sanity/client @sanity/image-url`; `sanity.config.ts`; Studio at `/studio` |
 | **Verify** | `http://localhost:3000/studio` loads login/create project UI |
 | **Do not** | Custom Studio components yet |
 
@@ -1692,7 +1692,7 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 **Phase 1b exit:** Studio publishes; site displays live contact/tagline from CMS.
 
-> **Done (8 June 2026):** All tasks 1b.1–1b.3 verified. Packages: `next-sanity@9`, `@sanity/client`, `@sanity/image-url`, `sanity@3`, `styled-components`. Studio at `/studio`; `sanity/schemas/siteSettings.ts` singleton; `getSiteSettings()` (React `cache`, 60s revalidate) wired to home, contact, `MobileBottomBar`. Lazy Sanity client — build passes without env. **`1b.P1`:** root `layout.tsx` gets `<html>`/`<body>`; `LocaleHtmlAttributes` sets `lang`/`dir` on locale routes (fixes `/studio` runtime error). **`1b.P2`:** `npm run build` → webpack only (drop `--turbopack`). **Manual:** CORS origin `http://localhost:3000` (credentials) in Sanity API tab.
+> **Done (8 June 2026):** All tasks 1b.1–1b.3 verified. Packages: `next-sanity@9`, `@sanity/client`, `@sanity/image-url`, `sanity@3`, `styled-components`. Studio at `/studio`; `sanity/schemas/siteSettings.ts` singleton; `getSiteSettings()` (React `cache`, 60s revalidate) wired to home, contact, `MobileBottomBar`. Lazy Sanity client — build passes without env. **`1b.P1`:** root `layout.tsx` gets `<html>`/`<body>`; `LocaleHtmlAttributes` sets `lang`/`dir` on locale routes (fixes `/studio` runtime error). **`1b.P2`:** `pnpm build` → webpack only (drop `--turbopack`). **Manual:** CORS origin `http://localhost:3000` (credentials) in Sanity API tab.
 
 ### Phase 2 — Content types & pages (no enhancer yet)
 
@@ -1780,8 +1780,8 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 | | |
 |---|---|
-| **Build** | `npm install @imgly/background-removal-node`; ensure `sharp` present; copy **`small`** ONNX/WASM to `public/enhance-models/`; `src/lib/media/removeBg.ts` with `publicPath` + `model: 'small'` |
-| **Verify** | `npm run build` passes; `public/enhance-models/` committed; no imgly import in client bundles |
+| **Build** | `pnpm add @imgly/background-removal-node`; ensure `sharp` present; copy **`small`** ONNX/WASM to `public/enhance-models/`; `src/lib/media/removeBg.ts` with `publicPath` + `model: 'small'` |
+| **Verify** | `pnpm build` passes; `public/enhance-models/` committed; no imgly import in client bundles |
 | **Do not** | Import imgly in client components; use `medium` model on Vercel Hobby |
 
 #### 2a.2 — Preset engine (honors only)
@@ -1918,7 +1918,7 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 | | |
 |---|---|
-| **Build** | `npm install driver.js`; `GuidedTour` + `data-tour` on sidebar items; `localStorage` `tourCompleted` |
+| **Build** | `pnpm add driver.js`; `GuidedTour` + `data-tour` on sidebar items; `localStorage` `tourCompleted` |
 | **Verify** | First Studio load shows tour; Skip works; Restart from Help reruns |
 | **Do not** | More than ~10 steps without updating this section |
 
@@ -2281,7 +2281,7 @@ Phase 6   → Weekly briefs (private)
 
 **Env** (`.env.local`): `NEXT_PUBLIC_SANITY_PROJECT_ID=5ce34emc`, `NEXT_PUBLIC_SANITY_DATASET=production`.
 
-Run locally: `npm run dev` → `/en`, `/ur`, or `/studio`. Production build: `npm run build` (webpack).
+Run locally: `pnpm dev` → `/en`, `/ur`, or `/studio`. Production build: `pnpm build` (webpack).
 
 Books, honors, lectures, and Q&A plug in during **§9 Phase 2**. Contact form email (Resend) is **Phase 3.9**.
 

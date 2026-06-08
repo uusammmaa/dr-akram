@@ -5,13 +5,13 @@ Bilingual (Urdu + English) personal/professional website.
 ## Prerequisites
 
 - Node.js 18+
-- npm
+- pnpm (enable via `corepack enable` if needed)
 
 ## Development
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
@@ -19,8 +19,8 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Build
 
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
 ```
 
 ## Project plan
