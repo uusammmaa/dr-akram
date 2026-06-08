@@ -1,7 +1,7 @@
 # Website Plan — Prof. Dr. Mian Muhammad Akram
 
-> **Status:** Plan finalized — ready to build once contact details, photo & books are provided.  
-> **Last updated:** 8 June 2026 — includes **§9 verifiable build phases**, Content Studio §5.5, Q&A & AI §5.4, domain §7, Shared Media Enhancer §5.2, CMS Help §5.3, Recommended Reading, dual upload paths, logo tools, **Handover Notes §12**.
+> **Status:** **Phases 1, 1c, 1b complete** — premium animated home live; Sanity Studio at `/studio` (`siteSettings` → hero tagline/portrait, contact page, mobile bar). **Next:** **§9 Phase 2.0** (`aboutPage` schema + About CMS wiring), then Phase 2 content schemas. Books/honors/lectures/Q&A still placeholders until Phase 2.  
+> **Last updated:** 8 June 2026 — **pnpm** (`pnpm-lock.yaml`, `packageManager: pnpm@10.15.0`); Phase 1c home (8 sections, Framer/Lenis/parallax); Phase 1b Sanity (`5ce34emc`, `next-sanity@9`); root layout `<html>`/`<body>` fix for `/studio`; `pnpm build` uses webpack (Turbopack incompatible with embedded Studio). **Manual:** add `http://localhost:3000` CORS origin in Sanity API settings; publish `siteSettings` in Studio.
 
 ---
 
@@ -68,9 +68,11 @@
 
 **Design:** Very modern, clean, dignified, scholarly — no reference site, but premium contemporary feel.
 
-**Mobile:** **Critical requirement** — must work flawlessly on old/low-end phones (see Section 5.1). Most visitors will open links from WhatsApp on budget Android phones with slow internet.
+**Mobile:** **Responsive & touch-friendly** — must look and feel premium on phones and desktop (see §5.1). Animations, parallax, smooth scroll, and rich hero effects are **encouraged on all viewports** — no stripping motion for low-end devices.
 
 **Maintenance:** **Prof. Dr. Akram should be able to update content himself** (books, lectures, honors, Q&A, etc.) via an admin panel — not developer-dependent. **Guided tour on first login + permanent Help desk** so he always knows what to do where (§5.3).
+
+**SEO & discoverability:** Site must rank and preview well for searches like *Islamic economics Lahore*, *Prof. Dr. Mian Muhammad Akram*, and individual Q&A topics — in **both Urdu and English**. Google, Bing, and WhatsApp link previews must show correct title, description, image, and locale. Full technical spec: **§5.6**; build tasks: **§9 Phase 3.7**.
 
 ---
 
@@ -152,26 +154,26 @@ Home
 
 ### 5.0 UI & polish library stack (use wherever needed)
 
-> **Rule:** Use the full stack for a premium feel on modern devices, but **gate heavy features** behind desktop detection, `prefers-reduced-motion`, and lazy client loading so old phones stay fast (see §5.1).
+> **Rule:** Use the **full polish stack everywhere** — Framer Motion, GSAP, Lenis, parallax, carousels, optional 3D hero, Magic UI effects. Lazy-load heavy chunks (R3F, AI chat) for bundle hygiene, not to disable motion on mobile. Only **`prefers-reduced-motion`** may reduce animation (accessibility). See §5.1.
 
 #### Practical install list (minimal `package.json`)
 
 ```bash
 # Core styling & components
-npm install tailwindcss @tailwindcss/typography tailwind-merge clsx class-variance-authority
-npm install lucide-react sonner vaul embla-carousel-react
-npm install framer-motion lenis @formkit/auto-animate
-npm install plaiceholder sharp
-npm install @imgly/background-removal-node   # Shared Media Enhancer — server-side only (§5.2)
-npm install driver.js                          # CMS first-login tour for father (§5.3)
-npm install next-themes
-npm install @vercel/analytics @vercel/speed-insights
+pnpm add tailwindcss @tailwindcss/typography tailwind-merge clsx class-variance-authority
+pnpm add lucide-react sonner vaul embla-carousel-react
+pnpm add framer-motion lenis @formkit/auto-animate
+pnpm add plaiceholder sharp
+pnpm add @imgly/background-removal-node   # Shared Media Enhancer — server-side only (§5.2)
+pnpm add driver.js                          # CMS first-login tour for father (§5.3)
+pnpm add next-themes
+pnpm add @vercel/analytics @vercel/speed-insights
 
 # shadcn/ui — init via CLI, pulls in @radix-ui/* per component
-npx shadcn@latest init
+pnpm dlx shadcn@latest init
 
-# Optional “wow” (desktop hero only — lazy-loaded)
-npm install @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-parallax
+# Optional “wow” (3D hero, extra parallax — lazy-loaded, all viewports)
+pnpm add @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-parallax
 ```
 
 #### Library → project mapping
@@ -185,9 +187,9 @@ npm install @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-p
 | 5 | **`sharp`** | Production image pipeline (required for `next/image` optimization on Vercel) |
 | 6 | **`plaiceholder`** | Blur/dominant-color placeholders on hero photo & book covers — smooth reveal without layout jump |
 | 7 | **`embla-carousel-react`** | Featured books row, lecture highlights, magazine issues — touch-friendly swipe on mobile |
-| 8 | **`framer-motion`** | Page section reveals, staggered cards, hero text fade-in — **desktop only**; static on mobile |
-| 9 | **`gsap` + `@gsap/react`** | About page career timeline scroll animation — **desktop only**; simple static timeline on mobile |
-| 10 | **`lenis`** | Smooth scroll on desktop/tablet — **disabled on mobile** and when `prefers-reduced-motion` |
+| 8 | **`framer-motion`** | Page section reveals, staggered cards, hero text fade-in — **all viewports** |
+| 9 | **`gsap` + `@gsap/react`** | About page career timeline scroll animation — **all viewports**; ScrollTrigger on mobile too |
+| 10 | **`lenis`** | Smooth scroll site-wide — disable only when `prefers-reduced-motion` |
 | 11 | **`@formkit/auto-animate`** | Book grid & lecture list re-order when filtering — lightweight, no config |
 | 12 | **`tailwindcss`** | Entire design system — spacing, colors, responsive breakpoints, RTL utilities |
 | 13 | **`tailwind-merge` + `clsx` + `cva`** | All components — conditional classes, button/card variants |
@@ -195,8 +197,8 @@ npm install @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-p
 | 15 | **`@radix-ui/react-*`** | Via shadcn — contact form dialog, mobile nav sheet, services tabs, book filters |
 | 16 | **`lucide-react`** | Icons site-wide — Phone, MessageCircle (WhatsApp), BookOpen, GraduationCap, Mosque, etc. |
 | 17 | **`vaul`** | Mobile contact form & navigation drawer — native bottom-sheet feel |
-| 18 | **`@react-three/fiber` + `@react-three/drei`** | Optional homepage hero — subtle 3D Islamic geometric pattern background — **desktop only, lazy-loaded** |
-| 19 | **`react-scroll-parallax`** | Hero parallax on Dr. Akram portrait — **desktop only**; flat image on mobile |
+| 18 | **`@react-three/fiber` + `@react-three/drei`** | Optional homepage hero — subtle 3D Islamic geometric pattern background — **lazy-loaded**, all viewports |
+| 19 | **`react-scroll-parallax`** | Hero parallax on Dr. Akram portrait — **all viewports** (Techwind-style jarallax hero) |
 | 20 | **`sonner`** | Toast feedback — “Message sent”, “Copied number”, form errors |
 | 21 | **`@imgly/background-removal-node`** | **Shared Media Enhancer** — AI background removal + compositing on CMS upload (§5.2): honors, portrait, book/magazine covers, logos. Server-side only |
 | 22 | **`driver.js`** | **CMS guided tour** — first-login walkthrough in Sanity Studio for father (§5.3). Lightweight, works on mobile |
@@ -207,57 +209,57 @@ npm install @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-p
 |---|---|
 | **Magic UI / Aceternity UI** | Hero text effects, bento grid for services/roles section, animated borders on featured book card |
 | **react-spring** | Skip — Framer Motion + auto-animate cover our needs with less bundle overlap |
-| **keen-slider** | Skip — Embla chosen for lighter weight on old phones |
+| **keen-slider** | Skip — Embla chosen for API + touch UX |
 | **next-themes** | Dark mode toggle (optional) — scholarly dark theme with gold accents; respects system preference |
-| **@vercel/analytics + speed-insights** | Always on — track real mobile performance in Pakistan |
+| **@vercel/analytics + speed-insights** | Always on — monitor real-user vitals after launch |
 
 #### Per-page library usage
 
 | Page | Libraries in play |
 |---|---|
-| **Home** | `next/image`, `plaiceholder`, portrait from §5.2, org logos from §5.2, `framer-motion` (desktop), `react-scroll-parallax` (desktop), optional R3F hero (desktop), `embla-carousel` (books + honors), `shadcn` cards, `lucide-react`, Magic UI bento for roles |
-| **About** | `@tailwindcss/typography`, §5.2 portrait + org logos, `gsap` ScrollTrigger timeline (desktop), static timeline (mobile), `auto-animate` |
+| **Home** | Techwind `index-personal.html` patterns (§6): floating hero card, wave divider, services grid, experience timeline, CTA band; `next/image`, `plaiceholder`, portrait from §5.2, `framer-motion`, `react-scroll-parallax`, optional R3F hero, `embla-carousel` (books + honors), `shadcn` cards, `lucide-react`, Magic UI bento for roles |
+| **About** | `@tailwindcss/typography`, §5.2 portrait + org logos, `gsap` ScrollTrigger timeline, `auto-animate` |
 | **Books** | `next/image`, `plaiceholder`, §5.2 cover presets, `shadcn` tabs (My Books · Recommended Reading), `auto-animate` (filter), `embla-carousel` (featured), `shadcn` cards |
-| **Lectures** | `next/image` (thumbnails), tap-to-load YouTube facade, `embla-carousel`, `framer-motion` (desktop) |
+| **Lectures** | `next/image` (thumbnails), tap-to-load YouTube facade, `embla-carousel`, `framer-motion` |
 | **Honors & Awards** | `next/image`, `plaiceholder`, `embla-carousel` (homepage teaser), masonry/grid gallery, Radix dialog lightbox (tap-to-zoom), `auto-animate` (filter), `Award`/`Trophy` lucide icons. Display images pre-processed via §5.2 enhancer — uniform trophy-case look |
 | **Afkar-e-Muallim** | `prose` typography, `embla-carousel` (issues), §5.2 cover presets, PDF download links |
-| **Services** | `shadcn` tabs, `framer-motion` stagger (desktop), `lucide-react` icons |
+| **Services** | `shadcn` tabs, `framer-motion` stagger, `lucide-react` icons |
 | **Q&A / FAQ** | `@tailwindcss/typography`, `shadcn` accordion, `auto-animate` (topic filter), server search; AI chat lazy-loaded Phase 5 only (§5.4) |
 | **Contact** | `vaul` drawer (mobile form), `shadcn` form + Radix, `sonner` toasts, sticky Call/WhatsApp bar |
 
 #### Next.js patterns (mandatory)
 
 - **`"use client"`** only on: motion wrappers, carousel, lenis, contact drawer, theme toggle, 3D hero
-- **Server Components** for: all page shells, bio text, book/lecture data from Sanity, SEO metadata
+- **Server Components** for: all page shells, bio text, book/lecture data from Sanity, SEO metadata (§5.6)
 - **`next/font` + `next/image`** over third-party equivalents — always
 - **Dynamic import** heavy libs: `const Hero3D = dynamic(() => import('./Hero3D'), { ssr: false })`
-- **Progressive enhancement:** page renders fully without JS; motion is enhancement only
+- **Progressive enhancement:** core content readable without JS; **motion is a first-class feature**, not desktop-only
 
-### 5.1 Mobile & Old-Device Strategy (hard requirement)
+### 5.1 Mobile & Responsive UX
 
-The site must load fast and remain fully usable on **old budget phones** common in Pakistan — e.g. small-screen Android devices, slow 3G, outdated browsers. Modern look, but **lightweight under the hood**.
+> **Policy (8 Jun 2026):** **No old-phone / low-end performance gating.** Prioritize a **premium, animated, modern feel** on phones and desktop alike. Use Framer Motion, GSAP, Lenis, parallax, carousels, and optional 3D freely. Do **not** strip animations or downgrade layouts for budget devices.
 
-#### Performance targets
-- First page load **under 3 seconds on 3G**
-- Initial page weight **under 500 KB** (excluding images user taps to view)
+The site must remain **fully usable and beautiful** on phones — responsive layout, touch-friendly controls, flawless Urdu RTL — while embracing rich motion and visual polish.
+
+#### Responsive targets
 - Works on screens as small as **320px** wide
 - No layout breaks in Urdu RTL on small screens
+- Hero, sections, and carousels animate smoothly on **mobile and desktop**
 
 #### What we will do
 | Area | Approach |
 |---|---|
 | **Layout** | Mobile-first CSS — design for phone first, scale up for desktop |
+| **Motion** | **Framer / GSAP / Lenis / parallax / R3F enabled on all viewports** — Techwind-style hero (floating card, wave, scroll reveals). Respect **`prefers-reduced-motion`** only |
 | **Touch** | Large tap targets (min **48×48px**) — easy for older users |
 | **Navigation** | Simple bottom bar or clear hamburger menu; no tiny links |
-| **Images** | Compressed WebP + JPEG fallback; lazy-load below fold; hero photo optimized |
-| **Awards gallery** | Thumbnails in grid; full-size only on tap (lightbox); max 12 visible per page with "load more" — never dump 50 images at once |
-| **Urdu font** | Subset font or single weight only — avoid loading 3+ heavy font files |
-| **Videos** | **Thumbnail + tap to play** — don't auto-load YouTube iframes (saves data & RAM) |
-| **Animations** | Framer/GSAP/Lenis/parallax/R3F **off on mobile**; respect `prefers-reduced-motion`; no scroll-jank |
-| **JavaScript** | Server-render pages; keep client JS small; core content works even if JS is slow |
+| **Images** | `next/image` WebP/AVIF; `plaiceholder` blur; lazy-load below fold |
+| **Awards gallery** | Thumbnails in grid; full-size on tap (lightbox); pagination/load more for large sets |
+| **Urdu font** | Subset font or single weight via `next/font` |
+| **Videos** | Thumbnail + tap to play — avoid auto-loading YouTube iframes |
+| **JavaScript** | Server-render pages; dynamic-import heaviest libs (R3F, AI chat) — not motion |
 | **Forms** | Large inputs, clear labels in Urdu + English, native phone keyboard for number fields |
 | **Contact** | **Sticky WhatsApp + Call buttons** always visible on mobile |
-| **Offline** | Basic pages readable if connection drops mid-load (server-rendered HTML) |
 
 #### Priority mobile flows (must be one-tap easy)
 1. **Call** → `tel:` link
@@ -267,10 +269,9 @@ The site must load fast and remain fully usable on **old budget phones** common 
 
 #### Testing plan before launch
 - Test on **320px** and **375px** screen widths
-- Test on slow network throttling (3G in Chrome DevTools)
 - Test Urdu RTL layout on small screen
-- Test on a real old Android phone if available
-- Lighthouse mobile score target: **90+ performance**
+- Test hero parallax + section animations on a real phone (smooth, no broken layout)
+- Verify `prefers-reduced-motion` disables Lenis/heavy motion
 
 ### 5.2 Shared Media Enhancer (CMS upload pipeline)
 
@@ -478,6 +479,10 @@ export const maxDuration = 10; // Hobby hard cap — do not raise without Pro
 | `autoEnhancedPortrait` | boolean | Prevents accidental re-processing |
 | `taglineEn` / `taglineUr` | string | Site taglines |
 | `phone` / `whatsapp` / `email` | string | Contact details |
+| `metaDescriptionEn` / `metaDescriptionUr` | text | Default meta description for home + fallback *(§5.6)* |
+| `ogImage` | image | Optional dedicated social preview image; falls back to `portrait` |
+
+**Studio hint on SEO fields:** *"یہ متن گوگل اور WhatsApp لنک پیش نظارہ میں دکھتا ہے — مختصر اور واضح رکھیں"*
 
 #### CMS schema: `aboutPage` singleton *(About — biography & career timeline)*
 
@@ -808,7 +813,7 @@ Father may save a draft answer while still `pending`; only **Publish** moves to 
 
 ```bash
 # Phase 5 — add when corpus is ready
-npm install ai @ai-sdk/openai          # Vercel AI SDK
+pnpm add ai @ai-sdk/openai          # Vercel AI SDK
 # + vector DB client (Pinecone etc.) — TBD at Phase 5
 ```
 
@@ -821,7 +826,7 @@ npm install ai @ai-sdk/openai          # Vercel AI SDK
 | **Private** questions never enter AI corpus | Personal matters stay off-site |
 | Public AI shows **sources** (“Based on Dr. Akram’s answer from…”) | Transparency |
 | Always offer **WhatsApp / Contact** when AI unsure | Human fallback |
-| AI chat widget **lazy-loaded** — optional, desktop-first | Old phones stay fast (§5.1) |
+| AI chat widget **lazy-loaded** — optional add-on | Keeps initial bundle lean; not a mobile motion restriction |
 
 **Minimum corpus before Phase 5d:** ~**50 approved Q&A pairs** across topics — otherwise little to retrieve.
 
@@ -979,6 +984,160 @@ Monday → Email to YOU: full research + script (2 topics)
 
 **No one else reads or approves the brief before you.**
 
+### 5.6 SEO & Discoverability
+
+> **Goal:** Every public page is indexable, locale-aware, and shareable — correct title/description in Google **and** WhatsApp. Bilingual hreflang so EN and UR rank independently without duplicate-content penalties. Build tasks: **§9 Phase 3.7** (foundation) + **§9 Phase 4.3** (Q&A detail pages).
+
+#### Principles
+
+| Rule | Why |
+|---|---|
+| **Server-rendered metadata** | `generateMetadata` in App Router — no client-side `<head>` hacks |
+| **Locale in every URL** | `/en/...` and `/ur/...` — matches `next-intl` routing; never mix locales on one URL |
+| **Canonical per locale** | Each page canonical points to itself in that locale; cross-locale via `alternates.languages` |
+| **CMS-driven defaults** | `siteSettings` supplies fallback description + OG image; page-level overrides in code/i18n |
+| **Structured data** | JSON-LD for `Person`, `WebSite`, `FAQPage` (Q&A), `BreadcrumbList` — validate in Rich Results Test |
+| **No index for private routes** | `/studio`, `/api/*` — `robots.txt` + `noindex` on Studio layout |
+
+#### Environment
+
+| Variable | Example | Use |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | `https://drmianakram.pk` | Canonical URLs, OG `url`, sitemap `loc`, JSON-LD `@id` |
+
+Set in Vercel for preview + production. **Never** hardcode `localhost` or `*.vercel.app` in metadata once domain is live.
+
+#### File structure (Phase 3.7)
+
+```
+src/lib/seo/
+  metadata.ts      # buildPageMetadata(), locale alternates, OG/Twitter helpers
+  json-ld.ts       # Person, WebSite, FAQPage, BreadcrumbList builders
+  routes.ts        # PUBLIC_ROUTES list for sitemap (static pages)
+src/app/
+  sitemap.ts       # Dynamic sitemap — all locales + published faqEntry slugs (Phase 4)
+  robots.ts        # Allow /en, /ur; disallow /studio, /api
+```
+
+#### Per-page metadata map
+
+| Route | `title` source | `description` source | OG image |
+|---|---|---|---|
+| `/[locale]` (home) | i18n `metadata.home.title` | `siteSettings.metaDescription*` or i18n fallback | `siteSettings.ogImage` → `portrait` |
+| `/[locale]/about` | i18n | `aboutPage.bio*` excerpt (first ~155 chars) or i18n | `portrait` |
+| `/[locale]/books` | i18n | i18n | `portrait` or featured book `cover` |
+| `/[locale]/lectures` | i18n | i18n | `portrait` or featured lecture thumbnail |
+| `/[locale]/honors` | i18n | i18n | `portrait` or featured honor `image` |
+| `/[locale]/services` | i18n | i18n | `portrait` |
+| `/[locale]/afkar` | i18n | i18n | latest issue `cover` or `portrait` |
+| `/[locale]/contact` | i18n | i18n | `portrait` |
+| `/[locale]/questions` | i18n | i18n | `portrait` |
+| `/[locale]/questions/[slug]` | `faqEntry.question*` | `faqEntry.answer*` excerpt | `portrait` *(Phase 4.3)* |
+
+**Title template:** `{pageTitle} | Prof. Dr. Mian Muhammad Akram` — Urdu pages use Urdu page title + Urdu name from i18n.
+
+#### hreflang & alternates (mandatory)
+
+Every `generateMetadata` return must include:
+
+```ts
+alternates: {
+  canonical: `${siteUrl}/${locale}${path}`,
+  languages: {
+    en: `${siteUrl}/en${path}`,
+    ur: `${siteUrl}/ur${path}`,
+    'x-default': `${siteUrl}/en${path}`,
+  },
+},
+```
+
+`path` is locale-neutral (e.g. `/about`, `/questions/what-is-riba`). Middleware already redirects `/` → `/en`.
+
+#### Open Graph & Twitter
+
+| Tag | Value |
+|---|---|
+| `og:type` | `website` (pages) · `article` (Q&A detail) |
+| `og:locale` | `en_PK` · `ur_PK` |
+| `og:locale:alternate` | other locale |
+| `og:image` | Absolute URL via `urlForImage()` — **1200×630** crop recommended |
+| `twitter:card` | `summary_large_image` |
+| `twitter:title` / `twitter:description` | Same as OG |
+
+Use Next.js `metadata.openGraph` + `metadata.twitter` — not manual `<meta>` tags.
+
+#### JSON-LD structured data
+
+| Page | Schema | Key fields |
+|---|---|---|
+| **All pages** (layout or page) | `WebSite` | `name`, `url`, `inLanguage` [`en`,`ur`] |
+| **Home + About** | `Person` | `name` (EN+UR), `jobTitle`, `alumniOf`, `knowsAbout`: Islamic Economics, `image`, `sameAs` (AFAQ, TAPAK links) |
+| **`/questions`** | `FAQPage` | `mainEntity[]` — each published `faqEntry` as `Question` + `acceptedAnswer` |
+| **`/questions/[slug]`** | `QAPage` | Single question + answer |
+| **Inner pages** | `BreadcrumbList` | Home → section *(optional v1 — add if time in 3.7e)* |
+
+Inject via `<script type="application/ld+json">` in Server Component — `src/components/seo/JsonLd.tsx`.
+
+#### Sitemap & robots
+
+**`sitemap.ts`:**
+- Static routes × 2 locales (`en`, `ur`)
+- After Phase 4: dynamic `faqEntry` slugs where `status == "published"` × 2 locales
+- `lastModified` from Sanity `_updatedAt` where available
+- `priority`: home `1.0`, main nav `0.8`, Q&A detail `0.6`
+
+**`robots.ts`:**
+```
+User-agent: *
+Allow: /
+Disallow: /studio
+Disallow: /api
+Sitemap: https://drmianakram.pk/sitemap.xml
+```
+
+#### i18n metadata keys
+
+Add to `messages/en.json` + `messages/ur.json`:
+
+```json
+"metadata": {
+  "home": { "title": "...", "description": "..." },
+  "about": { "title": "...", "description": "..." },
+  "books": { ... },
+  ...
+}
+```
+
+CMS `metaDescription*` overrides home description when set. Other pages: i18n defaults until father requests CMS overrides post-launch.
+
+#### Search Console & analytics (post-deploy)
+
+| Step | Who | When |
+|---|---|---|
+| Add `drmianakram.pk` property | Son | Phase 3.10 deploy |
+| Submit `sitemap.xml` | Son | After 3.7d |
+| Add `.com` redirect property if registered | Son | §7 |
+| Monitor Coverage + Core Web Vitals | Son | Ongoing via Search Console + Vercel Speed Insights |
+
+Father does **not** need Search Console access for v1.
+
+#### SEO verification checklist (before public launch)
+
+- [ ] View source on `/en` and `/ur` — unique `<title>`, `<meta name="description">`, `link rel="canonical"`, `hreflang` links
+- [ ] [opengraph.xyz](https://www.opengraph.xyz) or Meta Sharing Debugger — title + image on home and one Q&A URL
+- [ ] WhatsApp share preview — correct Urdu title on `/ur/questions/...`
+- [ ] `https://drmianakram.pk/sitemap.xml` lists all nav pages in both locales
+- [ ] `https://drmianakram.pk/robots.txt` blocks `/studio`
+- [ ] Google Rich Results Test — `Person` + `FAQPage` valid
+- [ ] Lighthouse SEO score ≥ 90 on home (mobile)
+
+#### What stays out of v1
+
+- Blog/article SEO *(deferred — §10)*
+- Per-book detail URLs *(list page only unless added later)*
+- Google Analytics *(unless requested — §3.8)*
+- Paid SEO tools / rank tracking
+
 ### What stays in code (rarely changes)
 - Site layout, design, navigation
 - About page **layout** (timeline UI, sections) — **copy lives in CMS** (`aboutPage` singleton)
@@ -988,7 +1147,9 @@ Monday → Email to YOU: full research + script (2 topics)
 
 ## 6. Design Direction
 
-**Feel:** Premium academic — think modern university professor portfolio, not outdated Islamic site clichés.
+**Feel:** Premium academic — think modern university professor portfolio, not outdated Islamic site clichés. **Rich motion welcome** — parallax hero, scroll-triggered reveals, smooth scroll, animated cards.
+
+**Layout reference:** Techwind **`index-personal.html`** (`techwind-330/.../HTML/Landing/src/index-personal.html`) — port patterns into Next.js with **green/gold palette** (not Techwind purple). Reuse: floating hero intro card, wave section divider, services card grid, experience timeline, full-width CTA band, image grids (→ books/honors). Skip: client logo strip, developer skill bars, freelancer copy.
 
 **Visual elements:**
 - Large professional portrait on homepage — processed via §5.2 portrait presets if original has messy background
@@ -996,8 +1157,8 @@ Monday → Email to YOU: full research + script (2 topics)
 - Urdu: **Noto Nastaliq Urdu** via `next/font` (single subset weight)
 - English: **Inter** via `next/font`; optional **Geist** for UI chrome
 - Subtle geometric Islamic patterns as background texture (not overpowering)
-- Light animations on desktop only; static/stable on old phones
-- **Mobile-first** — phone layout is the primary design, not an afterthought
+- **Animations on all devices** — Framer Motion section reveals, GSAP timeline, Lenis smooth scroll, hero parallax, optional 3D geometric background; static fallback only for `prefers-reduced-motion`
+- **Mobile-first layout** — phone layout is the primary design, not an afterthought
 
 **Mobile UI specifics:**
 - Fixed **bottom action bar** on phone: Call · WhatsApp · Contact
@@ -1007,17 +1168,21 @@ Monday → Email to YOU: full research + script (2 topics)
 - Language toggle as a simple, large button (اردو / EN)
 - No pop-ups, no cookie banners blocking the screen
 
-**Homepage sections:**
-1. Hero with photo + bilingual tagline
-2. "Who is Dr. Akram" short intro
-3. Services cards (Dars · Lectures · Islamic Economics)
-4. Featured books row *(My Books)*
-4b. **"Dr. Akram recommends"** — 2–3 featured reading picks *(optional teaser → Books tab)*
-5. **Honors carousel** — swipeable shields/trophies (tap → full gallery)
-6. Latest lecture video
-7. Organizations & roles
-7b. Featured Q&A *(2–3 published answers — §5.4)*
-8. Contact CTA strip (phone + WhatsApp + form)
+**Homepage sections** *(Techwind `index-personal.html` → **§9 Phase 1c** for static shell; CMS data in Phase 2)*:
+
+| # | Section | Phase 1c component | CMS / later |
+|---|---|---|---|
+| 1 | Hero — floating card, portrait, name, tagline | `HomeHero` | `siteSettings` tagline + portrait (1b / 2b) |
+| 2 | Credentials — round photo, degrees (not skill bars) | `HomeCredentials` | `aboutPage` bio excerpt |
+| 3 | Services — Dars · Islamic Economics · Speaking | `HomeServices` | static |
+| 4 | Career timeline | `HomeTimeline` | `aboutPage.careerMilestones[]` (2.0) |
+| 5 | CTA band — Dars & lectures | `HomeCtaBand` | static |
+| 6 | Featured grid — books & honors placeholders | `HomeFeaturedGrid` | `book` + `honor` `featured` (Phase 2) |
+| 6b | “Dr. Akram recommends” teaser | part of featured grid or `HomeLatestSection` | `recommendedBook` (Phase 2) |
+| 7 | Latest lectures / Q&A teasers | `HomeLatestSection` | `lecture` + `faqEntry` (Phase 2 / 4) |
+| 8 | Contact CTA strip | `HomeContactCta` | `siteSettings` phone/WhatsApp (1b) |
+
+*Phase 1c ships rows 1–5 + 8 with placeholders for 6–7. Phase 2 replaces placeholders with real CMS carousels/grids.*
 
 **Books page design:**
 - **Two tabs** at top — large, thumb-friendly: **میری کتابیں / My Books** · **مطالعہ کی تجویز / Recommended Reading**
@@ -1126,10 +1291,10 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 - [x] Languages: Urdu + English
 - [x] Contact: public phone/WhatsApp + form
 - [x] Design: very modern
-- [x] Mobile: must work on oldest/low-end phones (critical)
+- [x] Mobile: responsive + touch-friendly; **premium animations on all devices** (§5.1)
 - [x] CMS: father updates content
 - [x] CMS Help desk + first-login guided tour for father (§5.3)
-- [x] UI stack: full Next.js polish libraries (§5.0) — gated for old mobile
+- [x] UI stack: full Next.js polish libraries (§5.0) — **unrestricted motion**
 - [x] Books page: My Books + Recommended Reading tabs (§4)
 - [x] Honors gallery: shields, trophies, certificates from events
 - [x] Shared Media Enhancer: honors, portrait, covers, logos — free AI + presets (§5.2)
@@ -1152,6 +1317,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 - [ ] **Honors photos** — shields, trophies, certificates *(phone photos OK — §5.2)*
 - [ ] **Organization logos** — AFAQ, Tanzeem, Hamdard, Punjab University *(optional — §5.2 logo preset)*
 - [ ] **Seed FAQ entries** — 5–10 common questions + answers to launch Q&A page *(ask father — Islamic economics, Dars, books)*
+- [ ] **SEO meta descriptions** — short EN + UR blurbs for Google/WhatsApp previews in **Site Settings** *(§5.6; son can draft from bio for father’s approval)*
 
 ### Nice-to-have (can add after launch)
 - [ ] CV / resume PDF download
@@ -1183,7 +1349,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | Books list | Books page content | Yes — 1–2 sample books in Sanity |
 | Honors photos | Honors gallery | Yes — skip gallery until Phase 2a |
 | Domain | Production URL | Yes — use `*.vercel.app` until Phase 3 |
-| Sanity project | Phase 1b data fetching | Create empty project in Phase 0 |
+| Sanity project | Phase 1b data fetching | **Done** — project `5ce34emc`; CORS + publish `siteSettings` manual |
 
 **Verify pre-flight:** You have read **§4** (site structure) and **§5** (stack). You know which pages exist in nav.
 
@@ -1195,8 +1361,8 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | `npx create-next-app@latest` with: App Router, TypeScript, Tailwind, ESLint, `src/` optional, import alias `@/*`. Pin **Next.js 15.x** *(upgrade to 16 before Oct 2026 EOL — §5)* |
-| **Verify** | `npm run dev` → `http://localhost:3000` shows default page |
+| **Build** | `pnpm create next-app@latest` with: App Router, TypeScript, Tailwind, ESLint, `src/` optional, import alias `@/*`. Pin **Next.js 15.x** *(upgrade to 16 before Oct 2026 EOL — §5)* |
+| **Verify** | `pnpm dev` → `http://localhost:3000` shows default page |
 | **Do not** | Install Sanity, shadcn, or motion libraries yet |
 
 #### 0.2 — Folder structure
@@ -1204,14 +1370,14 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | | |
 |---|---|
 | **Build** | Create empty dirs: `src/components/`, `src/lib/`, `src/app/[locale]/`, `messages/` |
-| **Verify** | `ls` shows structure; `npm run build` still passes |
+| **Verify** | `ls` shows structure; `pnpm build` still passes |
 | **Do not** | Add pages beyond `[locale]/layout.tsx` placeholder |
 
 #### 0.3 — Environment template
 
 | | |
 |---|---|
-| **Build** | `.env.example` with commented keys: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `SANITY_API_TOKEN`, `RESEND_API_KEY`, `MEDIA_ENHANCE_SECRET` |
+| **Build** | `.env.example` with commented keys: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `SANITY_API_TOKEN`, `RESEND_API_KEY`, `MEDIA_ENHANCE_SECRET`, `NEXT_PUBLIC_SITE_URL` *(§5.6 — canonical + OG)* |
 | **Verify** | `.env.local` gitignored; `.env.example` committed |
 | **Do not** | Put real secrets in `.env.example` |
 
@@ -1223,7 +1389,9 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | **Verify** | `git status` clean after first commit (if repo initialized) |
 | **Do not** | Document features not built yet |
 
-**Phase 0 exit:** `npm run build` succeeds. No i18n, no CMS, no custom UI.
+**Phase 0 exit:** `pnpm build` succeeds. No i18n, no CMS, no custom UI.
+
+> **Done (8 June 2026):** All tasks 0.1–0.4 verified. `pnpm build` passes; `/` returns default page. `.env.example` committed; `.env.local` gitignored. Initial git commit deferred to developer. Sanity project **`5ce34emc`** created (Phase 1b).
 
 ### Phase 1 — Foundation (public site shell)
 
@@ -1234,14 +1402,14 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | | |
 |---|---|
 | **Build** | Install: `next-intl`, `tailwindcss` (if not present), `@tailwindcss/typography`, `tailwind-merge`, `clsx`, `class-variance-authority`, `lucide-react`, `sonner`, `vaul`, `sharp` |
-| **Verify** | `npm run build` passes; `package.json` lists versions |
+| **Verify** | `pnpm build` passes; `package.json` lists versions |
 | **Do not** | Install `framer-motion`, `gsap`, `lenis`, R3F, `@imgly/background-removal-node` yet |
 
 #### 1.2 — shadcn/ui init
 
 | | |
 |---|---|
-| **Build** | `npx shadcn@latest init` — add only: `button`, `card`, `input`, `label`, `textarea`, `select`, `tabs`, `accordion`, `dialog`, `sheet` |
+| **Build** | `pnpm dlx shadcn@latest init` — add only: `button`, `card`, `input`, `label`, `textarea`, `select`, `tabs`, `accordion`, `dialog`, `sheet` |
 | **Verify** | Import `<Button>` in a test page renders without error |
 | **Do not** | Add every shadcn component — add on demand per task |
 
@@ -1317,15 +1485,182 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | **Verify** | Every link in `Header` navigates without 404 |
 | **Do not** | Fetch from Sanity |
 
-#### 1.12 — Mobile performance gate
+#### 1.12 — Responsive + motion baseline
 
 | | |
 |---|---|
-| **Build** | Ensure no `framer-motion` / `lenis` in client bundle for mobile pages |
-| **Verify** | `npm run build` → check First Load JS for `/[locale]` < 200 kB shared ideally; throttle 3G → first paint < 3s on home |
-| **Do not** | Proceed to Phase 2 if horizontal scroll or broken RTL on 320px |
+| **Build** | Techwind-inspired home shell (§6): hero, services, timeline placeholders; install motion libs per §5.0 when redesign lands |
+| **Verify** | No horizontal scroll or broken RTL on 320px; animations run on mobile viewport in DevTools |
+| **Do not** | Disable Framer/GSAP/Lenis/parallax on mobile — old-phone gating removed |
 
-**Phase 1 exit:** Full nav works EN/UR. Home + About + Contact shell done. No CMS. No animations beyond CSS.
+**Phase 1 exit:** Full nav works EN/UR. Home + About + Contact shell done. No CMS. **Phase 1 used minimal CSS motion only** — full Techwind + animation pass is **Phase 1c** (below).
+
+> **Done (8 June 2026):** All tasks 1.1–1.12 verified. `pnpm build` passes; `/` → `/en`; 22 static pages. Shared JS ~115 kB. Default locale: `en`. **Post-Phase 1 polish:** (P1) desktop hamburger hidden — `md:hidden` wrapper on `MobileNav`; (P2) mobile sheet — `pe-12`/`pt-5` title, `SheetFooter` language strip; (P3) Urdu name clipping — no `line-clamp` on Nastaliq, `.font-urdu` `line-height: 1.8`.
+
+### Phase 1c — Techwind personal home redesign
+
+**Goal:** Rebuild **`/[locale]` home page** using layout patterns from Techwind `index-personal.html`, ported to Next.js + existing green/gold design tokens. Static copy from `messages/` + `portrait.png` until Sanity (Phase 1b) and CMS content (Phase 2). **Multi-page nav unchanged** — home is a rich landing page, not a single-page app.
+
+**Reference (local, gitignored):** `techwind-330/techwind-330/Techwind_v3.3.0/HTML/Landing/src/index-personal.html`
+
+**Design rules:**
+- Map Techwind `primary` / purple → site `--brand` / `--gold` (see `globals.css`)
+- **Keep:** hero floating card, wave divider, services grid, experience timeline, CTA band, featured image grid, contact CTA
+- **Drop:** client logo strip (Amazon/Google), developer skill bars, typewriter name, “Hire me” / freelancer copy, 6-service grid (use **3** only)
+- **Motion:** Framer Motion, Lenis, parallax enabled on **all viewports** (§5.1) — jarallax-style hero via CSS/`react-scroll-parallax`, animated circle background, section stagger reveals
+- **Do not** embed raw Techwind HTML, Gulp partials, Tobii lightbox, or Bootstrap — React components + Tailwind only
+
+#### Section map (`index-personal.html` → Dr. Akram home)
+
+| Techwind section | HTML lines | Next component | Content source |
+|---|---|---|---|
+| Hero (floating card + name + wave) | 25–74 | `HomeHero` | `common.siteName`, `common.tagline`, `home.intro`, portrait |
+| Client logos | 77–107 | — | **Skip** |
+| About (round photo + skill bars) | 112–172 | `HomeCredentials` | PhD / degrees / roles list — **no skill bars**; optional play button → `/lectures` later |
+| Services (icon cards) | 173–272 | `HomeServices` | Existing 3 services from `home.dars*` etc. |
+| Experience timeline | 277–358 | `HomeTimeline` | `timeline.*` + `roles.*` + career milestones from §2 |
+| CTA band (parallax bg) | 362–375 | `HomeCtaBand` | Dars-e-Quran + lecture invitation copy |
+| Portfolio grid | 379–516 | `HomeFeaturedGrid` | Placeholder cards → `/books`, `/honors` (real images Phase 2) |
+| Blog cards | 519–567 | `HomeLatestSection` | Placeholder → `/lectures`, `/questions` (Phase 2 CMS) |
+| Contact block | 569–580 | `HomeContactCta` | Link to `/contact` + open contact drawer |
+
+#### Target file structure (Phase 1c)
+
+```
+src/components/home/
+  HomeHero.tsx
+  HomeCredentials.tsx
+  HomeServices.tsx
+  HomeTimeline.tsx
+  HomeCtaBand.tsx
+  HomeFeaturedGrid.tsx
+  HomeLatestSection.tsx
+  HomeContactCta.tsx
+  SectionHeading.tsx
+  WaveDivider.tsx
+src/components/motion/
+  LenisProvider.tsx
+  FadeIn.tsx                    # reusable framer wrapper
+src/lib/home-data.ts            # timeline milestones (static until CMS)
+src/app/[locale]/page.tsx       # compose sections; full-bleed layout
+```
+
+#### 1c.1 — Motion & carousel dependencies
+
+| | |
+|---|---|
+| **Build** | `pnpm add framer-motion lenis @formkit/auto-animate react-scroll-parallax embla-carousel-react` |
+| **Verify** | `pnpm build` passes; packages in `package.json` |
+| **Do not** | Install GSAP/R3F yet (About page timeline — Phase 3.5); do not copy Techwind `node_modules` |
+
+#### 1c.2 — i18n keys (EN + UR)
+
+| | |
+|---|---|
+| **Build** | Add to `messages/en.json` + `messages/ur.json`: `home.heroCardTitle`, `home.heroCtaContact`, `home.heroCtaBooks`, `home.aboutLabel`, `home.credentialsTitle`, `home.experienceLabel`, `home.experienceTitle`, `home.experienceDesc`, `home.ctaBandTitle`, `home.ctaBandDesc`, `home.ctaBandButton`, `home.featuredLabel`, `home.featuredTitle`, `home.featuredBooks`, `home.featuredHonors`, `home.latestLabel`, `home.latestTitle`, `home.contactSectionTitle`, `home.contactSectionDesc`, `home.viewAll`; extend `timeline.*` with 4–6 milestone entries |
+| **Verify** | `/en` and `/ur` show no missing translation keys in console |
+| **Do not** | Hardcode English in components — all visible strings via `useTranslations` / server `getTranslations` |
+
+#### 1c.3 — Home layout shell + shared UI
+
+| | |
+|---|---|
+| **Build** | `SectionHeading` (uppercase brand label + h2 + optional description); `WaveDivider` (SVG from Techwind lines 69–72); home section spacing utilities in `globals.css` (optional `.home-section`, animated `.circles` background for hero — port from Techwind `_hero.css` if needed) |
+| **Verify** | Storybook-style check: render `SectionHeading` on a test fragment or home page with one section |
+| **Do not** | Change site-wide `--brand` colors to Techwind purple |
+
+#### 1c.4 — `HomeHero`
+
+| | |
+|---|---|
+| **Build** | Full-viewport hero: background portrait (`PORTRAIT_SRC` via `next/image`), green gradient overlay, floating intro card (tagline + intro + Contact + Books buttons), large name typography, scroll-down anchor to `#about`, `WaveDivider` below. Framer: card fade-up, name slide-in. Optional `react-scroll-parallax` on portrait layer |
+| **Verify** | `/en` + `/ur`: hero readable; RTL mirrors card position; portrait `priority` + `sizes`; no horizontal overflow at 320px |
+| **Do not** | Typewriter effect; “Hire me”; Amazon-style client row |
+
+#### 1c.5 — `HomeCredentials`
+
+| | |
+|---|---|
+| **Build** | Two-column block (`#about`): circular portrait (same image), dot pattern decoration, credentials list (PhD Economics · Islamic Economics, M.A. Islamic Studies, M.Sc. Economics) — replaces Techwind skill bars. Optional muted play icon linking to `/lectures` with “coming soon” empty state |
+| **Verify** | Urdu credentials render with Nastaliq; no percentage bars |
+| **Do not** | WordPress/JavaScript/HTML skill bars |
+
+#### 1c.6 — `HomeServices`
+
+| | |
+|---|---|
+| **Build** | Techwind-style 3-column card grid: icon in gold/brand soft box, title, description, “Read more” link → `/services`. Alternate shadow on middle card (Techwind pattern). Framer stagger on scroll into view |
+| **Verify** | Exactly **3** cards; links work; tap targets ≥ 48px |
+| **Do not** | Six generic UX/design services from template |
+
+#### 1c.7 — `HomeTimeline`
+
+| | |
+|---|---|
+| **Build** | Vertical timeline with dashed center line (Techwind lines 286–354): milestones from `src/lib/home-data.ts` — e.g. 2020 retirement, GC Science Principal, Punjab lecturer, AFAQ chairman, Afkar editor. Use `ltr:` / `rtl:` flip for alternating sides. Organization initials or lucide icons instead of Google/Lenovo logos |
+| **Verify** | `/ur` timeline reads correctly RTL; dates and titles match §2 career facts |
+| **Do not** | “UX Designer at Google” placeholder copy |
+
+#### 1c.8 — `HomeCtaBand`
+
+| | |
+|---|---|
+| **Build** | Full-width band with dark overlay on background image (stock or subtle pattern from `/public/images/`), centered headline + Contact button → `/contact` |
+| **Verify** | Text contrast passes WCAG on overlay; button opens contact route |
+| **Do not** | “Available for Freelancer Projects” copy |
+
+#### 1c.9 — `HomeFeaturedGrid`
+
+| | |
+|---|---|
+| **Build** | 4-column responsive grid (2 on mobile): placeholder cards for Books + Honors with hover scale/overlay (Techwind portfolio hover). Links to `/books` and `/honors`; `EmptyState` or styled placeholders until Phase 2 images |
+| **Verify** | Hover animation works on desktop and touch devices; grid doesn’t break RTL |
+| **Do not** | Tobii lightbox or mockup portfolio images from Techwind assets |
+
+#### 1c.10 — `HomeLatestSection` + `HomeContactCta`
+
+| | |
+|---|---|
+| **Build** | 3-card row linking to `/lectures` and `/questions` with “coming soon” teasers; final contact strip with phone icon button → `/contact` and secondary WhatsApp via existing bottom bar pattern |
+| **Verify** | All CTA links resolve; contact drawer still works from hero/bottom bar |
+| **Do not** | Duplicate full contact form on home (keep form on `/contact`) |
+
+#### 1c.11 — Compose `page.tsx` + Lenis
+
+| | |
+|---|---|
+| **Build** | Replace current simple home grid with full-bleed sections; wrap locale layout or home-only client boundary with `LenisProvider` (smooth scroll); respect `prefers-reduced-motion` (disable Lenis + reduce Framer) |
+| **Verify** | Home scrolls smoothly; reduced-motion media query shows static behavior; `pnpm build` succeeds |
+| **Do not** | Remove `Header` / `Footer` / `MobileBottomBar`; do not convert site to one-page anchor nav only |
+
+#### 1c.12 — Sanity-ready hooks (optional, no CMS yet)
+
+| | |
+|---|---|
+| **Build** | Props/interfaces on hero components: `tagline?`, `portraitSrc?` so Phase 1b can pass `siteSettings` without rewriting layout |
+| **Verify** | Home still works with defaults when props omitted |
+| **Do not** | Block 1c on Sanity — ship with `messages/` + `PORTRAIT_SRC` first |
+
+#### 1c.13 — Phase 1c exit checklist
+
+| | |
+|---|---|
+| **Verify** | `/en` + `/ur` home matches §6 layout reference; no freelancer/dev copy; animations run on mobile viewport; Lighthouse accessibility ≥ 90; no console i18n errors |
+| **Verify** | Other pages (`/about`, `/books`, …) unchanged except shared header/footer if tweaked |
+| **Do not** | Port entire Techwind pack — home only in Phase 1c |
+
+**Phase 1c exit:** Premium animated home live. Ready for Phase 1b to swap tagline/portrait from Sanity.
+
+> **Done (8 June 2026):** All tasks 1c.1–1c.13 verified. `src/components/home/` (8 sections + `SectionHeading`, `WaveDivider`, `HomeMotionShell`); `src/components/motion/` (`FadeIn`, `LenisProvider`); `src/lib/home-data.ts`; extended `messages/` keys. Home First Load JS ~276 kB. `embla-carousel-react` installed; featured grid is static (carousel deferred Phase 2).
+
+#### Future Techwind borrows (not Phase 1c)
+
+| Techwind file | Use when | Target page |
+|---|---|---|
+| `contact-one.html` | Phase 3 polish | `/contact` |
+| `blog.html` / `blog-detail.html` | Phase 2+ | `/questions`, `/afkar` |
+| `portfolio-detail-one.html` | Phase 2+ | Book / honor detail modals or routes |
+| `index-personal.html` GSAP timeline | Phase 3.5 | `/about` scroll timeline (enhance `HomeTimeline` patterns) |
 
 ### Phase 1b — Sanity connection (read-only)
 
@@ -1335,7 +1670,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | `npm install next-sanity @sanity/client @sanity/image-url`; `sanity.config.ts`; Studio at `/studio` |
+| **Build** | `pnpm add next-sanity @sanity/client @sanity/image-url`; `sanity.config.ts`; Studio at `/studio` |
 | **Verify** | `http://localhost:3000/studio` loads login/create project UI |
 | **Do not** | Custom Studio components yet |
 
@@ -1343,7 +1678,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | Fields: `taglineEn`, `taglineUr`, `phone`, `whatsapp`, `email`, `portrait` (image, optional) |
+| **Build** | Fields: `taglineEn`, `taglineUr`, `phone`, `whatsapp`, `email`, `portrait` (image, optional); optional `metaDescriptionEn`/`metaDescriptionUr`, `ogImage` *(§5.6 — wired in Phase 3.7)* |
 | **Verify** | Create singleton in Studio; fill test values; publish |
 | **Do not** | Portrait enhancer fields (`rawPortrait`, `portraitSource`) until Phase 2b |
 
@@ -1352,10 +1687,12 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | | |
 |---|---|
 | **Build** | `src/lib/sanity/client.ts`, `queries.ts` with `getSiteSettings()` |
-| **Verify** | Home hero tagline + Contact page show values from Sanity after refresh |
+| **Verify** | Home hero tagline + portrait props (Phase 1c components) + Contact page show values from Sanity after refresh |
 | **Do not** | Hardcode contact numbers in components if Sanity has data |
 
 **Phase 1b exit:** Studio publishes; site displays live contact/tagline from CMS.
+
+> **Done (8 June 2026):** All tasks 1b.1–1b.3 verified. Packages: `next-sanity@9`, `@sanity/client`, `@sanity/image-url`, `sanity@3`, `styled-components`. Studio at `/studio`; `sanity/schemas/siteSettings.ts` singleton; `getSiteSettings()` (React `cache`, 60s revalidate) wired to home, contact, `MobileBottomBar`. Lazy Sanity client — build passes without env. **`1b.P1`:** root `layout.tsx` gets `<html>`/`<body>`; `LocaleHtmlAttributes` sets `lang`/`dir` on locale routes (fixes `/studio` runtime error). **`1b.P2`:** `pnpm build` → webpack only (drop `--turbopack`). **Manual:** CORS origin `http://localhost:3000` (credentials) in Sanity API tab.
 
 ### Phase 2 — Content types & pages (no enhancer yet)
 
@@ -1367,7 +1704,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 |---|---|
 | **Build** | `aboutPage` singleton per §5 (`bioEn`, `bioUr`, `careerMilestones[]`); `getAboutPage()` query; About page reads CMS instead of placeholders |
 | **Verify** | Edit bio in Studio → `/about` updates EN+UR; add milestone → timeline shows in order; Urdu bio RTL in `prose` |
-| **Do not** | GSAP timeline yet (Phase 3 desktop); hardcoded bio after this task |
+| **Do not** | GSAP timeline yet (Phase 3 — site-wide motion per §5.1); hardcoded bio after this task |
 
 #### 2.1 — Schemas: books
 
@@ -1421,9 +1758,9 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | Featured books row (embla); honors teaser carousel; latest lecture; org row; placeholder for FAQ teaser |
-| **Verify** | Toggle `featured: true` on 1 book/honor → appears on home after revalidate |
-| **Do not** | `plaiceholder` until real images uploaded (optional in 2.8) |
+| **Build** | Wire Phase **1c** components to Sanity: `HomeFeaturedGrid` ← `book` + `honor` where `featured: true`; `HomeLatestSection` ← latest `lecture` + featured `faqEntry`; optional org row in `HomeCredentials` or separate strip from `organization` schema |
+| **Verify** | Toggle `featured: true` on 1 book/honor → appears in existing home grid/carousel after revalidate; placeholders removed |
+| **Do not** | Rebuild home layout from scratch — extend 1c components only; skip `plaiceholder` until 2.8 |
 
 #### 2.8 — Images polish
 
@@ -1443,8 +1780,8 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | `npm install @imgly/background-removal-node`; ensure `sharp` present; copy **`small`** ONNX/WASM to `public/enhance-models/`; `src/lib/media/removeBg.ts` with `publicPath` + `model: 'small'` |
-| **Verify** | `npm run build` passes; `public/enhance-models/` committed; no imgly import in client bundles |
+| **Build** | `pnpm add @imgly/background-removal-node`; ensure `sharp` present; copy **`small`** ONNX/WASM to `public/enhance-models/`; `src/lib/media/removeBg.ts` with `publicPath` + `model: 'small'` |
+| **Verify** | `pnpm build` passes; `public/enhance-models/` committed; no imgly import in client bundles |
 | **Do not** | Import imgly in client components; use `medium` model on Vercel Hobby |
 
 #### 2a.2 — Preset engine (honors only)
@@ -1581,33 +1918,79 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | `npm install driver.js`; `GuidedTour` + `data-tour` on sidebar items; `localStorage` `tourCompleted` |
+| **Build** | `pnpm add driver.js`; `GuidedTour` + `data-tour` on sidebar items; `localStorage` `tourCompleted` |
 | **Verify** | First Studio load shows tour; Skip works; Restart from Help reruns |
 | **Do not** | More than ~10 steps without updating this section |
 
-#### 3.5 — Desktop-only motion
+#### 3.5 — Site-wide motion & animations
 
 | | |
 |---|---|
-| **Build** | `useIsDesktop` hook; lazy `framer-motion` on home sections; GSAP timeline on About desktop only |
-| **Verify** | Mobile: no motion bundle in critical path; `prefers-reduced-motion`: static |
-| **Do not** | Animate on 320px viewport |
+| **Build** | If Phase **1c** complete: enhance About page with GSAP ScrollTrigger timeline; extend motion to inner pages. If 1c skipped: implement 1c motion stack on home first |
+| **Verify** | Motion runs on 320px viewport; `prefers-reduced-motion` disables Lenis + heavy effects |
+| **Do not** | `useIsDesktop` gates that strip animation on mobile — removed per §5.1 |
 
-#### 3.6 — Optional desktop hero
-
-| | |
-|---|---|
-| **Build** | Dynamic import R3F + parallax — **only if** Phase 1 mobile gate still passes |
-| **Verify** | Lighthouse mobile still ≥90 performance; desktop shows enhancement |
-| **Do not** | Block launch on 3D hero — skip if bundle too heavy |
-
-#### 3.7 — SEO + OG
+#### 3.6 — Optional 3D hero + parallax extras
 
 | | |
 |---|---|
-| **Build** | `generateMetadata` per page; OG image from `siteSettings.portrait` |
-| **Verify** | [opengraph.xyz](https://www.opengraph.xyz) or WhatsApp debugger shows title + image |
-| **Do not** | Wrong domain in OG URL (use env `NEXT_PUBLIC_SITE_URL`) |
+| **Build** | Dynamic import R3F geometric background + enhanced parallax on home hero |
+| **Verify** | Lazy chunk loads; hero still usable if WebGL fails; mobile shows same design intent |
+| **Do not** | Block launch on 3D hero — skip only if visually broken, not for bundle size alone |
+
+#### 3.7 — SEO & discoverability (§5.6)
+
+> **Depends on:** Phase 1b `siteSettings` (portrait, tagline). **Full spec:** §5.6.
+
+##### 3.7a — SEO foundation
+
+| | |
+|---|---|
+| **Build** | `src/lib/seo/metadata.ts`, `routes.ts`; add `NEXT_PUBLIC_SITE_URL` to `.env.example`; extend `siteSettings` with `metaDescriptionEn` / `metaDescriptionUr` + optional `ogImage`; i18n `metadata.*` keys in `messages/en.json` + `ur.json` |
+| **Verify** | `buildPageMetadata({ locale, path, title, description })` returns canonical + hreflang object; grep confirms env used — no hardcoded domain |
+| **Do not** | Client-side `next/head` or duplicate `<title>` in components |
+
+##### 3.7b — Per-page `generateMetadata`
+
+| | |
+|---|---|
+| **Build** | Export `generateMetadata` on every `[locale]/*` page: home, about, books, lectures, honors, services, afkar, contact, questions (list). Home pulls `metaDescription*` from Sanity when set |
+| **Verify** | `/en/about` and `/ur/about` view-source show distinct titles/descriptions in correct language |
+| **Do not** | Single static `metadata` export in `[locale]/layout.tsx` only — layout keeps site-name default; pages override |
+
+##### 3.7c — Open Graph + Twitter cards
+
+| | |
+|---|---|
+| **Build** | OG image from `siteSettings.ogImage` → `portrait` via `urlForImage()`; `openGraph` + `twitter` in `buildPageMetadata`; `og:locale` / `og:locale:alternate` |
+| **Verify** | [opengraph.xyz](https://www.opengraph.xyz) on `/en` shows title, description, 1200×630 image |
+| **Do not** | Relative image URLs; wrong domain in `og:url` |
+
+##### 3.7d — `sitemap.ts` + `robots.ts`
+
+| | |
+|---|---|
+| **Build** | `src/app/sitemap.ts` — static routes × `en` + `ur`; `src/app/robots.ts` — allow `/`, disallow `/studio` + `/api`; `Sitemap:` line uses `NEXT_PUBLIC_SITE_URL` |
+| **Verify** | Dev: `/sitemap.xml` and `/robots.txt` load; sitemap includes `/en/contact` and `/ur/contact` |
+| **Do not** | Index `/studio` or API routes |
+
+##### 3.7e — JSON-LD structured data
+
+| | |
+|---|---|
+| **Build** | `src/lib/seo/json-ld.ts` + `JsonLd` component; `Person` + `WebSite` on home/about; `BreadcrumbList` on inner pages *(optional if tight on time)* |
+| **Verify** | Google Rich Results Test on `/en` — `Person` valid, no errors |
+| **Do not** | Fake `aggregateRating` or review schema |
+
+##### 3.7f — Search Console prep
+
+| | |
+|---|---|
+| **Build** | Document GSC steps in README; after 3.10 deploy, son submits sitemap |
+| **Verify** | GSC property added; sitemap status “Success” within 48h of launch |
+| **Do not** | Block Phase 3 exit on GSC indexing — submit only, indexing takes days |
+
+**Phase 3.7 exit:** All static pages have locale-correct metadata, hreflang, OG previews, sitemap, robots, and core JSON-LD. Q&A detail metadata added in **Phase 4.3**.
 
 #### 3.8 — Analytics
 
@@ -1641,7 +2024,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | **Verify** | HTTPS works; both locales work on production domain |
 | **Do not** | Change primary from `.pk` without explicit decision |
 
-**Phase 3 exit:** Site on Vercel (+ domain if ready). Father completes guided tour on production Studio. Contact form sends email. **Soft launch** — Q&A page may still be empty until Phase 4.
+**Phase 3 exit:** Site on Vercel (+ domain if ready). Father completes guided tour on production Studio. Contact form sends email. **SEO foundation live** (§5.6 / 3.7). **Soft launch** — Q&A page may still be empty until Phase 4.
 
 ### Phase 4 — Q&A & public launch (§5.4)
 
@@ -1659,17 +2042,17 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | Accordion list; topic filter chips; only `status: published` |
-| **Verify** | Pending/private entries never appear on public page |
+| **Build** | Accordion list; topic filter chips; only `status: published`; `FAQPage` JSON-LD listing all visible entries |
+| **Verify** | Pending/private entries never appear on public page; Rich Results Test on `/en/questions` shows `FAQPage` |
 | **Do not** | AI search or chat |
 
-#### 4.3 — Individual Q&A routes
+#### 4.3 — Individual Q&A routes + SEO
 
 | | |
 |---|---|
-| **Build** | `/questions/[slug]` with `generateStaticParams` or ISR |
-| **Verify** | Shared link opens correct Q&A; metadata correct EN/UR |
-| **Do not** | Index private slugs |
+| **Build** | `/questions/[slug]` with `generateStaticParams` or ISR; `generateMetadata` from `questionEn`/`questionUr` + answer excerpt; `og:type: article`; `QAPage` JSON-LD; add published slugs to `sitemap.ts` (both locales) |
+| **Verify** | Shared WhatsApp link shows Urdu question title on `/ur/questions/...`; Rich Results Test validates `QAPage`; private/pending slugs return 404 |
+| **Do not** | Index private slugs; omit hreflang on detail pages |
 
 #### 4.4 — Ask question form
 
@@ -1700,7 +2083,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | | |
 |---|---|
 | **Build** | Walkthrough: Site Settings, add 1 book, 1 honor (enhance), answer 1 test question |
-| **Verify** | Father completes tasks using Help only; §12 handover sent |
+| **Verify** | Father completes tasks using Help only; §12 handover sent; §5.6 SEO verification checklist passed (OG preview, sitemap, hreflang on home + 1 Q&A) |
 | **Do not** | Launch without mobile test on real Android if available |
 
 #### 4.8 — Seed content minimum
@@ -1748,7 +2131,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 | | |
 |---|---|
 | **Trigger** | ~50+ Q&A + father opt-in |
-| **Build** | Lazy-loaded chat widget desktop-first; `/api/faq/ask`; cites sources; WhatsApp fallback |
+| **Build** | Lazy-loaded chat widget; `/api/faq/ask`; cites sources; WhatsApp fallback |
 | **Verify** | Off-topic question → refuses + contact CTA; answer shows source Q&A titles |
 | **Do not** | Load chat widget on mobile critical path |
 
@@ -1809,7 +2192,8 @@ Before coding, confirm:
 - [ ] **Schema field names** match **§5** tables exactly (`fieldEn` / `fieldUr` — use `localized()` helper)
 - [ ] **`faqEntry.status`** is only `pending` · `published` · `private`
 - [ ] **Display field** is always `portrait` / `cover` / `logo` / `image` on frontend — never `raw*`
-- [ ] **Mobile rule:** no new heavy client JS without `useIsDesktop` or dynamic import
+- [ ] **`prefers-reduced-motion`:** Lenis + heavy Framer disabled when user prefers reduced motion
+- [ ] **SEO (§5.6):** `NEXT_PUBLIC_SITE_URL` set; `generateMetadata` per page; hreflang on both locales; no hardcoded preview domain
 - [ ] **Verify step** from current task completed before next task
 
 ### Build order summary
@@ -1817,14 +2201,15 @@ Before coding, confirm:
 ```
 Phase 0   → Repo boots
 Phase 1   → EN/UR shell, static pages, mobile bar
-Phase 1b  → Sanity siteSettings on site
+Phase 1c  → Techwind personal home redesign (animated landing)
+Phase 1b  → Sanity siteSettings on site (+ wire into 1c hero)
 Phase 2   → All schemas + pages (plain image upload)
 Phase 2.0 → aboutPage bio + career timeline in CMS
 Phase 2a  → Honor enhancer (Vercel Hobby–safe)
 Phase 2b  → Portrait enhancer
 Phase 2c  → Cover enhancer
 Phase 2d  → Logo enhancer
-Phase 3   → Help, tour, SEO, Resend, Vercel, domain
+Phase 3   → Help, tour, SEO (§5.6: metadata, hreflang, sitemap, JSON-LD), Resend, Vercel, domain (+ Techwind contact/blog patterns)
 Phase 4   → Q&A + public launch
 Phase 5   → AI (when corpus large enough)
 Phase 6   → Weekly briefs (private)
@@ -1834,8 +2219,40 @@ Phase 6   → Weekly briefs (private)
 
 | Task ID | Date | Verified by | Notes |
 |---------|------|-------------|-------|
-| 0.1 | | | |
-| … | | | |
+| 0.1 | 8 Jun 2026 | build + dev | Next.js 15.5.19, App Router, TS, Tailwind, ESLint, `src/`, `@/*`. Scaffolded via temp dir (`plan.md` blocked direct `create-next-app .`) |
+| 0.2 | 8 Jun 2026 | build | `src/components/`, `src/lib/`, `messages/` + `[locale]/layout.tsx` passthrough |
+| 0.3 | 8 Jun 2026 | grep + file check | `.env.example` with commented keys; `.gitignore` has `.env*` + `!.env.example`. Sanity project `5ce34emc` created (Phase 1b) |
+| 0.4 | 8 Jun 2026 | manual | `README.md` (dev commands + link to plan). Git commit skipped — developer commits when ready |
+| 1.1 | 8 Jun 2026 | build | next-intl, typography, shadcn deps, lucide, sonner, vaul, sharp |
+| 1.2 | 8 Jun 2026 | build | shadcn v4 init + button, card, input, label, textarea, select, tabs, accordion, dialog, sheet |
+| 1.3 | 8 Jun 2026 | build | `src/lib/fonts.ts` — Inter + Noto Nastaliq Urdu (400) |
+| 1.4 | 8 Jun 2026 | dev | middleware, i18n routing, `messages/en.json` + `ur.json`, `/` → `/en` |
+| 1.5 | 8 Jun 2026 | dev | RTL `dir` on `/ur`, `LanguageToggle` in header |
+| 1.6 | 8 Jun 2026 | visual | Design tokens green/gold/off-white, typography plugin, `.tap-target` |
+| 1.7 | 8 Jun 2026 | dev | Header, Footer, MobileBottomBar, ContactDrawer (vaul) |
+| 1.8 | 8 Jun 2026 | build | Home hero, services cards, roles strip |
+| 1.9 | 8 Jun 2026 | build | About prose bio + static timeline |
+| 1.10 | 8 Jun 2026 | dev | Contact form UI + sonner toast; no Resend API |
+| 1.11 | 8 Jun 2026 | dev | Empty-state shells: books, lectures, honors, services, afkar, questions |
+| 1.12 | 8 Jun 2026 | build | Phase 1 shipped without motion libs (~115 kB shared); **policy updated same day** — full animations OK on all devices (§5.1) |
+| 1.P0 | 8 Jun 2026 | plan | **Design policy:** remove old-phone performance gating; Techwind `index-personal.html` as home layout ref; motion on all viewports |
+| 1c.1 | 8 Jun 2026 | build | framer-motion, lenis, auto-animate, react-scroll-parallax, embla-carousel-react |
+| 1c.2 | 8 Jun 2026 | build | `home.*`, `credentials.*`, extended `timeline.*` in EN+UR; `src/lib/home-data.ts` |
+| 1c.3 | 8 Jun 2026 | build | `FadeIn`, `LenisProvider`, `SectionHeading`, `WaveDivider`, `.home-section` utilities |
+| 1c.4–1c.10 | 8 Jun 2026 | build | `HomeHero` … `HomeContactCta` — 8 sections composed in `HomeMotionShell` |
+| 1c.11 | 8 Jun 2026 | build | `page.tsx` thin composer; home-only Lenis + ParallaxProvider |
+| 1c.12 | 8 Jun 2026 | build | `tagline?`, `portraitSrc?` props on hero/credentials |
+| 1c.13 | 8 Jun 2026 | build | `/en` + `/ur` home; 22 static pages; no freelancer copy |
+| 1.P1 | 8 Jun 2026 | visual | Fix: hamburger visible on desktop — wrap `Sheet` in `div.md:hidden` |
+| 1.P2 | 8 Jun 2026 | visual | Fix: mobile sheet title/close spacing; language toggle in `SheetFooter` |
+| 1.P3 | 8 Jun 2026 | visual | Fix: Urdu name clipping — remove `line-clamp` on Nastaliq; `line-height: 1.8` |
+| 1b.1 | 8 Jun 2026 | dev | `next-sanity@9`, Studio `/studio`, `sanity.config.ts`, dynamic `NextStudio` |
+| 1b.2 | 8 Jun 2026 | studio | `siteSettings` singleton schema (tagline, contact, portrait) |
+| 1b.3 | 8 Jun 2026 | build | `src/lib/sanity/*`, `localized()`, contact page + bottom bar wired |
+| 1b.P1 | 8 Jun 2026 | fix | Root layout `<html>`/`<body>`; `LocaleHtmlAttributes` for locale `lang`/`dir` |
+| 1b.P2 | 8 Jun 2026 | build | `next build` without Turbopack (Sanity Studio bundle) |
+| 1b.P3 | 8 Jun 2026 | manual | Sanity API → CORS: `http://localhost:3000` + allow credentials |
+| 2.0 | | | |
 
 *Copy a row per completed task. If Verify failed, note fix before marking done.*
 
@@ -1856,11 +2273,17 @@ Phase 6   → Weekly briefs (private)
 
 ## 11. Next Step
 
-**We are ready to start building** as soon as you say go. Begin with **§9 Phase 0.1**.
+**Phases 1, 1c, 1b complete.** Begin **§9 Phase 2.0** — `aboutPage` singleton + wire About page to CMS.
 
-You can send photo + contact numbers now or use placeholders (see **§9 Pre-flight**). Books and videos plug in during **§9 Phase 2**.
+**Sanity (father / developer):**
+1. **API → CORS origins:** add `http://localhost:3000` (allow credentials). Add production URL before deploy.
+2. **Studio** → [http://localhost:3000/studio](http://localhost:3000/studio) → **Site Settings** → fill tagline, phone, WhatsApp, email, portrait → **Publish**.
 
-Say **"start building"** when ready.
+**Env** (`.env.local`): `NEXT_PUBLIC_SANITY_PROJECT_ID=5ce34emc`, `NEXT_PUBLIC_SANITY_DATASET=production`.
+
+Run locally: `pnpm dev` → `/en`, `/ur`, or `/studio`. Production build: `pnpm build` (webpack).
+
+Books, honors, lectures, and Q&A plug in during **§9 Phase 2**. Contact form email (Resend) is **Phase 3.9**.
 
 ---
 
@@ -1897,7 +2320,7 @@ You update content yourself in **Sanity** (admin panel). No need to call the dev
 
 | Section | What it updates on the live site |
 |---|---|
-| **Site Settings** (ترتیبات) | Your photo, phone, WhatsApp, email, tagline |
+| **Site Settings** (ترتیبات) | Your photo, phone, WhatsApp, email, tagline, Google/WhatsApp preview text (SEO description) |
 | **About Page** (میرے بارے میں) | Biography (Urdu + English) and career timeline |
 | **Books → My Books** (میری کتابیں) | Textbooks & works you wrote |
 | **Books → Recommended Reading** (مطالعہ کی تجویز) | Books you suggest others read |
@@ -1935,7 +2358,8 @@ Many uploads offer **two paths**. Pick the right one:
 **Where:** Site Settings (ترتیبات)
 
 - **Photo:** Professional file already good? → direct upload. Event/office photo with clutter? → Enhance → pick portrait style → preview → Save.  
-- **Phone / WhatsApp / Email:** Edit → Save. Shows on Contact page and mobile Call/WhatsApp buttons.
+- **Phone / WhatsApp / Email:** Edit → Save. Shows on Contact page and mobile Call/WhatsApp buttons.  
+- **SEO description (Urdu + English):** Short summary of who you are — appears when someone shares the website link on WhatsApp or Google. Keep under ~2 lines each language.
 
 #### Update your biography or career timeline
 **Where:** About Page (میرے بارے میں)
@@ -2102,7 +2526,7 @@ If something breaks or you’re unsure → **Help** in admin **or** WhatsApp son
 ### After launch checklist (for you)
 
 - [ ] Complete first-login tour  
-- [ ] Update Site Settings — photo, phone, WhatsApp, email  
+- [ ] Update Site Settings — photo, phone, WhatsApp, email, SEO descriptions (EN + UR)  
 - [ ] Update About Page — biography + career timeline  
 - [ ] Add at least 3 honors (Enhance photos)  
 - [ ] Add 5–10 **seed FAQ** entries (common questions you often get)  
