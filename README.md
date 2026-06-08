@@ -5,13 +5,13 @@ Bilingual (Urdu + English) personal/professional website.
 ## Prerequisites
 
 - Node.js 18+
-- npm
+- pnpm (enable via `corepack enable` if needed)
 
 ## Development
 
 ```bash
-npm install
-npm run dev
+pnpm install
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
@@ -19,15 +19,15 @@ Open [http://localhost:3000](http://localhost:3000).
 ## Build
 
 ```bash
-npm run build
-npm start
+pnpm build
+pnpm start
 ```
 
 ## Project plan
 
 Full build phases, schemas, and scope: [plan.md](./plan.md).
 
-**Current status:** Phase 0 complete (repository bootstrap). Phase 1 adds the bilingual site shell with `next-intl`.
+**Current status:** Phase 1 complete (bilingual site shell). Visit `/en` or `/ur`. Phase 1b connects Sanity CMS.
 
 ## Environment
 
