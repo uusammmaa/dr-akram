@@ -1,7 +1,7 @@
 # Website Plan — Prof. Dr. Mian Muhammad Akram
 
-> **Status:** **Phases 1, 1c, 1b, 2 complete** — all main content pages wired to Sanity (`aboutPage`, `book`, `readingRecommendation`, `lecture`, `honor`, `organization`, `afkarIssue`); home featured grid + latest lectures from CMS; `/questions` still placeholder until Phase 4. **Next:** **§9 Phase 2a** (honor photo enhancer) or seed CMS content in Studio; then Phase 3 (SEO, Resend, deploy).  
-> **Last updated:** 8 June 2026 — **Phase 2** (tasks 2.0–2.8): 8 content schemas + GROQ queries; `/about`, `/books`, `/lectures`, `/honors`, `/services`, `/afkar` live; `plaiceholder` blur on key images; YouTube tap-to-load facade; honors pagination + lightbox. **pnpm** (`pnpm-lock.yaml`); `pnpm build` passes (22 static pages, home ~280 kB). **Manual:** publish content in Studio (bio, books, honors, lectures, orgs, Afkar issues).
+> **Status:** **Phases 1, 1c, 1b, 2 complete** — all main content pages wired to Sanity (`aboutPage`, `book`, `readingRecommendation`, `lecture`, `honor`, `organization`, `afkarIssue`); home featured grid + latest lectures from CMS; `/questions` still placeholder until Phase 4. All CMS images: direct Sanity upload (§5.2). **Next:** seed CMS content in Studio, then **Phase 3** (SEO, guided tour, Resend, deploy).  
+> **Last updated:** 8 June 2026 — **Phase 2** (tasks 2.0–2.8) complete. **Manual:** publish content in Studio.
 
 ---
 
@@ -164,7 +164,6 @@ pnpm add tailwindcss @tailwindcss/typography tailwind-merge clsx class-variance-
 pnpm add lucide-react sonner vaul embla-carousel-react
 pnpm add framer-motion lenis @formkit/auto-animate
 pnpm add plaiceholder sharp
-pnpm add @imgly/background-removal-node   # Shared Media Enhancer — server-side only (§5.2)
 pnpm add driver.js                          # CMS first-login tour for father (§5.3)
 pnpm add next-themes
 pnpm add @vercel/analytics @vercel/speed-insights
@@ -200,8 +199,7 @@ pnpm add @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-para
 | 18 | **`@react-three/fiber` + `@react-three/drei`** | Optional homepage hero — subtle 3D Islamic geometric pattern background — **lazy-loaded**, all viewports |
 | 19 | **`react-scroll-parallax`** | Hero parallax on Dr. Akram portrait — **all viewports** (Techwind-style jarallax hero) |
 | 20 | **`sonner`** | Toast feedback — “Message sent”, “Copied number”, form errors |
-| 21 | **`@imgly/background-removal-node`** | **Shared Media Enhancer** — AI background removal + compositing on CMS upload (§5.2): honors, portrait, book/magazine covers, logos. Server-side only |
-| 22 | **`driver.js`** | **CMS guided tour** — first-login walkthrough in Sanity Studio for father (§5.3). Lightweight, works on mobile |
+| 21 | **`driver.js`** | **CMS guided tour** — first-login walkthrough in Sanity Studio for father (§5.3). Lightweight, works on mobile |
 
 #### Honorable mentions — where they fit
 
@@ -217,12 +215,12 @@ pnpm add @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-para
 
 | Page | Libraries in play |
 |---|---|
-| **Home** | Techwind `index-personal.html` patterns (§6): floating hero card, wave divider, services grid, experience timeline, CTA band; `next/image`, `plaiceholder`, portrait from §5.2, `framer-motion`, `react-scroll-parallax`, optional R3F hero, `embla-carousel` (books + honors), `shadcn` cards, `lucide-react`, Magic UI bento for roles |
-| **About** | `@tailwindcss/typography`, §5.2 portrait + org logos, `gsap` ScrollTrigger timeline, `auto-animate` |
-| **Books** | `next/image`, `plaiceholder`, §5.2 cover presets, `shadcn` tabs (My Books · Recommended Reading), `auto-animate` (filter), `embla-carousel` (featured), `shadcn` cards |
+| **Home** | Techwind `index-personal.html` patterns (§6): floating hero card, wave divider, services grid, experience timeline, CTA band; `next/image`, `plaiceholder`, `siteSettings.portrait`, `framer-motion`, `react-scroll-parallax`, optional R3F hero, `embla-carousel` (books + honors), `shadcn` cards, `lucide-react`, Magic UI bento for roles |
+| **About** | `@tailwindcss/typography`, org logos, `gsap` ScrollTrigger timeline, `auto-animate` |
+| **Books** | `next/image`, `plaiceholder`, `shadcn` tabs (My Books · Recommended Reading), `auto-animate` (filter), `embla-carousel` (featured), `shadcn` cards |
 | **Lectures** | `next/image` (thumbnails), tap-to-load YouTube facade, `embla-carousel`, `framer-motion` |
-| **Honors & Awards** | `next/image`, `plaiceholder`, `embla-carousel` (homepage teaser), masonry/grid gallery, Radix dialog lightbox (tap-to-zoom), `auto-animate` (filter), `Award`/`Trophy` lucide icons. Display images pre-processed via §5.2 enhancer — uniform trophy-case look |
-| **Afkar-e-Muallim** | `prose` typography, `embla-carousel` (issues), §5.2 cover presets, PDF download links |
+| **Honors & Awards** | `next/image`, `plaiceholder`, `embla-carousel` (homepage teaser), masonry/grid gallery, Radix dialog lightbox (tap-to-zoom), `auto-animate` (filter), `Award`/`Trophy` lucide icons |
+| **Afkar-e-Muallim** | `prose` typography, `embla-carousel` (issues), PDF download links |
 | **Services** | `shadcn` tabs, `framer-motion` stagger, `lucide-react` icons |
 | **Q&A / FAQ** | `@tailwindcss/typography`, `shadcn` accordion, `auto-animate` (topic filter), server search; AI chat lazy-loaded Phase 5 only (§5.4) |
 | **Contact** | `vaul` drawer (mobile form), `shadcn` form + Radix, `sonner` toasts, sticky Call/WhatsApp bar |
@@ -273,335 +271,21 @@ The site must remain **fully usable and beautiful** on phones — responsive lay
 - Test hero parallax + section animations on a real phone (smooth, no broken layout)
 - Verify `prefers-reduced-motion` disables Lenis/heavy motion
 
-### 5.2 Shared Media Enhancer (CMS upload pipeline)
+### 5.2 CMS image uploads
 
-> **Use case:** Father uploads phone photos with messy backgrounds — shields, his portrait, book covers, magazine issues, org logos. One tool in Sanity turns them into uniform, professional images before they appear on the site.
+> **Rule:** All images use standard Sanity image fields — **direct upload only**. No AI enhancement pipeline. Sanity CDN + `next/image` + `plaiceholder` handle optimization on the site.
 
-**Approach:** Free, local AI cutout + custom compositing — no paid API, no per-image cost. **One API route, one Studio button, many preset packs.**
-
-| Step | Tool | What it does |
+| Content | Field | Studio |
 |---|---|---|
-| 1. Upload | Sanity Studio | Father picks a phone photo (`rawImage`) |
-| 2. Enhance | `@imgly/background-removal-node` | AI removes messy background (runs on our server, images stay private) |
-| 3. Composite | `sharp` | Places cutout on preset backdrop + shadow/border *(or transparent PNG for logos)* |
-| 4. Preview | Custom Sanity input | Side-by-side before/after — father approves before save |
-| 5. Publish | Sanity | Processed WebP/PNG saved as display field; original kept as `rawImage` backup |
-
-**Father’s workflow in Sanity (same everywhere):**
-
-```
-Upload photo → pick content type / background style → tap "Make professional" → preview → Save
-```
-
-Large Urdu/English button label: **"تصویر بہتر بنائیں / Enhance photo"**
-
-Studio type picker (Urdu + English):
-
-| Picker label | Preset pack |
-|---|---|
-| اعزاز / Award | Honor presets |
-| تصویر / Portrait | Portrait presets |
-| کتاب / Book cover | Cover presets |
-| مجلہ / Magazine issue | Cover presets *(same engine as books)* |
-| لوگو / Logo | Logo preset *(transparent output)* |
-
-**API route:** `POST /api/media/enhance`
-
-- Input: Sanity asset URL or upload buffer + `preset` ID + optional `contentType`
-- Output: processed buffer → uploaded back to Sanity
-- Auth: Sanity session token or internal secret — not public
-- Limits: max **1600px** upload → downscale to **1024px** before AI; **`small` model only** on Vercel Hobby (see Performance & hosting notes below)
-
-**Custom Sanity Studio components:**
-- `PhotoEnhancerInput` — enhance step (honors, portrait enhanced path, logo enhanced path). Props: `presetPack`, `rawField`, `displayField`.
-- `CoverUploadInput` — dual-path UI for books & Afkar: **Publisher cover** (direct) vs **Photo of book** (enhanced). Wraps `PhotoEnhancerInput` on path B only.
-- `PortraitUploadInput` / `LogoUploadInput` — same direct-vs-enhance pattern for `siteSettings` and `organization`.
-
-#### Use cases & preset packs
-
-| # | Use case | Priority | Where it shows | Processing |
-|---|---|---|---|---|
-| 1 | **Honors** (shields, trophies, certificates) | Already planned | Honors gallery, homepage carousel | AI cutout + backdrop composite |
-| 2 | **Homepage / About portrait** | **High** | Hero, About page, WhatsApp OG preview | AI cutout + portrait framing (head/shoulders) |
-| 3 | **Book covers** | **Medium** | Books grid, homepage featured row | Straighten + crop + “book card” template; optional light bg cleanup |
-| 4 | **Afkar-e-Muallim issue covers** | **Medium** | Afkar page carousel | Same as book covers — uniform issue cards |
-| 5 | **Organization logos** | **High** *(if uploaded)* | About, homepage “Organizations & roles” | AI cutout → **transparent PNG** (no backdrop) |
-
-**Honor presets** *(اعزاز)*:
-
-| Preset ID | Look | Best for |
-|---|---|---|
-| `honor-velvet-green` | Deep green gradient + soft vignette | Shields, wooden plaques *(default)* |
-| `honor-gold-gradient` | Warm cream-to-gold studio backdrop | Trophies, gold mementos |
-| `honor-cream-neutral` | Off-white with subtle geometric texture | Certificates, paper awards |
-
-**Portrait presets** *(تصویر — high value)*:
-
-| Preset ID | Look | Best for |
-|---|---|---|
-| `portrait-green` | Soft scholarly green backdrop | Homepage hero *(default)* |
-| `portrait-neutral` | Warm gray/cream studio look | About page |
-| `portrait-gradient` | Subtle green-to-gold gradient | Alternate / formal use |
-
-Framing: head-and-shoulders crop, softer shadow than honors, no gold border.
-
-**Cover presets** *(کتاب / مجلہ — medium value)*:
-
-| Preset ID | Look | Best for |
-|---|---|---|
-| `cover-flat-cream` | Off-white card + soft drop shadow, fixed aspect ratio | Book grid *(default)* |
-| `cover-flat-green` | Deep green accent border + cream fill | Featured book |
-| `cover-flat-gold` | Gold accent border + cream fill | Afkar-e-Muallim issues |
-
-Processing *(enhanced path only)*: auto-straighten perspective, crop to uniform ratio — AI bg removal only if table/desk is messy.
-
-#### Dual upload paths (covers, portrait, logos)
-
-Enhancement is **optional** — not every upload needs AI. Studio shows **two clear choices** (Urdu + English). Site always reads the single display field (`cover`, `portrait`, `logo`).
-
-**Books & Afkar issue covers** — **`CoverUploadInput`** component:
-
-| Path | Studio label | When to use | What happens |
-|---|---|---|---|
-| **A — Default** | **پبلشر کی تصویر / Publisher cover** | JPEG/PNG from publisher, Daraz, or clean scan | Upload → save to `cover`. Sanity + Sharp auto-compress only. **No Enhance button.** `coverSource: direct` |
-| **B — Optional** | **کتاب کی تصویر / Photo of book** | He photographed the physical book or magazine | Upload → `rawCover` → **Enhance cover** → preview → `cover`. `coverSource: enhanced` |
-
-```
-Publisher file:  [ Upload cover ]  →  Done
-
-Phone photo:     [ Upload photo ]  →  [ Enhance cover ]  →  Preview  →  Save
-```
-
-**Never run publisher artwork through the enhancer** — it would add an extra frame and can degrade the real cover.
-
-**Portrait** — same pattern on `siteSettings`:
-
-| Path | Label | When |
-|---|---|---|
-| **Direct** | **پروفیشنل تصویر / Professional photo** | Studio or clean file already good | → `portrait` · `portraitSource: direct` |
-| **Enhanced** | **تصویر بہتر بنائیں / Photo needs cleanup** | Event/office photo, messy background | → `rawPortrait` → Enhance → `portrait` · `portraitSource: enhanced` |
-
-**Logos** — same pattern on `organization`:
-
-| Path | Label | When |
-|---|---|---|
-| **Direct** | **لوگو فائل / Logo file** | PNG/SVG with transparency already | → `logo` · `logoSource: direct` |
-| **Enhanced** | **تصویر سے لوگو / Logo from photo** | Screenshot or photo of letterhead | → `rawLogo` → Enhance → `logo` · `logoSource: enhanced` |
-
-**Honors** — enhance-first (phone photos are the norm); no direct path needed unless he skips enhancement and uses fallback `rawImage`.
-
-**Frontend rule:** Always display `cover` / `portrait` / `logo` — one field, regardless of source.
-
-**CMS guide for father (books):**
-1. Cover file from publisher? → **Publisher cover** → upload → save.
-2. Only have the book in hand? → **Photo of book** → upload → **Enhance cover** → save.
-
-**Logo preset** *(لوگو — high value if uploaded)*:
-
-| Preset ID | Look | Best for |
-|---|---|---|
-| `logo-transparent` | Clean cutout, transparent PNG | AFAQ, Tanzeem, Hamdard, Punjab University, etc. |
-
-No compositing backdrop — output used on light and dark sections.
-
-**Build order:** Honor → portrait → covers → logos. Step-by-step tasks with verify checks: **§9 Phase 2a–2d**.
-
-**Performance & hosting notes (Vercel Hobby — $0):**
-
-> **Cost rule:** Enhancement stays **100% free** — `@imgly/background-removal-node` (AGPL) + `sharp` + Vercel Hobby. **No** Remove.bg, **no** paid GPU, **no** Vercel Pro required if configured below.
-
-| Concern | Mitigation on Vercel Hobby |
-|---|---|
-| **Hobby 10s function limit** | Use **`model: 'small'`** only (not `medium`); resize input to **max 1024px** before cutout; target **&lt;8s** after warm-up |
-| **Cold start / model load** | Self-host ONNX + WASM in **`public/enhance-models/`** (`publicPath` config) — no runtime CDN fetch inside the function |
-| **First click may timeout** | Studio: spinner + *“Pehli dafa thora waqt lag sakta hai — dubara Enhance try karein”*; **second click** usually succeeds on warm function |
-| **CPU-heavy AI** | Run **on demand** when he clicks Enhance — never on page views; **one image at a time** |
-| **Old phone in Studio** | Upload on phone; **processing on server** — phone only waits for result |
-| **Bad cutout (glare, hair, book spine)** | Always show preview; re-upload or skip enhancement |
-| **Re-processing loop** | `autoEnhanced` flag per document — skip unless he clicks “Re-enhance” |
-| **Optional warm-up** | Daily Hobby cron `GET /api/media/warm` loads models off-peak *(uses 1 of 2 free cron slots)* |
-
-**API route config (`POST /api/media/enhance`):**
-
-```ts
-export const runtime = 'nodejs';
-export const maxDuration = 10; // Hobby hard cap — do not raise without Pro
-```
-
-- Auth: `MEDIA_ENHANCE_SECRET` or Sanity session — not public  
-- Input cap: max **1600px** wide upload → downscale to **1024px** before AI  
-- Output: WebP via `sharp` presets  
-- **If 504/timeout:** return clear error; Studio keeps `rawImage`; site fallback unchanged  
-
-**License:** `@imgly/background-removal-node` is free under AGPL — fine for this personal portfolio site.
-
-**Fallback:** If enhancement fails or times out, site falls back to `rawImage` / `rawCover` / `rawPortrait` with standard Sanity compression.
-
-**Not used:** Remove.bg API (paid/limited), auto-webhook without preview (risk of bad crops), `medium`/`large` models on Hobby (too slow).
-
-**Not enhanced:** Lecture thumbnails (YouTube default preferred), PDFs, contact text fields.
-
-### What he can update himself (via CMS admin)
-- **Site profile** — **direct professional portrait OR optional enhance** (§5.2)
-- **About page** — biography (Urdu + English) and career timeline milestones (`aboutPage` singleton)
-- Books (title, cover, description, buy link) — **direct publisher cover OR optional enhance** (§5.2)
-- **Reading recommendations** — books he suggests others read; author, topic, why he recommends (§4)
-- Lectures / videos (YouTube URL, title, description)
-- **Honors & awards** (photo, title, event/organization, year, type) — **one-click enhancement** (§5.2)
-- **Afkar-e-Muallim issues** — **direct cover OR optional enhance** + PDF/link (§5.2)
-- **Organizations** — name, role, **direct logo file OR optional enhance** (§5.2)
-- **Questions & answers** — review incoming questions, write answers, publish to FAQ (§5.4)
-- Contact info (phone, WhatsApp, email) — if changed
-
-> **Out of v1 scope (post-launch optional):** Articles / announcements blog — no schema or phase in §9; add only if father requests after launch.
-
-#### Bilingual CMS fields — convention *(all schemas)*
-
-**Pattern:** separate fields **`fieldEn`** + **`fieldUr`** — not a plugin, not inline “EN + UR” in one string.
-
-| In Sanity | On site (`next-intl`) |
-|---|---|
-| `titleEn` / `titleUr` | Show `titleEn` when `locale === 'en'`, else `titleUr` |
-| Long text: `bioEn`, `descriptionUr`, etc. | Same rule; Urdu fields render RTL in `prose` |
-
-**Helper:** `src/lib/i18n/cms.ts` → `localized(doc, 'title', locale)` reads `titleEn` or `titleUr`. **Do not** use `@sanity/document-internationalization` for v1 *(optional later for Content Studio briefs only)*.
-
-**Schema tables below** use shorthand `titleEn` / `titleUr` — implement as two Sanity string/text fields.
-
-#### CMS schema: `siteSettings` singleton
-
-| Field | Type | Example |
-|---|---|---|
-| `portraitSource` | enum | `direct` · `enhanced` |
-| `rawPortrait` | image | Original upload *(backup — enhanced path only)* |
-| `portrait` | image | Display photo for hero/about/OG *(both paths write here)* |
-| `portraitStyle` | enum | `portrait-green` · `portrait-neutral` · `portrait-gradient` *(enhanced path only)* |
-| `autoEnhancedPortrait` | boolean | Prevents accidental re-processing |
-| `taglineEn` / `taglineUr` | string | Site taglines |
-| `phone` / `whatsapp` / `email` | string | Contact details |
-| `metaDescriptionEn` / `metaDescriptionUr` | text | Default meta description for home + fallback *(§5.6)* |
-| `ogImage` | image | Optional dedicated social preview image; falls back to `portrait` |
-
-**Studio hint on SEO fields:** *"یہ متن گوگل اور WhatsApp لنک پیش نظارہ میں دکھتا ہے — مختصر اور واضح رکھیں"*
-
-#### CMS schema: `aboutPage` singleton *(About — biography & career timeline)*
-
-| Field | Type | Example |
-|---|---|---|
-| `bioEn` | text | English biography (`prose` on site) |
-| `bioUr` | text | Urdu biography (`prose`, RTL on site) |
-| `careerMilestones` | array | Ordered career timeline — see object below |
-
-**`careerMilestones[]` object:**
-
-| Field | Type | Example |
-|---|---|---|
-| `year` | string | `"2020"` or `"2015–2020"` |
-| `titleEn` / `titleUr` | string | `"Retired — Govt. College of Science, Lahore"` |
-| `descriptionEn` / `descriptionUr` | text | Optional detail |
-| `order` | number | Sort order (oldest first on timeline) |
-
-**Studio:** single **About Page (میرے بارے میں)** entry under Site Settings group. **Phase 2.0 (done):** live CMS data on `/about` and home timeline.
-
-#### CMS schema: `lecture` document *(Lectures & Media)*
-
-| Field | Type | Example |
-|---|---|---|
-| `titleEn` / `titleUr` | string | "Introduction to Islamic Economics" |
-| `descriptionEn` / `descriptionUr` | text | Optional short blurb |
-| `youtubeUrl` | url | `https://www.youtube.com/watch?v=…` *(required)* |
-| `category` | enum | Islamic Economics · Dars · General · Current Affairs |
-| `featured` | boolean | Homepage “latest lecture” slot |
-| `order` | number | Sort within category / listing |
-| `publishedAt` | date | Optional — display date |
-
-**Frontend:** YouTube thumbnail from URL (oEmbed or `img.youtube.com`); **tap-to-load** iframe — no upload. **Studio hint:** *"صرف YouTube link چپکائیں — thumbnail خود آ جائے گی"*.
-
-#### CMS schema: `book` document *(My Books — authored works)*
-| Field | Type | Example |
-|---|---|---|
-| `titleEn` / `titleUr` | string | "Islamic Economics" |
-| `level` | enum | M.A. · B.Com. · I.Com. · etc. |
-| `descriptionEn` / `descriptionUr` | text | Short blurb |
-| `buyLink` | url | Daraz / publisher link |
-| `coverSource` | enum | `direct` · `enhanced` |
-| `rawCover` | image | Original phone photo *(backup — enhanced path only)* |
-| `cover` | image | Display cover *(both paths write here)* |
-| `coverStyle` | enum | `cover-flat-cream` · `cover-flat-green` · `cover-flat-gold` *(enhanced path only)* |
-| `autoEnhanced` | boolean | |
-| `featured` | boolean | Homepage carousel |
-| `order` | number | Sort order |
-
-**Studio component:** `CoverUploadInput` — dual path UI (§5.2); default tab = **Publisher cover**.
-
-#### CMS schema: `readingRecommendation` document *(Recommended Reading — books he suggests)*
-| Field | Type | Example |
-|---|---|---|
-| `titleEn` / `titleUr` | string | "The Ethics of Islamic Economics" |
-| `authorEn` / `authorUr` | string | Dr. Muhammad Nejatullah Siddiqi |
-| `topic` | enum | Islamic Economics · Quran & Tafsir · Islamic Studies · History · General |
-| `recommendationNoteEn` / `recommendationNoteUr` | text | *"Essential for understanding riba-free finance…"* |
-| `audienceEn` / `audienceUr` | string | Optional — e.g. "Students", "General public" |
-| `buyLink` | url | Optional — Daraz, publisher, or library link |
-| `coverSource` | enum | `direct` · `enhanced` |
-| `rawCover` | image | Original *(backup — enhanced path only)* |
-| `cover` | image | Display cover |
-| `coverStyle` | enum | Same cover presets as `book` |
-| `autoEnhanced` | boolean | |
-| `featured` | boolean | Homepage "Dr. Akram recommends" teaser |
-| `order` | number | Sort within topic |
-
-**Studio component:** `CoverUploadInput` *(same as books)*. Sanity list preview shows `authorEn` + topic.
-
-**Why a separate document type (not one `book` with a flag):** Clearer for father in CMS — **My Books** vs **Recommendations** are different tasks; avoids mixing his authored textbooks with others' works. Same card UI on the frontend.
-
-#### CMS schema: `faqEntry` document *(Questions & Answers — §5.4)*
-
-See full field list in **§5.4**. Father’s main job: **Inbox → write answer → Publish** (or mark Private).
-
-#### CMS schema: `afkarIssue` document
-| Field | Type | Example |
-|---|---|---|
-| `title` | string | "March 2024 Issue" |
-| `month` / `year` | number | 3 / 2024 |
-| `coverSource` | enum | `direct` · `enhanced` |
-| `rawCover` | image | Original phone photo *(backup — enhanced path only)* |
-| `cover` | image | Display cover *(both paths write here)* |
-| `coverStyle` | enum | Same as `book` cover presets *(enhanced path only)* |
-| `autoEnhanced` | boolean | |
-| `pdf` | file | Optional PDF upload |
-| `externalLink` | url | Link to Tanzeem site if PDF hosted elsewhere |
-| `order` | number | Carousel sort |
-
-**Studio component:** `CoverUploadInput` *(same as books)*.
-
-#### CMS schema: `organization` document
-| Field | Type | Example |
-|---|---|---|
-| `nameEn` / `nameUr` | string | AFAQ |
-| `roleEn` / `roleUr` | string | Chairman / Board Member |
-| `status` | enum | Current · Former |
-| `logoSource` | enum | `direct` · `enhanced` |
-| `rawLogo` | image | Original file or photo *(backup — enhanced path only)* |
-| `logo` | image | Display logo *(both paths write here)* |
-| `autoEnhanced` | boolean | |
-| `url` | url | https://afaq.edu.pk |
-| `order` | number | Display order on About / homepage |
-
-#### CMS schema: `honor` document
-| Field | Type | Example |
-|---|---|---|
-| `titleEn` / `titleUr` | string | "Recognition for services to Islamic education" |
-| `type` | enum | Shield · Trophy · Certificate · Memento · Other |
-| `organization` | string | AFAQ, Tanzeem-e-Asatiza, Punjab University |
-| `event` | string | National Education Conference 2024 |
-| `year` | number | 2024 |
-| `rawImage` | image upload | Original phone photo *(backup — not shown on site)* |
-| `image` | image | Processed display photo *(§5.2 honor presets)* |
-| `backgroundStyle` | enum | `honor-velvet-green` · `honor-gold-gradient` · `honor-cream-neutral` |
-| `autoEnhanced` | boolean | `true` after enhancement — prevents accidental re-processing |
-| `featured` | boolean | Show on homepage carousel |
-| `order` | number | Manual sort within gallery |
+| Portrait | `siteSettings.portrait` | Site Settings → upload JPEG/PNG |
+| Book / recommendation covers | `book.cover`, `readingRecommendation.cover` | Upload publisher cover or photo |
+| Afkar issue covers | `afkarIssue.cover` | Upload cover image |
+| Organization logos | `organization.logo` | Upload PNG/JPG logo |
+| Honors | `honor.image` | Upload shield/trophy/certificate photo |
+
+**Tips for father:** Use JPG or PNG. iPhone: **Settings → Camera → Formats → Most Compatible** if HEIC upload fails. Crop in a photo app first if needed for best presentation on the site.
+
+**Not uploaded:** Lecture thumbnails (YouTube auto), PDFs, contact text fields.
 
 ### 5.3 CMS Help & Guided Tour (for father)
 
@@ -655,17 +339,17 @@ Each step spotlights the real UI element (`data-tour="..."` attributes on desk s
 
 | Task | Where in CMS | Quick steps |
 |---|---|---|
-| **Update my homepage photo** | Site Settings → Portrait | Professional photo? Direct upload. Messy background? Enhance path (§5.2) |
+| **Update my homepage photo** | Site Settings → Portrait | Upload JPEG/PNG → Save → Publish |
 | **Update my biography or career** | About Page (میرے بارے میں) | Edit bio Urdu + English → add/reorder timeline milestones → Save |
 | **Change phone or WhatsApp** | Site Settings → Contact | Edit number → Save. Appears on Contact page + mobile bar |
 | **Add a new book** | Books → My Books → Create | Title → Cover → Description → Level → Save |
 | **Suggest a book to read** | Books → Recommended Reading → Create | Title → Author → Topic → **Why I recommend this** (Urdu + English) → Cover → Save |
-| **Add a shield or award photo** | Honors → Create | Upload photo → pick type → **Enhance photo** → preview → fill event/year → Save |
+| **Add a shield or award photo** | Honors → Create | Upload photo → type → event/year → Save → Publish |
 | **Add a lecture video** | Lectures → Create | Paste YouTube URL → title → Save. Thumbnail auto-fetches |
 | **Answer a visitor’s question** | Q&A → Inbox → open pending | Read question → write answer (Urdu + English) → **Publish** or **Private** |
 | **Add a published FAQ manually** | Q&A → Create | Question + answer + topic → Publish *(no inbound form needed)* |
-| **Add Afkar-e-Muallim issue** | Afkar Issues → Create | Cover (direct or enhance) → PDF or link → month/year → Save |
-| **Add organization logo** | Organizations → Create | Logo file **or** photo + Enhance → name & role → Save |
+| **Add Afkar-e-Muallim issue** | Afkar Issues → Create | Cover upload → PDF or link → month/year → Save |
+| **Add organization logo** | Organizations → Create | Logo upload → name & role → Save |
 | **Feature item on homepage** | Any content → `featured` toggle | Turn on Featured → appears in homepage carousel |
 | **Something went wrong** | Help → Contact support | WhatsApp link to son *(pre-filled message)* |
 
@@ -679,9 +363,8 @@ Built into schemas and custom inputs — father sees hints **on the form itself*
 
 | Location | Hint example |
 |---|---|
-| Book cover — direct tab | *"پبلشر کی تیار شدہ تصویر؟ یہاں اپ لوڈ کریں — کسی editing کی ضرورت نہیں"* |
-| Book cover — enhance tab | *"کتاب کی تصویر لی ہے؟ Enhance دبائیں"* |
-| Honor upload | *"Function ki photo — Enhance se professional ban jati hai / تقریب کی تصویر — Enhance سے بہتر بنائیں"* |
+| Book cover | *"پبلشر کی تصویر یا کتاب کی فوٹو — یہاں اپ لوڈ کریں"* |
+| Honor photo | *"تقریب کی تصویر — براہ راست اپ لوڈ کریں"* |
 | Lecture YouTube field | *"صرف YouTube link چپکائیں — thumbnail خود آ جائے گا"* |
 | `featured` toggle | *"Homepage par dikhane ke liye ON karein"* |
 
@@ -1152,7 +835,7 @@ Father does **not** need Search Console access for v1.
 **Layout reference:** Techwind **`index-personal.html`** (`techwind-330/.../HTML/Landing/src/index-personal.html`) — port patterns into Next.js with **green/gold palette** (not Techwind purple). Reuse: floating hero intro card, wave section divider, services card grid, experience timeline, full-width CTA band, image grids (→ books/honors). Skip: client logo strip, developer skill bars, freelancer copy.
 
 **Visual elements:**
-- Large professional portrait on homepage — processed via §5.2 portrait presets if original has messy background
+- Large professional portrait on homepage — upload in Site Settings
 - Warm, trustworthy palette (deep green / gold accents / off-white — Islamic scholarly without being dated)
 - Urdu: **Noto Nastaliq Urdu** via `next/font` (single subset weight)
 - English: **Inter** via `next/font`; optional **Geist** for UI chrome
@@ -1172,7 +855,7 @@ Father does **not** need Search Console access for v1.
 
 | # | Section | Phase 1c component | CMS / later |
 |---|---|---|---|
-| 1 | Hero — floating card, portrait, name, tagline | `HomeHero` | `siteSettings` tagline + portrait (1b / 2b) |
+| 1 | Hero — floating card, portrait, name, tagline | `HomeHero` | `siteSettings` tagline + portrait (1b) |
 | 2 | Credentials — round photo, degrees (not skill bars) | `HomeCredentials` | `aboutPage` bio excerpt |
 | 3 | Services — Dars · Islamic Economics · Speaking | `HomeServices` | static |
 | 4 | Career timeline | `HomeTimeline` | `aboutPage.careerMilestones[]` (2.0) |
@@ -1205,7 +888,7 @@ Father does **not** need Search Console access for v1.
 
 **Honors & Awards page design:**
 - Proud but dignified — trophy case / hall of recognition feel, not boastful
-- **Uniform photo treatment** — all honors share the same professional backdrop via §5.2 enhancer (consistent greens/golds even when originals were messy event photos)
+- **Photo grid** — honors display uploaded photos as-is; consistent card layout via site CSS
 - **Grid layout:** 2 columns on phone, 3–4 on desktop
 - Each card: photo, title, organization, year, type badge (shield/trophy icon)
 - **Tap any photo** → full-screen lightbox (Radix dialog) with pinch-zoom friendly view
@@ -1297,25 +980,24 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 - [x] UI stack: full Next.js polish libraries (§5.0) — **unrestricted motion**
 - [x] Books page: My Books + Recommended Reading tabs (§4)
 - [x] Honors gallery: shields, trophies, certificates from events
-- [x] Shared Media Enhancer: honors, portrait, covers, logos — free AI + presets (§5.2)
 - [x] Q&A knowledge base + AI roadmap — ask form, FAQ, future RAG (§5.4)
 - [x] Content Studio: weekly 2-topic video briefs + RAG from his books/uploads (§5.5)
 - [x] Domain strategy: **`drmianakram.pk`** primary + **`drmianakram.com`** optional redirect (§7)
 
 ### Still needed before / during build 🔲
-- [ ] **Professional photo** (high-res; messy background OK — §5.2 portrait enhancer)
+- [ ] **Professional photo** (high-res JPEG/PNG for Site Settings portrait)
 - [ ] **Phone number** (for public display)
 - [ ] **WhatsApp number** (may be same as phone)
 - [ ] **Email address**
-- [ ] **List of books (authored)** — titles, covers, descriptions, purchase links *(publisher cover files preferred — §5.2)*
+- [ ] **List of books (authored)** — titles, covers, descriptions, purchase links *(publisher cover files preferred)*
 - [ ] **Reading recommendations** — books he suggests to students/visitors: title, author, why he recommends, topic *(ask father — can start with 5–10 classics in Islamic economics & Islamic studies)*
 - [ ] **Lecture videos** — YouTube links or channel *(ask father)*
 - [ ] **Urdu name spelling** — confirm: میاں محمد اکرم
 - [ ] **Short bio** in his own words — enter in **About Page** CMS after Phase 2.0 *(or draft from public info for his approval)*
 - [ ] **Domain** — register **`drmianakram.pk`** (primary); add **`drmianakram.com`** redirect if available (§7)
-- [ ] **Afkar-e-Muallim** — link to issues/PDFs; issue cover photos if available *(§5.2 cover enhancer)*
-- [ ] **Honors photos** — shields, trophies, certificates *(phone photos OK — §5.2)*
-- [ ] **Organization logos** — AFAQ, Tanzeem, Hamdard, Punjab University *(optional — §5.2 logo preset)*
+- [ ] **Afkar-e-Muallim** — link to issues/PDFs; issue cover photos if available
+- [ ] **Honors photos** — shields, trophies, certificates *(direct upload in Studio)*
+- [ ] **Organization logos** — AFAQ, Tanzeem, Hamdard, Punjab University *(optional)*
 - [ ] **Seed FAQ entries** — 5–10 common questions + answers to launch Q&A page *(ask father — Islamic economics, Dars, books)*
 - [ ] **SEO meta descriptions** — short EN + UR blurbs for Google/WhatsApp previews in **Site Settings** *(§5.6; son can draft from bio for father’s approval)*
 
@@ -1344,10 +1026,10 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | Item | Required for launch | Can use placeholder? |
 |------|---------------------|----------------------|
-| Professional photo | Phase 2b hero | Yes — gray placeholder image |
+| Professional photo | Site Settings | Yes — gray placeholder image |
 | Phone / WhatsApp / Email | Contact page + forms | Yes — fake numbers, swap later |
 | Books list | Books page content | Yes — 1–2 sample books in Sanity |
-| Honors photos | Honors gallery | Yes — skip gallery until Phase 2a |
+| Honors photos | Honors gallery | Yes — add when ready |
 | Domain | Production URL | Yes — use `*.vercel.app` until Phase 3 |
 | Sanity project | Phase 1b data fetching | **Done** — project `5ce34emc`; CORS + publish `siteSettings` manual |
 
@@ -1377,7 +1059,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 
 | | |
 |---|---|
-| **Build** | `.env.example` with commented keys: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `SANITY_API_TOKEN`, `RESEND_API_KEY`, `MEDIA_ENHANCE_SECRET`, `NEXT_PUBLIC_SITE_URL` *(§5.6 — canonical + OG)* |
+| **Build** | `.env.example` with commented keys: `NEXT_PUBLIC_SANITY_PROJECT_ID`, `SANITY_API_TOKEN`, `RESEND_API_KEY`, `NEXT_PUBLIC_SITE_URL` *(§5.6 — canonical + OG)* |
 | **Verify** | `.env.local` gitignored; `.env.example` committed |
 | **Do not** | Put real secrets in `.env.example` |
 
@@ -1403,7 +1085,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 |---|---|
 | **Build** | Install: `next-intl`, `tailwindcss` (if not present), `@tailwindcss/typography`, `tailwind-merge`, `clsx`, `class-variance-authority`, `lucide-react`, `sonner`, `vaul`, `sharp` |
 | **Verify** | `pnpm build` passes; `package.json` lists versions |
-| **Do not** | Install `framer-motion`, `gsap`, `lenis`, R3F, `@imgly/background-removal-node` yet |
+| **Do not** | Install `framer-motion`, `gsap`, `lenis`, R3F` yet |
 
 #### 1.2 — shadcn/ui init
 
@@ -1680,7 +1362,6 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 |---|---|
 | **Build** | Fields: `taglineEn`, `taglineUr`, `phone`, `whatsapp`, `email`, `portrait` (image, optional); optional `metaDescriptionEn`/`metaDescriptionUr`, `ogImage` *(§5.6 — wired in Phase 3.7)* |
 | **Verify** | Create singleton in Studio; fill test values; publish |
-| **Do not** | Portrait enhancer fields (`rawPortrait`, `portraitSource`) until Phase 2b |
 
 #### 1b.3 — Sanity fetch helper
 
@@ -1694,9 +1375,9 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 > **Done (8 June 2026):** All tasks 1b.1–1b.3 verified. Packages: `next-sanity@9`, `@sanity/client`, `@sanity/image-url`, `sanity@3`, `styled-components`. Studio at `/studio`; `sanity/schemas/siteSettings.ts` singleton; `getSiteSettings()` (React `cache`, 60s revalidate) wired to home, contact, `MobileBottomBar`. Lazy Sanity client — build passes without env. **`1b.P1`:** root `layout.tsx` gets `<html>`/`<body>`; `LocaleHtmlAttributes` sets `lang`/`dir` on locale routes (fixes `/studio` runtime error). **`1b.P2`:** `pnpm build` → webpack only (drop `--turbopack`). **Manual:** CORS origin `http://localhost:3000` (credentials) in Sanity API tab.
 
-### Phase 2 — Content types & pages (no enhancer yet)
+### Phase 2 — Content types & pages
 
-**Goal:** All main pages render real CMS data. Enhancer comes in Phase 2a–2d **after** schemas exist.
+**Goal:** All main pages render real CMS data with **standard Sanity image uploads** (§5.2).
 
 #### 2.0 — Schema: aboutPage + About page CMS wiring
 
@@ -1712,7 +1393,6 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 |---|---|
 | **Build** | `book` + `readingRecommendation` per §5 schemas (all fields; `cover` image only — no custom input yet) |
 | **Verify** | Studio: create 1 book + 1 recommendation; both appear in dataset |
-| **Do not** | `CoverUploadInput` — use default Sanity image field for now |
 
 #### 2.2 — Books page
 
@@ -1728,7 +1408,6 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 |---|---|
 | **Build** | `lecture`, `honor`, `organization`, `afkarIssue` per §5 |
 | **Verify** | Each document type: create 1 sample doc in Studio |
-| **Do not** | `PhotoEnhancerInput` on honors yet |
 
 #### 2.4 — Lectures page
 
@@ -1768,125 +1447,10 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 |---|---|
 | **Build** | `plaiceholder` for hero + book covers; `next/image` `sizes` on all grids |
 | **Verify** | Blur placeholder shows before image load; no layout shift (CLS) |
-| **Do not** | Run enhancer API |
 
-**Phase 2 exit:** All content pages work with standard Sanity image uploads. Father can add content without enhancer.
+**Phase 2 exit:** All content pages work with standard Sanity image uploads.
 
 > **Done (8 June 2026):** All tasks 2.0–2.8 verified. Schemas: `aboutPage`, `book`, `readingRecommendation`, `lecture`, `honor`, `organization`, `afkarIssue` (+ `careerMilestone` object). Studio sidebar reorganized. Queries in `src/lib/sanity/queries.ts`. Pages: About (bio/timeline/orgs), Books (tabs + filters + `?tab=recommendations`), Lectures (`YouTubeFacade`), Honors (filter/pagination/lightbox), Services (i18n + books link), Afkar (Embla carousel). Home: `HomeFeaturedGrid`, `HomeLatestSection` (lectures; Q&A deferred Phase 4), `HomeTimeline` from CMS. `plaiceholder` + `getBlurDataUrl`. `/questions` remains `EmptyState`. `pnpm build` passes.
-
-### Phase 2a — Media Enhancer: Honors (§5.2)
-
-**Goal:** Father can enhance honor photos in Studio.
-
-#### 2a.1 — Install enhancer deps + model assets
-
-| | |
-|---|---|
-| **Build** | `pnpm add @imgly/background-removal-node`; ensure `sharp` present; copy **`small`** ONNX/WASM to `public/enhance-models/`; `src/lib/media/removeBg.ts` with `publicPath` + `model: 'small'` |
-| **Verify** | `pnpm build` passes; `public/enhance-models/` committed; no imgly import in client bundles |
-| **Do not** | Import imgly in client components; use `medium` model on Vercel Hobby |
-
-#### 2a.2 — Preset engine (honors only)
-
-| | |
-|---|---|
-| **Build** | `src/lib/media/presets/honor.ts`: `honor-velvet-green`, `honor-gold-gradient`, `honor-cream-neutral` compositing with `sharp` |
-| **Verify** | Unit test or script: pass local PNG → outputs WebP with correct dimensions (max 1600px) |
-| **Do not** | Portrait or cover presets in same file without tests |
-
-#### 2a.3 — API route (Vercel Hobby–safe)
-
-| | |
-|---|---|
-| **Build** | `POST /api/media/enhance` — `runtime: 'nodejs'`, `maxDuration: 10`; auth via `MEDIA_ENHANCE_SECRET` or Sanity token; downscale to 1024px; `model: 'small'`; compositing via honor presets |
-| **Verify** | `curl` with secret returns processed WebP; 401 without auth; **deploy to Vercel Hobby preview** — enhance completes in &lt;10s on **second** request (warm); timeout returns JSON error + Studio retry message |
-| **Do not** | Expose route publicly without auth; rely on runtime CDN model fetch; expect cold-first-click to always succeed on Hobby |
-
-#### 2a.3b — Optional model warm-up cron (Hobby)
-
-| | |
-|---|---|
-| **Build** | `GET /api/media/warm` — loads models only; Vercel cron `0 4 * * *` UTC *(9am PKT, off-peak)* |
-| **Verify** | Vercel Cron logs show 200; subsequent Studio enhance faster same day |
-| **Do not** | Use more than 1–2 cron slots total on Hobby (Content Studio shares slot in Phase 6) |
-
-#### 2a.4 — `PhotoEnhancerInput` (Studio)
-
-| | |
-|---|---|
-| **Build** | Custom input on `honor`: `rawImage` → enhance → preview → write `image`; `backgroundStyle` enum; `autoEnhanced` flag |
-| **Verify** | Studio: upload phone photo → “تصویر بہتر بنائیں / Enhance photo” → preview → save → site shows processed image |
-| **Do not** | Dual-path on honors (enhance-first only per §5.2) |
-
-**Phase 2a exit:** One honor enhanced end-to-end in Studio and visible on `/honors`.
-
-### Phase 2b — Media Enhancer: Portrait
-
-#### 2b.1 — Portrait presets
-
-| | |
-|---|---|
-| **Build** | `src/lib/media/presets/portrait.ts`: `portrait-green`, `portrait-neutral`, `portrait-gradient` |
-| **Verify** | Script test: head-and-shoulders crop applied; softer shadow than honors |
-| **Do not** | Reuse honor backdrop for portrait |
-
-#### 2b.2 — Extend `siteSettings` schema
-
-| | |
-|---|---|
-| **Build** | Add: `portraitSource`, `rawPortrait`, `portraitStyle`, `autoEnhancedPortrait` |
-| **Verify** | Existing `portrait` still displays if new fields empty |
-| **Do not** | Break hero if only old `portrait` filled |
-
-#### 2b.3 — `PortraitUploadInput` (Studio)
-
-| | |
-|---|---|
-| **Build** | Dual path: Direct professional photo vs Enhance; writes to single `portrait` field |
-| **Verify** | Direct upload → hero updates; enhance path → preview → hero + OG meta image |
-| **Do not** | Run publisher-quality direct photo through enhancer UI |
-
-**Phase 2b exit:** Hero and About use `siteSettings.portrait` from either path.
-
-### Phase 2c — Media Enhancer: Covers
-
-#### 2c.1 — Cover presets
-
-| | |
-|---|---|
-| **Build** | `src/lib/media/presets/cover.ts`: `cover-flat-cream`, `cover-flat-green`, `cover-flat-gold` |
-| **Verify** | Test image → fixed aspect ratio card with shadow |
-| **Do not** | Enhance path for flat vector publisher art (guard in UI copy) |
-
-#### 2c.2 — `CoverUploadInput` (Studio)
-
-| | |
-|---|---|
-| **Build** | Tab A: Publisher cover (direct to `cover`); Tab B: Photo → `rawCover` → enhance → `cover` |
-| **Verify** | `book`, `readingRecommendation`, `afkarIssue` all use component; `coverSource` enum set correctly |
-| **Do not** | Default tab = Photo path (must be Publisher per §5.2) |
-
-**Phase 2c exit:** One book via direct cover + one via enhanced photo; both display identically on site.
-
-### Phase 2d — Media Enhancer: Logos
-
-#### 2d.1 — Logo preset
-
-| | |
-|---|---|
-| **Build** | `logo-transparent` — cutout only, no backdrop |
-| **Verify** | Output PNG with alpha; looks OK on green and white sections |
-| **Do not** | Add gold border to logos |
-
-#### 2d.2 — `LogoUploadInput` on `organization`
-
-| | |
-|---|---|
-| **Build** | Dual path: direct file vs enhance from photo |
-| **Verify** | Org row on home/about shows logo from `organization.logo` |
-| **Do not** | Enhance official SVG/PNG logos (UI warning only) |
-
-**Phase 2d exit:** At least one org logo uploaded (direct or enhanced).
 
 ### Phase 3 — CMS UX, polish & deploy prep (§5.3)
 
@@ -2084,7 +1648,7 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 | | |
 |---|---|
-| **Build** | Walkthrough: Site Settings, add 1 book, 1 honor (enhance), answer 1 test question |
+| **Build** | Walkthrough: Site Settings, add 1 book, 1 honor (upload photo), answer 1 test question |
 | **Verify** | Father completes tasks using Help only; §12 handover sent; §5.6 SEO verification checklist passed (OG preview, sitemap, hreflang on home + 1 Q&A) |
 | **Do not** | Launch without mobile test on real Android if available |
 
@@ -2189,11 +1753,11 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 Before coding, confirm:
 
-- [ ] Which **phase and task ID** you are on (e.g. `2a.3`)
+- [ ] Which **phase and task ID** you are on (e.g. `3.1`)
 - [ ] **Files that should exist** from prior tasks (grep, don’t assume)
 - [ ] **Schema field names** match **§5** tables exactly (`fieldEn` / `fieldUr` — use `localized()` helper)
 - [ ] **`faqEntry.status`** is only `pending` · `published` · `private`
-- [ ] **Display field** is always `portrait` / `cover` / `logo` / `image` on frontend — never `raw*`
+- [ ] **Display field** is `portrait` / `cover` / `logo` / `image` on frontend
 - [ ] **`prefers-reduced-motion`:** Lenis + heavy Framer disabled when user prefers reduced motion
 - [ ] **SEO (§5.6):** `NEXT_PUBLIC_SITE_URL` set; `generateMetadata` per page; hreflang on both locales; no hardcoded preview domain
 - [ ] **Verify step** from current task completed before next task
@@ -2207,10 +1771,6 @@ Phase 1c  → Techwind personal home redesign (animated landing)
 Phase 1b  → Sanity siteSettings on site (+ wire into 1c hero)
 Phase 2   → All schemas + pages (plain image upload)
 Phase 2.0 → aboutPage bio + career timeline in CMS
-Phase 2a  → Honor enhancer (Vercel Hobby–safe)
-Phase 2b  → Portrait enhancer
-Phase 2c  → Cover enhancer
-Phase 2d  → Logo enhancer
 Phase 3   → Help, tour, SEO (§5.6: metadata, hreflang, sitemap, JSON-LD), Resend, Vercel, domain (+ Techwind contact/blog patterns)
 Phase 4   → Q&A + public launch
 Phase 5   → AI (when corpus large enough)
@@ -2283,7 +1843,7 @@ Phase 6   → Weekly briefs (private)
 
 ## 11. Next Step
 
-**Phases 1, 1c, 1b, 2 complete.** Seed CMS content in Studio, then begin **§9 Phase 2a** (honor enhancer) or **Phase 3** (SEO, guided tour, Resend, deploy).
+**Phases 1, 1c, 1b, 2 complete.** Seed CMS content in Studio, then **Phase 3** (SEO, guided tour, Resend, deploy).
 
 **Sanity (father / developer) — seed content:**
 1. **Site Settings** → tagline, phone, WhatsApp, email, portrait → **Publish**
@@ -2351,20 +1911,14 @@ You update content yourself in **Sanity** (admin panel). No need to call the dev
 
 ---
 
-### Golden rule: two ways to upload images
+### Golden rule: upload images directly
 
-Many uploads offer **two paths**. Pick the right one:
+All photos and covers use **standard Sanity upload** — pick a JPG or PNG and upload. No enhancement step.
 
-| Situation | What to do | Enhance button? |
-|---|---|---|
-| **Publisher sent a cover file** (JPEG/PNG) | **Direct upload** — پبلشر کی تصویر | **No** — use as-is |
-| **You photographed a book/shield on a table** | **Photo path** → then **تصویر بہتر بنائیں / Enhance** | **Yes** |
-| **Professional studio portrait** | **Direct upload** | **No** |
-| **Photo at a function — messy background** | **Enhance** (portrait or honor preset) | **Yes** |
-| **Official organization logo from their website** | **Direct upload** | **No** |
-| **Logo from photo or screenshot** | **Enhance** (logo preset) | **Yes** |
-
-**Never run a perfect publisher cover or official logo through Enhance** — it can make it worse.
+| Content | What to upload |
+|---|---|
+| Portrait, honors, book covers, logos | JPEG or PNG (iPhone: **Most Compatible** format if HEIC fails) |
+| Lecture videos | YouTube link only — no image upload |
 
 ---
 
@@ -2373,7 +1927,7 @@ Many uploads offer **two paths**. Pick the right one:
 #### Update your homepage photo or contact numbers
 **Where:** Site Settings (ترتیبات)
 
-- **Photo:** Professional file already good? → direct upload. Event/office photo with clutter? → Enhance → pick portrait style → preview → Save.  
+- **Photo:** Upload JPEG/PNG → Save → Publish.  
 - **Phone / WhatsApp / Email:** Edit → Save. Shows on Contact page and mobile Call/WhatsApp buttons.  
 - **SEO description (Urdu + English):** Short summary of who you are — appears when someone shares the website link on WhatsApp or Google. Keep under ~2 lines each language.
 
@@ -2388,7 +1942,7 @@ Many uploads offer **two paths**. Pick the right one:
 **Where:** Books → **My Books** (میری کتابیں) → Create
 
 1. Title (Urdu + English)  
-2. **Cover:** Publisher file? → **Publisher cover** tab → upload → Save. Only have the physical book? → **Photo of book** → upload → **Enhance cover** → preview → Save.  
+2. **Cover:** Upload cover image (publisher file or photo of book) → Save.  
 3. Description, level (M.A., B.Com., etc.), buy link if any  
 4. Turn **Featured** ON to show on homepage  
 
@@ -2398,18 +1952,17 @@ Many uploads offer **two paths**. Pick the right one:
 1. Title + **Author name**  
 2. **Topic** (Islamic Economics, Quran, etc.)  
 3. **Why I recommend this** (Urdu + English) — *this is the important part; write like you speak to a student*  
-4. Cover (same direct vs photo rules as above)  
+4. Cover image upload  
 5. Optional buy link  
 6. **Featured** → homepage “Dr. Akram recommends” teaser  
 
 #### Add a shield, trophy, or certificate
 **Where:** Honors (اعزازات) → Create
 
-1. Upload phone photo (messy background is OK)  
+1. Upload photo (JPEG/PNG)  
 2. Pick type: Shield · Trophy · Certificate · etc.  
-3. Tap **تصویر بہتر بنائیں / Enhance photo** → pick backdrop → **preview** → Save  
-4. Fill event name, organization, year  
-5. **Featured** → homepage carousel  
+3. Fill event name, organization, year  
+4. **Featured** → homepage carousel → Save → Publish  
 
 #### Add a lecture video
 **Where:** Lectures (لیکچرز) → Create
@@ -2420,7 +1973,7 @@ Many uploads offer **two paths**. Pick the right one:
 #### Add an Afkar-e-Muallim issue
 **Where:** Afkar Issues → Create
 
-- Cover: publisher/issue file → direct; photo of magazine → Enhance  
+- Cover: upload issue cover image  
 - Upload PDF **or** paste external link  
 - Month / year  
 
@@ -2429,7 +1982,7 @@ Many uploads offer **two paths**. Pick the right one:
 
 - **Best:** Download official logo from org website → **direct upload**  
 - **If creating your own logo:** see **Logo tools** below → download PNG → upload  
-- Photo of letterhead? → **Enhance** (logo preset)  
+- Use official logo file when possible; otherwise upload a clean PNG/JPG  
 
 #### Answer a visitor’s question
 **Where:** Q&A → **Inbox** (سوالات — Inbox)
@@ -2460,19 +2013,6 @@ You can also add FAQ entries manually: Q&A → Create *(question + answer, no vi
 
 ---
 
-### Photo enhancer — when it helps
-
-The **Enhance** button removes messy backgrounds and places the image on a clean professional backdrop (green/gold, matching the website).
-
-**Good for:** Shields at functions, portraits with clutter, phone photos of books, logos from photos.  
-**Not for:** Publisher covers, official logos, already-professional portraits.  
-**Always:** Preview before Save. If it looks wrong, skip Enhance or re-upload.  
-**First time slow?** Enhancement is free and runs on the server — if it times out, tap **Enhance** again; the second try is usually faster.
-
-**Backdrop choices (honors):** green velvet (shields) · gold (trophies) · cream (certificates)
-
----
-
 ### Creating a logo yourself (optional)
 
 If you need a simple logo (e.g. for Afkar-e-Muallim or a custom mark):
@@ -2492,7 +2032,7 @@ If you need a simple logo (e.g. for Afkar-e-Muallim or a custom mark):
 
 **Main website logo:** Your name in clean typography (Urdu + English) — handled in the site design; you don’t need to design this in Canva unless you want to.
 
-**After creating/downloading:** Sanity → Organizations (or relevant section) → Logo → upload. Messy background? → **Enhance**.
+**After creating/downloading:** Sanity → Organizations → Logo → upload.
 
 **Not truly free (preview only — must pay to download):** Looka, Brandmark, LogoAI — skip unless son helps with payment.
 
@@ -2516,15 +2056,14 @@ If something breaks or you’re unsure → **Help** in admin **or** WhatsApp son
 │  DR. AKRAM WEBSITE — QUICK GUIDE                        │
 ├─────────────────────────────────────────────────────────┤
 │  Stuck?        →  ? مدد / Help  (top bar)              │
-│  Photo messy?  →  تصویر بہتر بنائیں / Enhance           │
-│  Publisher file? → Direct upload — NO Enhance           │
+│  Photos/covers  →  Direct upload (JPG/PNG)              │
 │  YouTube lecture? → Paste link only                     │
 ├─────────────────────────────────────────────────────────┤
 │  My photo/phone     → Site Settings                     │
 │  My bio / career    → About Page (میرے بارے میں)         │
 │  My book            → Books → My Books                  │
 │  Book to recommend  → Books → Recommended Reading       │
-│  Shield/award       → Honors → Enhance photo              │
+│  Shield/award       → Honors → upload photo               │
 │  Lecture            → Lectures → YouTube URL            │
 │  Afkar issue        → Afkar Issues                        │
 │  Org logo           → Organizations (official logo best)  │
@@ -2535,7 +2074,7 @@ If something breaks or you’re unsure → **Help** in admin **or** WhatsApp son
 ```
 
 **Urdu one-liner summary:**  
-*“پبلشر کی تیار تصویر براہ راست اپ لوڈ کریں۔ فون کی تصویر ہو تو Enhance دبائیں۔ الجھن ہو تو Help دبائیں۔”*
+*“تصاویر براہ راست اپ لوڈ کریں (JPG/PNG)۔ الجھن ہو تو Help دبائیں۔”*
 
 ---
 
@@ -2544,7 +2083,7 @@ If something breaks or you’re unsure → **Help** in admin **or** WhatsApp son
 - [ ] Complete first-login tour  
 - [ ] Update Site Settings — photo, phone, WhatsApp, email, SEO descriptions (EN + UR)  
 - [ ] Update About Page — biography + career timeline  
-- [ ] Add at least 3 honors (Enhance photos)  
+- [ ] Add at least 3 honors (upload photos)  
 - [ ] Add 5–10 **seed FAQ** entries (common questions you often get)  
 - [ ] Add your main books (My Books)  
 - [ ] Add 5–10 reading recommendations with “why I recommend” notes  

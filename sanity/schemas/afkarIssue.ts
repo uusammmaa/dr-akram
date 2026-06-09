@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import { coverEnhancerFields } from "./shared";
 
 export const afkarIssue = defineType({
   name: "afkarIssue",
@@ -30,7 +29,6 @@ export const afkarIssue = defineType({
       type: "image",
       options: { hotspot: true },
     }),
-    ...coverEnhancerFields,
     defineField({
       name: "pdf",
       title: "PDF File",

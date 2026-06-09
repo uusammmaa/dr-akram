@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import { coverEnhancerFields } from "./shared";
 
 const topics = [
   "Islamic Economics",
@@ -75,7 +74,6 @@ export const readingRecommendation = defineType({
       type: "image",
       options: { hotspot: true },
     }),
-    ...coverEnhancerFields,
     defineField({
       name: "featured",
       title: "Featured on Homepage",

@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import { honorEnhancerFields } from "./shared";
 
 const honorTypes = ["Shield", "Trophy", "Certificate", "Memento", "Other"];
 
@@ -47,7 +46,6 @@ export const honor = defineType({
       options: { hotspot: true },
       description: "Upload the honor photo directly.",
     }),
-    ...honorEnhancerFields,
     defineField({
       name: "featured",
       title: "Featured on Homepage",

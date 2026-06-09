@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import { logoEnhancerFields } from "./shared";
 
 export const organization = defineType({
   name: "organization",
@@ -44,7 +43,6 @@ export const organization = defineType({
       title: "Logo",
       type: "image",
     }),
-    ...logoEnhancerFields,
     defineField({
       name: "url",
       title: "Website URL",

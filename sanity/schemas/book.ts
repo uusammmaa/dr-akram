@@ -1,5 +1,4 @@
 import { defineField, defineType } from "sanity";
-import { coverEnhancerFields } from "./shared";
 
 const bookLevels = [
   "M.A.",
@@ -58,7 +57,6 @@ export const book = defineType({
       options: { hotspot: true },
       description: "Upload the book cover directly.",
     }),
-    ...coverEnhancerFields,
     defineField({
       name: "featured",
       title: "Featured on Homepage",
