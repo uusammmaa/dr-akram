@@ -1,7 +1,9 @@
 import { getPlaiceholder } from "plaiceholder";
 
+const blurEnabled = process.env.NODE_ENV === "production";
+
 export async function getBlurDataUrl(src: string): Promise<string | undefined> {
-  if (!src) return undefined;
+  if (!src || !blurEnabled) return undefined;
   try {
     const res = await fetch(src);
     if (!res.ok) return undefined;
