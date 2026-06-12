@@ -21,6 +21,9 @@ export type SiteSettings = {
   whatsapp?: string;
   email?: string;
   portrait?: SanityImage;
+  metaDescriptionEn?: string;
+  metaDescriptionUr?: string;
+  ogImage?: SanityImage;
 };
 
 export type CareerMilestoneItem = {

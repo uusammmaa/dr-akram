@@ -15,12 +15,14 @@ export const careerMilestone = defineType({
       name: "titleEn",
       title: "Title (English)",
       type: "string",
+      description: "Milestone title in English.",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "titleUr",
       title: "Title (Urdu)",
       type: "string",
+      description: "Milestone title in Urdu.",
       validation: (rule) => rule.required(),
     }),
     defineField({
@@ -28,12 +30,14 @@ export const careerMilestone = defineType({
       title: "Description (English)",
       type: "text",
       rows: 3,
+      description: "Optional details in English.",
     }),
     defineField({
       name: "descriptionUr",
       title: "Description (Urdu)",
       type: "text",
       rows: 3,
+      description: "Optional details in Urdu.",
     }),
     defineField({
       name: "order",

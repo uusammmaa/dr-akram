@@ -25,7 +25,8 @@ async function fetchSanity<T>(query: string, params: Record<string, unknown> = {
 }
 
 const siteSettingsQuery = `*[_type == "siteSettings" && _id == "siteSettings"][0]{
-  taglineEn, taglineUr, phone, whatsapp, email, portrait
+  taglineEn, taglineUr, phone, whatsapp, email, portrait,
+  metaDescriptionEn, metaDescriptionUr, ogImage
 }`;
 
 const aboutPageQuery = `*[_type == "aboutPage" && _id == "aboutPage"][0]{

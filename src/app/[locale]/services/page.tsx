@@ -1,8 +1,11 @@
+import type { Metadata } from "next";
 import { BookOpen, GraduationCap, Mic } from "lucide-react";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
+import { FadeIn, FadeInItem, FadeInStagger } from "@/components/motion/FadeIn";
 import { Button } from "@/components/ui/button";
+import { buildStaticPageMetadata } from "@/lib/seo/page-metadata";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -10,6 +13,11 @@ type Props = {
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return buildStaticPageMetadata(locale as "en" | "ur", "/services", "services");
 }
 
 const sections = [
@@ -32,17 +40,19 @@ export default async function ServicesPage({ params }: Props) {
 
   return (
     <div className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
-      <h1 className="text-2xl font-semibold text-brand sm:text-3xl">
-        {t("title")}
-      </h1>
-      <p className="mt-4 text-muted-foreground">{t("intro")}</p>
+      <FadeIn>
+        <h1 className="text-2xl font-semibold text-brand sm:text-3xl">
+          {t("title")}
+        </h1>
+        <p className="mt-4 text-muted-foreground">{t("intro")}</p>
+      </FadeIn>
 
-      <div className="mt-10 space-y-8">
+      <FadeInStagger className="mt-10 space-y-8">
         {sections.map((section) => {
           const Icon = section.icon;
           return (
+            <FadeInItem key={section.id}>
             <section
-              key={section.id}
               className="rounded-2xl border border-border bg-card p-6 shadow-sm"
             >
               <div className="flex items-start gap-4">
@@ -67,15 +77,16 @@ export default async function ServicesPage({ params }: Props) {
                 </div>
               </div>
             </section>
+            </FadeInItem>
           );
         })}
-      </div>
+      </FadeInStagger>
 
-      <div className="mt-10 text-center">
+      <FadeIn className="mt-10 text-center">
         <Button render={<Link href="/contact" />} className="tap-target">
           {t("contactCta")}
         </Button>
-      </div>
+      </FadeIn>
     </div>
   );
 }

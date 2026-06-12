@@ -1,3 +1,9 @@
+"use client";
+
+import { useRef } from "react";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { CareerMilestoneItem } from "@/lib/sanity/types";
 import { localizedText } from "@/lib/i18n/cms";
 import { cn } from "@/lib/utils";
@@ -9,17 +15,54 @@ type Props = {
 };
 
 export function CareerTimeline({ milestones, locale, variant = "page" }: Props) {
+  const containerRef = useRef<HTMLOListElement>(null);
+
+  useGSAP(
+    () => {
+      if (variant !== "page" || !containerRef.current) return;
+      const prefersReduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      if (prefersReduced) return;
+
+      gsap.registerPlugin(ScrollTrigger);
+
+      const items = containerRef.current.querySelectorAll(".timeline-item");
+      items.forEach((item) => {
+        gsap.fromTo(
+          item,
+          { opacity: 0, x: locale === "ur" ? 24 : -24 },
+          {
+            opacity: 1,
+            x: 0,
+            duration: 0.6,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 85%",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+    },
+    { scope: containerRef, dependencies: [locale, variant, milestones.length] }
+  );
+
   if (milestones.length === 0) return null;
 
   if (variant === "page") {
     return (
-      <ol className="mt-6 space-y-4 border-s-2 border-gold ps-6">
+      <ol
+        ref={containerRef}
+        className="mt-6 space-y-4 border-s-2 border-gold ps-6"
+      >
         {milestones.map((item) => {
           const title = localizedText(item, "title", locale);
           const description = localizedText(item, "description", locale);
           if (!title) return null;
           return (
-            <li key={item._key} className="relative">
+            <li key={item._key} className="timeline-item relative">
               <span className="absolute -start-[1.6rem] top-1 flex size-3 rounded-full bg-brand" />
               {item.year && (
                 <span className="text-sm font-semibold text-gold">{item.year}</span>

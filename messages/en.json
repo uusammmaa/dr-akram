@@ -131,6 +131,9 @@
     "preferredDate": "Preferred date (optional)",
     "submit": "Send message",
     "notConfigured": "Contact form not configured yet",
+    "submitSuccess": "Your message has been sent. We will respond soon.",
+    "submitError": "Could not send your message. Please try again or call directly.",
+    "sending": "Sending…",
     "required": "Please fill in all required fields",
     "typeDars": "Dars-e-Quran",
     "typeLecture": "Lecture invitation",
@@ -151,5 +154,43 @@
     "afkar": "Chief Editor — Afkar-e-Muallim monthly magazine",
     "punjab": "Lecturer in Islamic Economics, University of the Punjab",
     "2020": "Retired as Principal, Government College of Science, Lahore"
+  },
+  "metadata": {
+    "home": {
+      "title": "Home",
+      "description": "Prof. Dr. Mian Muhammad Akram — Professor of Economics, Islamic Economics, and education in Lahore. Books, lectures, honors, and contact."
+    },
+    "about": {
+      "title": "About",
+      "description": "Biography, academic career, and affiliations of Prof. Dr. Mian Muhammad Akram — Islamic economics scholar and educator."
+    },
+    "books": {
+      "title": "Books",
+      "description": "Textbooks authored by Prof. Dr. Mian Muhammad Akram and his recommended reading in Islamic economics and Islamic studies."
+    },
+    "lectures": {
+      "title": "Lectures & Media",
+      "description": "Islamic economics lectures, Dars-e-Quran talks, and speaking engagements by Prof. Dr. Mian Muhammad Akram."
+    },
+    "honors": {
+      "title": "Honors & Awards",
+      "description": "Shields, trophies, and certificates received by Prof. Dr. Mian Muhammad Akram from academic and Islamic organizations."
+    },
+    "services": {
+      "title": "Services",
+      "description": "Dars-e-Quran, Islamic economics consultation, and lecture invitations — Prof. Dr. Mian Muhammad Akram."
+    },
+    "afkar": {
+      "title": "Afkar-e-Muallim",
+      "description": "Afkar-e-Muallim monthly Urdu magazine — issues and publications edited by Prof. Dr. Mian Muhammad Akram."
+    },
+    "contact": {
+      "title": "Contact",
+      "description": "Contact Prof. Dr. Mian Muhammad Akram for Dars-e-Quran, Islamic economics guidance, or lecture invitations."
+    },
+    "questions": {
+      "title": "Questions & Answers",
+      "description": "Common questions and answers on Islamic economics, Dars, and related topics — Prof. Dr. Mian Muhammad Akram."
+    }
   }
 }

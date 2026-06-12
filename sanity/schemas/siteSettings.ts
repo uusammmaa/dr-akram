@@ -33,14 +33,37 @@ export const siteSettings = defineType({
       name: "email",
       title: "Email",
       type: "string",
-      description: "Contact email shown on the Contact page.",
+      description:
+        "Contact email shown on Contact page; receives form notifications.",
     }),
     defineField({
       name: "portrait",
       title: "Portrait",
       type: "image",
       options: { hotspot: true },
-      description: "Professional photo for homepage hero and credentials section.",
+      description: "Professional photo for homepage hero.",
+    }),
+    defineField({
+      name: "metaDescriptionEn",
+      title: "Meta Description (English)",
+      type: "text",
+      rows: 3,
+      description: "Short description for Google/WhatsApp previews (English).",
+    }),
+    defineField({
+      name: "metaDescriptionUr",
+      title: "Meta Description (Urdu)",
+      type: "text",
+      rows: 3,
+      description: "Short description for Google/WhatsApp previews (Urdu).",
+    }),
+    defineField({
+      name: "ogImage",
+      title: "Social Share Image",
+      type: "image",
+      options: { hotspot: true },
+      description:
+        "Optional image for link previews (1200×630). Falls back to portrait.",
     }),
   ],
 });

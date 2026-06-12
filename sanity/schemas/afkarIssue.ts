@@ -17,22 +17,26 @@ export const afkarIssue = defineType({
       title: "Month",
       type: "number",
       validation: (rule) => rule.min(1).max(12),
+      description: "Issue month (1–12).",
     }),
     defineField({
       name: "year",
       title: "Year",
       type: "number",
+      description: "Issue year.",
     }),
     defineField({
       name: "cover",
       title: "Cover Image",
       type: "image",
       options: { hotspot: true },
+      description: "Upload issue cover.",
     }),
     defineField({
       name: "pdf",
       title: "PDF File",
       type: "file",
+      description: "Upload PDF file.",
     }),
     defineField({
       name: "externalLink",
@@ -45,6 +49,7 @@ export const afkarIssue = defineType({
       title: "Sort Order",
       type: "number",
       initialValue: 0,
+      description: "Lower numbers appear first in carousel.",
     }),
   ],
   preview: {

@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { buildStaticPageMetadata } from "@/lib/seo/page-metadata";
 import { LecturesPageContent } from "@/components/lectures/LecturesPageContent";
 import { getLectures } from "@/lib/sanity/queries";
 
@@ -9,6 +11,11 @@ type Props = {
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return buildStaticPageMetadata(locale as "en" | "ur", "/lectures", "lectures");
 }
 
 export default async function LecturesPage({ params }: Props) {

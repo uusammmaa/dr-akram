@@ -22,26 +22,61 @@ type ContactFormProps = {
 export function ContactForm({ onSuccess }: ContactFormProps) {
   const t = useTranslations("contact");
   const [inquiryType, setInquiryType] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const form = event.currentTarget;
     const formData = new FormData(form);
-    const message = formData.get("message");
+    const message = formData.get("message") as string;
 
-    if (!inquiryType || !message) {
+    if (!inquiryType || !message?.trim()) {
       toast.error(t("required"));
       return;
     }
 
-    toast.info(t("notConfigured"));
-    onSuccess?.();
-    form.reset();
-    setInquiryType(null);
+    setSending(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          phone: formData.get("phone"),
+          city: formData.get("city"),
+          type: inquiryType,
+          message,
+          preferredDate: formData.get("preferredDate"),
+          website: formData.get("website"),
+        }),
+      });
+
+      if (!res.ok) {
+        toast.error(t("submitError"));
+        return;
+      }
+
+      toast.success(t("submitSuccess"));
+      onSuccess?.();
+      form.reset();
+      setInquiryType(null);
+    } catch {
+      toast.error(t("submitError"));
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <input
+        type="text"
+        name="website"
+        tabIndex={-1}
+        autoComplete="off"
+        className="hidden"
+        aria-hidden
+      />
       <div className="space-y-2">
         <Label htmlFor="name">{t("name")}</Label>
         <Input id="name" name="name" className="min-h-12 text-base" />
@@ -92,8 +127,12 @@ export function ContactForm({ onSuccess }: ContactFormProps) {
           className="min-h-12 text-base"
         />
       </div>
-      <Button type="submit" className="tap-target w-full bg-brand text-brand-foreground hover:bg-brand/90">
-        {t("submit")}
+      <Button
+        type="submit"
+        disabled={sending}
+        className="tap-target w-full bg-brand text-brand-foreground hover:bg-brand/90"
+      >
+        {sending ? t("sending") : t("submit")}
       </Button>
     </form>
   );

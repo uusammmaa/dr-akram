@@ -1,6 +1,7 @@
 import { aboutPage } from "./aboutPage";
 import { afkarIssue } from "./afkarIssue";
 import { book } from "./book";
+import { faqEntry } from "./faqEntry";
 import { honor } from "./honor";
 import { lecture } from "./lecture";
 import { careerMilestone } from "./objects/careerMilestone";
@@ -18,4 +19,5 @@ export const schemaTypes = [
   honor,
   organization,
   afkarIssue,
+  faqEntry,
 ];

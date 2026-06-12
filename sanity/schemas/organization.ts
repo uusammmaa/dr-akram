@@ -9,22 +9,26 @@ export const organization = defineType({
       name: "nameEn",
       title: "Name (English)",
       type: "string",
+      description: "Organization name in English.",
       validation: (rule) => rule.required(),
     }),
     defineField({
       name: "nameUr",
       title: "Name (Urdu)",
       type: "string",
+      description: "Organization name in Urdu.",
     }),
     defineField({
       name: "roleEn",
       title: "Role (English)",
       type: "string",
+      description: "Your role at this organization.",
     }),
     defineField({
       name: "roleUr",
       title: "Role (Urdu)",
       type: "string",
+      description: "Your role in Urdu.",
     }),
     defineField({
       name: "status",
@@ -37,22 +41,26 @@ export const organization = defineType({
         ],
       },
       initialValue: "current",
+      description: "Current or former affiliation.",
     }),
     defineField({
       name: "logo",
       title: "Logo",
       type: "image",
+      description: "Upload organization logo.",
     }),
     defineField({
       name: "url",
       title: "Website URL",
       type: "url",
+      description: "Organization website link.",
     }),
     defineField({
       name: "order",
       title: "Sort Order",
       type: "number",
       initialValue: 0,
+      description: "Lower numbers appear first on About page.",
     }),
   ],
   preview: {

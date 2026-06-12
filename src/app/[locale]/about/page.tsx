@@ -1,7 +1,12 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { CareerTimeline } from "@/components/about/CareerTimeline";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildBreadcrumbList, buildPerson, buildWebSite } from "@/lib/seo/json-ld";
+import { buildPageMetadata, excerpt } from "@/lib/seo/metadata";
+import { getDefaultOgImageUrl } from "@/lib/seo/og-image";
 import { OrgCard } from "@/components/organizations/OrgCard";
 import { localizedText } from "@/lib/i18n/cms";
 import { PORTRAIT_SRC } from "@/lib/site-images";
@@ -20,6 +25,27 @@ type Props = {
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const loc = locale as "en" | "ur";
+  const [about, t] = await Promise.all([
+    getAboutPage(),
+    getTranslations({ locale, namespace: "metadata" }),
+  ]);
+  const bioExcerpt = about
+    ? excerpt(localizedText(about, "bio", loc))
+    : "";
+  const imageUrl = await getDefaultOgImageUrl();
+
+  return buildPageMetadata({
+    locale: loc,
+    path: "/about",
+    title: t("about.title"),
+    description: bioExcerpt || t("about.description"),
+    imageUrl,
+  });
 }
 
 export default async function AboutPage({ params }: Props) {
@@ -45,7 +71,22 @@ export default async function AboutPage({ params }: Props) {
     ? await getBlurDataUrl(portraitSrc)
     : undefined;
 
+  const ogImageUrl = await getDefaultOgImageUrl();
+  const loc = locale as "en" | "ur";
+  const tMeta = await getTranslations({ locale, namespace: "metadata" });
+
   return (
+    <>
+      <JsonLd
+        data={[
+          buildWebSite(loc),
+          buildPerson(loc, ogImageUrl),
+          buildBreadcrumbList(loc, [
+            { name: tMeta("home.title"), path: "/" },
+            { name: tMeta("about.title"), path: "/about" },
+          ]),
+        ]}
+      />
     <div className="mx-auto max-w-3xl px-4 py-8 sm:py-12">
       <h1 className="text-2xl font-semibold text-brand sm:text-3xl">
         {t("about.title")}
@@ -100,5 +141,6 @@ export default async function AboutPage({ params }: Props) {
         </section>
       )}
     </div>
+    </>
   );
 }

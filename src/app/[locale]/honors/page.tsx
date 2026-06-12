@@ -1,5 +1,7 @@
+import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
+import { buildStaticPageMetadata } from "@/lib/seo/page-metadata";
 import { HonorsPageContent } from "@/components/honors/HonorsPageContent";
 import { sanityImageUrl } from "@/lib/sanity/image";
 import { getBlurMap } from "@/lib/sanity/plaiceholder";
@@ -11,6 +13,11 @@ type Props = {
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  return buildStaticPageMetadata(locale as "en" | "ur", "/honors", "honors");
 }
 
 export default async function HonorsPage({ params }: Props) {

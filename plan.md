@@ -1,7 +1,7 @@
 # Website Plan — Prof. Dr. Mian Muhammad Akram
 
-> **Status:** **Phases 1, 1c, 1b, 2 complete** — all main content pages wired to Sanity (`aboutPage`, `book`, `readingRecommendation`, `lecture`, `honor`, `organization`, `afkarIssue`); home featured grid + latest lectures from CMS; `/questions` still placeholder until Phase 4. All CMS images: direct Sanity upload (§5.2). **Next:** seed CMS content in Studio, then **Phase 3** (SEO, guided tour, Resend, deploy).  
-> **Last updated:** 8 June 2026 — **Phase 2** (tasks 2.0–2.8) complete. **Manual:** publish content in Studio.
+> **Status:** **Phases 1, 1c, 1b, 2, 3 (engineering) complete** — CMS UX (English-only Studio UI, Help desk, guided tour), SEO foundation (`generateMetadata`, sitemap, robots, JSON-LD), GSAP About timeline, Resend contact form, Vercel Analytics. `faqEntry` schema + Studio Inbox/Published views ready; `/questions` public page still **Phase 4**. All CMS images: direct Sanity upload (§5.2). **Next:** **Phase 4** (public Q&A + ask form), then manual **3.10** deploy + **3.11** domain.  
+> **Last updated:** 12 June 2026 — **Phase 3** (tasks 3.1–3.5, 3.7–3.9) complete. **Studio UI:** English-only (sidebar, Help, tour, field hints); Urdu remains on public site + bilingual content fields (`titleUr`, `bioUr`, etc.). **Manual:** seed/publish CMS content; deploy to Vercel; set `RESEND_*` + `NEXT_PUBLIC_SITE_URL`.
 
 ---
 
@@ -289,11 +289,11 @@ The site must remain **fully usable and beautiful** on phones — responsive lay
 
 ### 5.3 CMS Help & Guided Tour (for father)
 
-> **Goal:** Father opens Sanity on his phone and **never feels lost**. Two layers: (1) a **one-time interactive tour** on first login, and (2) a permanent **Help section** he can open anytime — both bilingual Urdu + English.
+> **Goal:** Father opens Sanity on his phone and **never feels lost**. Two layers: (1) a **one-time interactive tour** on first login, and (2) a permanent **Help section** he can open anytime — **English-only Studio UI**. Urdu is for **visitor-facing** website content only (`/ur` routes, `messages/ur.json`, CMS fields like `bioUr`, `titleUr`).
 
 **Design principles:**
 - Large text (min 18px in Studio help UI), simple steps, no jargon
-- **Urdu + English** on every screen — Urdu RTL layout in help panel
+- **English-only** sidebar labels, Help desk, tour, and gray field hints — content fields still labeled e.g. `Title (Urdu)` so he knows which visitor language he is editing
 - Mobile-first — he will admin from WhatsApp-era Android phones
 - “What do I want to do?” task menu, not technical CMS terms
 - **Skip tour** anytime; **Restart tour** always available from Help
@@ -304,43 +304,43 @@ The site must remain **fully usable and beautiful** on phones — responsive lay
 
 **When it runs:**
 - Automatically on **first login** to Sanity Studio
-- Again if he taps **"دوبارہ тур / Restart tour"** in Help
+- Again if he taps **Restart tour** in Help
 - Stored flag: `tourCompleted` in browser localStorage + optional Sanity user preference
 
 **Tour steps (~10):**
 
-| Step | Highlights | Urdu hint |
-|---|---|---|
-| 1 | Welcome — “This is where you update your website” | خوش آمدید — یہاں آپ اپنی ویب سائٹ اپ ڈیٹ کرتے ہیں |
-| 2 | Left sidebar — list of sections | بائیں طرف تمام حصے |
-| 3 | **Site Settings** — photo, phone, WhatsApp, email | اپنی تصویر اور رابطہ نمبر |
-| 3b | **About Page** — biography + career timeline | میرے بارے میں — تعارف اور پیشہ |
-| 4 | **Books** — My Books + Recommended Reading | کتابیں — اپنی اور تجویز کردہ |
-| 5 | **Q&A** — answer visitor questions | سوالات — آنے والے سوالات |
-| 6 | **Honors** — shields & awards photos | اعزازات کی تصاویر |
-| 7 | **Lectures** — paste YouTube link only | یوٹیوب لنک پیسٹ کریں |
-| 8 | **Help button** — come here when stuck | مدد — جب بھی الجھن ہو |
-| 9 | Done — changes go live in ~1 minute | محفوظ کریں — چند لمحوں میں سائٹ پر |
+| Step | Highlights |
+|---|---|
+| 1 | Welcome — “This is where you update your website” |
+| 2 | Left sidebar — list of sections |
+| 3 | **Site Settings** — photo, phone, WhatsApp, email |
+| 3b | **About Page** — biography + career timeline |
+| 4 | **Books** — My Books + Recommended Reading |
+| 5 | **Q&A** — answer visitor questions |
+| 6 | **Honors** — shields & awards photos |
+| 7 | **Lectures** — paste YouTube link only |
+| 8 | **Help** — come here when stuck |
+| 9 | Done — changes go live in ~1 minute |
 
 Each step spotlights the real UI element (`data-tour="..."` attributes on desk structure).
 
 #### B. Permanent Help desk (always available)
 
-**Access:** Fixed **? مدد / Help** button in Sanity Studio top bar — visible on every screen.
+**Access:** Fixed **Help** button in Sanity Studio top bar — visible on every screen. Same content also pinned in sidebar.
 
 **Opens:** Full-screen help panel (sheet on mobile) with two tabs:
 
 | Tab | Content |
 |---|---|
-| **میں کیا کرنا چاہتا ہوں / What do I want to do?** | Task cards — tap a task → step-by-step instructions |
-| **تمام حصے / All sections** | Reference list of every CMS area and what it controls on the live site |
+| **What do I want to do?** | Task cards — tap a task → step-by-step instructions |
+| **All sections** | Reference list of every CMS area and what it controls on the live site |
 
 **Task cards** *(tap to expand steps + optional screenshot)*:
 
 | Task | Where in CMS | Quick steps |
 |---|---|---|
 | **Update my homepage photo** | Site Settings → Portrait | Upload JPEG/PNG → Save → Publish |
-| **Update my biography or career** | About Page (میرے بارے میں) | Edit bio Urdu + English → add/reorder timeline milestones → Save |
+| **Update my biography or career** | About Page | Edit bio in English and Urdu → add/reorder timeline milestones → Save |
 | **Change phone or WhatsApp** | Site Settings → Contact | Edit number → Save. Appears on Contact page + mobile bar |
 | **Add a new book** | Books → My Books → Create | Title → Cover → Description → Level → Save |
 | **Suggest a book to read** | Books → Recommended Reading → Create | Title → Author → Topic → **Why I recommend this** (Urdu + English) → Cover → Save |
@@ -354,7 +354,7 @@ Each step spotlights the real UI element (`data-tour="..."` attributes on desk s
 | **Something went wrong** | Help → Contact support | WhatsApp link to son *(pre-filled message)* |
 
 **Help content source:**
-- **Launch:** Static bilingual copy in code (`/sanity/help/` JSON or TS) — version-controlled, fast
+- **Launch:** Static English copy in code (`sanity/help/tasks.ts`, `sanity/help/tour.ts`) — version-controlled, fast
 - **Post-launch (optional):** `helpArticle` documents in Sanity — son can edit tips without redeploying
 
 #### C. Inline hints (always on, zero extra clicks)
@@ -363,31 +363,31 @@ Built into schemas and custom inputs — father sees hints **on the form itself*
 
 | Location | Hint example |
 |---|---|
-| Book cover | *"پبلشر کی تصویر یا کتاب کی فوٹو — یہاں اپ لوڈ کریں"* |
-| Honor photo | *"تقریب کی تصویر — براہ راست اپ لوڈ کریں"* |
-| Lecture YouTube field | *"صرف YouTube link چپکائیں — thumbnail خود آ جائے گا"* |
-| `featured` toggle | *"Homepage par dikhane ke liye ON karein"* |
+| Book cover | *"Upload the publisher cover or a photo of the book."* |
+| Honor photo | *"Upload a photo from the ceremony."* |
+| Lecture YouTube field | *"Paste the YouTube URL only — thumbnail loads automatically."* |
+| `featured` toggle | *"Turn on to show this item on the homepage."* |
 
 Sanity schema `description` fields on every document type — shown as gray helper text under field labels.
 
 #### D. Studio structure (clear labels for father)
 
-Sidebar grouped and labeled in **Urdu + English** — matches live site sections:
+Sidebar grouped and labeled in **English** — matches live site sections. Bilingual field labels (`Title (Urdu)`, etc.) remain on document forms.
 
 ```
-🏠 Site Settings (ترتیبات)
-   └── About Page (میرے بارے میں)   ← bio + career timeline
-📚 Books
-   ├── My Books (میری کتابیں)
-   └── Recommended Reading (مطالعہ کی تجویز)
-❓ Q&A (سوالات و جوابات)
+Site Settings
+   └── About Page   ← bio + career timeline
+Books
+   ├── My Books
+   └── Recommended Reading
+Q&A
    ├── Inbox (pending questions)
    └── Published FAQ
-🏆 Honors & Awards (اعزازات)
-🎬 Lectures (لیکچرز)
-📰 Afkar-e-Muallim (افکار معلم)
-🏛️ Organizations (ادارے)
-❓ Help (مدد)          ← pinned, always last
+Honors & Awards
+Lectures
+Afkar-e-Muallim
+Organizations
+Help          ← pinned, always last
 ```
 
 No duplicate or developer-only document types visible to father’s role.
@@ -403,8 +403,9 @@ No duplicate or developer-only document types visible to father’s role.
 | Component | Purpose |
 |---|---|
 | `HelpDeskTool` | Navbar Help button + task cards panel |
+| `HelpDeskContent` | Task cards + sections tabs (sidebar pane + tool) |
 | `GuidedTour` | `driver.js` wrapper, first-login + restart |
-| `TourProvider` | Context for tour state, Urdu/EN toggle in help UI |
+| `StudioLayout` | Mounts guided tour globally on Studio load |
 
 ### 5.4 Q&A Knowledge Base & AI Roadmap
 
@@ -1460,24 +1461,24 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 | | |
 |---|---|
-| **Build** | `structure.ts`: grouped sidebar Urdu+EN labels; Books split; Q&A split; Help pinned last |
+| **Build** | `structure.ts`: grouped sidebar **English-only** labels; Books split; Q&A split; Help pinned last |
 | **Verify** | Sidebar matches §5.3D tree exactly; no dev-only types visible |
-| **Do not** | Rename sections without bilingual labels |
+| **Do not** | Bilingual sidebar labels — father reads English; Urdu is visitor-facing only |
 
 #### 3.2 — Schema descriptions (inline hints)
 
 | | |
 |---|---|
-| **Build** | `description` on every field per §5.3C table |
+| **Build** | `description` on every field per §5.3C table — **English-only** helper text |
 | **Verify** | Open book cover + honor + lecture in Studio → gray helper text visible |
-| **Do not** | English-only hints |
+| **Do not** | Urdu in `description` strings — keep `Title (Urdu)` etc. on field labels |
 
 #### 3.3 — Help desk (`HelpDeskTool`)
 
 | | |
 |---|---|
-| **Build** | `sanity/components/HelpDeskTool.tsx`; static content `sanity/help/tasks.ts` (bilingual); `? مدد / Help` navbar button |
-| **Verify** | Help opens on mobile; task cards expand steps; Urdu RTL in panel |
+| **Build** | `sanity/components/GuidedTour.tsx` (`HelpDeskTool`); `HelpDeskContent`; static content `sanity/help/tasks.ts` (English); **Help** navbar button |
+| **Verify** | Help opens on mobile; task cards expand steps; readable on dark Studio theme |
 | **Do not** | `helpArticle` CMS type (post-launch optional) |
 
 #### 3.4 — Guided tour (`driver.js`)
@@ -1496,7 +1497,7 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 | **Verify** | Motion runs on 320px viewport; `prefers-reduced-motion` disables Lenis + heavy effects |
 | **Do not** | `useIsDesktop` gates that strip animation on mobile — removed per §5.1 |
 
-#### 3.6 — Optional 3D hero + parallax extras
+#### 3.6 — Optional 3D hero + parallax extras *(skipped — not required for launch)*
 
 | | |
 |---|---|
@@ -1592,11 +1593,13 @@ src/app/[locale]/page.tsx       # compose sections; full-bleed layout
 
 **Phase 3 exit:** Site on Vercel (+ domain if ready). Father completes guided tour on production Studio. Contact form sends email. **SEO foundation live** (§5.6 / 3.7). **Soft launch** — Q&A page may still be empty until Phase 4.
 
+> **Done (12 June 2026):** Tasks 3.1–3.5, 3.7–3.9 verified. English-only Studio UI (sidebar, Help, tour, schema hints). `sanity/help/tasks.ts`, `tour.ts`, `HelpDeskContent`, `GuidedTour`, `StudioLayout`. `faqEntry` schema + Inbox/Published structure (public page deferred Phase 4). GSAP `CareerTimeline` ScrollTrigger. SEO: `src/lib/seo/*`, `sitemap.ts`, `robots.ts`, `JsonLd`, per-page `generateMetadata`. `@vercel/analytics` + speed insights. `POST /api/contact` (Resend). `pnpm build` passes. **Skipped:** 3.6 R3F hero. **Manual pending:** 3.10 Vercel deploy, 3.11 domain, GSC sitemap submit.
+
 ### Phase 4 — Q&A & public launch (§5.4)
 
 **Goal:** Public FAQ + ask flow live. **Public launch** with father walkthrough — Phase 3 may already be on production without Q&A.
 
-#### 4.1 — `faqEntry` schema
+#### 4.1 — `faqEntry` schema *(schema + Studio views done in Phase 3 — verify + seed content)*
 
 | | |
 |---|---|
@@ -1771,7 +1774,7 @@ Phase 1c  → Techwind personal home redesign (animated landing)
 Phase 1b  → Sanity siteSettings on site (+ wire into 1c hero)
 Phase 2   → All schemas + pages (plain image upload)
 Phase 2.0 → aboutPage bio + career timeline in CMS
-Phase 3   → Help, tour, SEO (§5.6: metadata, hreflang, sitemap, JSON-LD), Resend, Vercel, domain (+ Techwind contact/blog patterns)
+Phase 3   → Help, tour, SEO (§5.6), Resend, Analytics — English-only Studio UI; deploy/domain manual (3.10–3.11)
 Phase 4   → Q&A + public launch
 Phase 5   → AI (when corpus large enough)
 Phase 6   → Weekly briefs (private)
@@ -1823,6 +1826,16 @@ Phase 6   → Weekly briefs (private)
 | 2.6 | 8 Jun 2026 | dev | `/services` i18n sections; `/afkar` carousel; About orgs grid |
 | 2.7 | 8 Jun 2026 | build | Home featured books/honors + latest lectures from CMS |
 | 2.8 | 8 Jun 2026 | build | `plaiceholder` blur; `img.youtube.com` in `next.config.ts`; `pnpm build` OK |
+| 3.1 | 12 Jun 2026 | studio | `structure.ts` English-only sidebar; Books/Q&A split; Help pinned |
+| 3.2 | 12 Jun 2026 | studio | English-only `description` hints on all schemas |
+| 3.3 | 12 Jun 2026 | studio | `HelpDeskTool`, `HelpDeskContent`, `sanity/help/tasks.ts` |
+| 3.4 | 12 Jun 2026 | studio | `driver.js` guided tour; `StudioLayout` global mount; `tour.ts` |
+| 3.5 | 12 Jun 2026 | build | GSAP ScrollTrigger on `CareerTimeline` (About page) |
+| 3.7 | 12 Jun 2026 | build | `src/lib/seo/*`, `sitemap.ts`, `robots.ts`, `generateMetadata` all pages |
+| 3.8 | 12 Jun 2026 | build | `@vercel/analytics` + `@vercel/speed-insights` in root layout |
+| 3.9 | 12 Jun 2026 | build | `POST /api/contact` (Resend); `ContactForm` wired |
+| 3.P1 | 12 Jun 2026 | studio | English-only Studio UI policy — Urdu visitor-facing only |
+| 3.P2 | 12 Jun 2026 | studio | `faqEntry` schema + Inbox/Published views (public page Phase 4) |
 
 *Copy a row per completed task. If Verify failed, note fix before marking done.*
 
@@ -1843,7 +1856,7 @@ Phase 6   → Weekly briefs (private)
 
 ## 11. Next Step
 
-**Phases 1, 1c, 1b, 2 complete.** Seed CMS content in Studio, then **Phase 3** (SEO, guided tour, Resend, deploy).
+**Phases 1, 1c, 1b, 2, 3 (engineering) complete.** **Phase 4** next (public Q&A page, ask form, individual question URLs). Then manual deploy (3.10) + domain (3.11).
 
 **Sanity (father / developer) — seed content:**
 1. **Site Settings** → tagline, phone, WhatsApp, email, portrait → **Publish**
@@ -1857,9 +1870,11 @@ Phase 6   → Weekly briefs (private)
 
 **Env** (`.env.local`): `NEXT_PUBLIC_SANITY_PROJECT_ID=5ce34emc`, `NEXT_PUBLIC_SANITY_DATASET=production`.
 
-Run locally: `pnpm dev` → `/en`, `/ur`, or `/studio`. Production build: `pnpm build` (webpack).
+Run locally: `pnpm dev` → `/en`, `/ur`, or `/studio`. Production build: `pnpm build` (webpack). If dev crashes with JSON parse errors, stop server, `rm -rf .next`, restart.
 
-`/questions` (Q&A) is **Phase 4**. Contact form email (Resend) is **Phase 3.9**.
+**Env for production:** `NEXT_PUBLIC_SITE_URL`, `RESEND_API_KEY`, `RESEND_FROM_EMAIL` (see `.env.example`).
+
+`/questions` public page + ask form is **Phase 4**. Contact form email (Resend) is wired — set Resend env vars to test.
 
 ---
 
@@ -1889,25 +1904,25 @@ You update content yourself in **Sanity** (admin panel). No need to call the dev
 1. Open the **Sanity Studio link** (son will send after launch).  
 2. Log in with your email.  
 3. **First time:** a short **guided tour** walks you through the screen (~2 minutes).  
-4. **Anytime you’re stuck:** tap **? مدد / Help** (top bar) — task list in Urdu + English.  
-5. **Restart tour:** Help → **دوبارہ тур / Restart tour**.
+4. **Anytime you’re stuck:** tap **Help** (top bar or sidebar) — step-by-step task list in English.  
+5. **Restart tour:** Help → **Restart tour**.
 
 **Sidebar (what each section controls):**
 
 | Section | What it updates on the live site |
 |---|---|
-| **Site Settings** (ترتیبات) | Your photo, phone, WhatsApp, email, tagline, Google/WhatsApp preview text (SEO description) |
-| **About Page** (میرے بارے میں) | Biography (Urdu + English) and career timeline |
-| **Books → My Books** (میری کتابیں) | Textbooks & works you wrote |
-| **Books → Recommended Reading** (مطالعہ کی تجویز) | Books you suggest others read |
-| **Honors** (اعزازات) | Shields, trophies, certificates |
-| **Lectures** (لیکچرز) | YouTube videos |
-| **Afkar Issues** (افکار معلم) | Magazine covers & PDFs/links |
-| **Organizations** (ادارے) | AFAQ, Tanzeem, etc. — logos & roles |
-| **Q&A → Inbox** (سوالات — Inbox) | Visitor questions waiting for your answer |
-| **Q&A → Published** (شائع شدہ) | Live FAQ on website |
-| **Content Studio** (مواد سازی) | *Private* — weekly video topics & scripts *(not on public site)* |
-| **Help** (مدد) | Instructions — always here |
+| **Site Settings** | Your photo, phone, WhatsApp, email, tagline, Google/WhatsApp preview text (SEO description) |
+| **About Page** | Biography (Urdu + English) and career timeline |
+| **Books → My Books** | Textbooks & works you wrote |
+| **Books → Recommended Reading** | Books you suggest others read |
+| **Honors & Awards** | Shields, trophies, certificates |
+| **Lectures** | YouTube videos |
+| **Afkar-e-Muallim** | Magazine covers & PDFs/links |
+| **Organizations** | AFAQ, Tanzeem, etc. — logos & roles |
+| **Q&A → Inbox** | Visitor questions waiting for your answer |
+| **Q&A → Published FAQ** | Live FAQ on website |
+| **Content Studio** | *Private* — weekly video topics & scripts *(not on public site; Phase 6)* |
+| **Help** | Instructions — always here |
 
 ---
 
@@ -1925,21 +1940,21 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 ### Task-by-task guide
 
 #### Update your homepage photo or contact numbers
-**Where:** Site Settings (ترتیبات)
+**Where:** Site Settings
 
 - **Photo:** Upload JPEG/PNG → Save → Publish.  
 - **Phone / WhatsApp / Email:** Edit → Save. Shows on Contact page and mobile Call/WhatsApp buttons.  
 - **SEO description (Urdu + English):** Short summary of who you are — appears when someone shares the website link on WhatsApp or Google. Keep under ~2 lines each language.
 
 #### Update your biography or career timeline
-**Where:** About Page (میرے بارے میں)
+**Where:** About Page
 
 1. **Biography** — write or edit Urdu + English text (like a short intro for students and visitors).  
 2. **Career timeline** — add milestones: year, title (Urdu + English), optional detail. Use **order** to sort oldest → newest.  
 3. Save → About page on the website updates within ~1 minute.
 
 #### Add a book you wrote
-**Where:** Books → **My Books** (میری کتابیں) → Create
+**Where:** Books → **My Books** → Create
 
 1. Title (Urdu + English)  
 2. **Cover:** Upload cover image (publisher file or photo of book) → Save.  
@@ -1947,7 +1962,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 4. Turn **Featured** ON to show on homepage  
 
 #### Suggest a book for others to read
-**Where:** Books → **Recommended Reading** (مطالعہ کی تجویز) → Create
+**Where:** Books → **Recommended Reading** → Create
 
 1. Title + **Author name**  
 2. **Topic** (Islamic Economics, Quran, etc.)  
@@ -1957,7 +1972,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 6. **Featured** → homepage “Dr. Akram recommends” teaser  
 
 #### Add a shield, trophy, or certificate
-**Where:** Honors (اعزازات) → Create
+**Where:** Honors & Awards → Create
 
 1. Upload photo (JPEG/PNG)  
 2. Pick type: Shield · Trophy · Certificate · etc.  
@@ -1965,7 +1980,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 4. **Featured** → homepage carousel → Save → Publish  
 
 #### Add a lecture video
-**Where:** Lectures (لیکچرز) → Create
+**Where:** Lectures → Create
 
 - Paste **YouTube link only** — thumbnail comes automatically.  
 - Add title and description. No need to upload video files.
@@ -1985,7 +2000,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 - Use official logo file when possible; otherwise upload a clean PNG/JPG  
 
 #### Answer a visitor’s question
-**Where:** Q&A → **Inbox** (سوالات — Inbox)
+**Where:** Q&A → **Inbox**
 
 1. Open a **pending** question (email notifies you when new ones arrive)  
 2. Write your answer in **Urdu and English**  
@@ -2055,12 +2070,12 @@ If something breaks or you’re unsure → **Help** in admin **or** WhatsApp son
 ┌─────────────────────────────────────────────────────────┐
 │  DR. AKRAM WEBSITE — QUICK GUIDE                        │
 ├─────────────────────────────────────────────────────────┤
-│  Stuck?        →  ? مدد / Help  (top bar)              │
+│  Stuck?        →  Help  (top bar or sidebar)            │
 │  Photos/covers  →  Direct upload (JPG/PNG)              │
 │  YouTube lecture? → Paste link only                     │
 ├─────────────────────────────────────────────────────────┤
 │  My photo/phone     → Site Settings                     │
-│  My bio / career    → About Page (میرے بارے میں)         │
+│  My bio / career    → About Page                        │
 │  My book            → Books → My Books                  │
 │  Book to recommend  → Books → Recommended Reading       │
 │  Shield/award       → Honors → upload photo               │
@@ -2073,8 +2088,7 @@ If something breaks or you’re unsure → **Help** in admin **or** WhatsApp son
 └─────────────────────────────────────────────────────────┘
 ```
 
-**Urdu one-liner summary:**  
-*“تصاویر براہ راست اپ لوڈ کریں (JPG/PNG)۔ الجھن ہو تو Help دبائیں۔”*
+**Quick summary:** Upload photos directly (JPG/PNG). Stuck? Tap **Help**.
 
 ---
 

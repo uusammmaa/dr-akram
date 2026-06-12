@@ -1,7 +1,12 @@
-import { setRequestLocale } from "next-intl/server";
+import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { HomeMotionShell } from "@/components/home/HomeMotionShell";
+import { JsonLd } from "@/components/seo/JsonLd";
 import { localizedText } from "@/lib/i18n/cms";
+import { buildPageMetadata } from "@/lib/seo/metadata";
+import { buildPerson, buildWebSite } from "@/lib/seo/json-ld";
+import { getDefaultOgImageUrl } from "@/lib/seo/og-image";
 import { sanityImageUrl } from "@/lib/sanity/image";
 import { getBlurDataUrl, getBlurMap } from "@/lib/sanity/plaiceholder";
 import {
@@ -20,6 +25,23 @@ type Props = {
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  const settings = await getSiteSettings();
+  const cmsDescription =
+    settings && localizedText(settings, "metaDescription", locale);
+  const imageUrl = await getDefaultOgImageUrl();
+
+  return buildPageMetadata({
+    locale: locale as "en" | "ur",
+    path: "/",
+    title: t("home.title"),
+    description: cmsDescription ?? t("home.description"),
+    imageUrl,
+  });
 }
 
 export default async function HomePage({ params }: Props) {
@@ -75,16 +97,27 @@ export default async function HomePage({ params }: Props) {
     featuredItems.map((item) => ({ id: item.id, imageUrl: item.imageUrl }))
   );
 
+  const ogImageUrl = await getDefaultOgImageUrl();
+  const loc = locale as "en" | "ur";
+
   return (
-    <HomeMotionShell
-      locale={locale}
-      tagline={tagline}
-      portraitSrc={portraitSrc}
-      portraitBlur={portraitBlur}
-      milestones={milestones}
-      featuredItems={featuredItems.length > 0 ? featuredItems : undefined}
-      featuredBlurs={featuredBlurs}
-      latestLectures={latestLectures.length > 0 ? latestLectures : undefined}
-    />
+    <>
+      <JsonLd
+        data={[
+          buildWebSite(loc),
+          buildPerson(loc, ogImageUrl),
+        ]}
+      />
+      <HomeMotionShell
+        locale={locale}
+        tagline={tagline}
+        portraitSrc={portraitSrc}
+        portraitBlur={portraitBlur}
+        milestones={milestones}
+        featuredItems={featuredItems.length > 0 ? featuredItems : undefined}
+        featuredBlurs={featuredBlurs}
+        latestLectures={latestLectures.length > 0 ? latestLectures : undefined}
+      />
+    </>
   );
 }
