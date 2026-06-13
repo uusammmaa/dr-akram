@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { driver } from "driver.js";
 import "driver.js/dist/driver.css";
+import "./guided-tour.css";
+import { navigateToStructureRoot } from "../help/find-tour-target";
 import {
   clearTourCompleted,
   isTourCompleted,
@@ -13,16 +15,21 @@ import { HelpDeskContent } from "./HelpDeskContent";
 
 let activeDriver: ReturnType<typeof driver> | null = null;
 
-export function startGuidedTour(force = false): void {
+async function runGuidedTour(force = false): Promise<void> {
   if (!force && isTourCompleted()) return;
 
   activeDriver?.destroy();
+
+  await navigateToStructureRoot();
+  await new Promise<void>((r) => setTimeout(r, 200));
 
   activeDriver = driver({
     showProgress: true,
     allowClose: true,
     overlayOpacity: 0.65,
-    stagePadding: 8,
+    stagePadding: 10,
+    smoothScroll: true,
+    popoverClass: "dr-akram-tour-popover",
     steps: tourSteps,
     onDestroyed: () => {
       markTourCompleted();
@@ -31,6 +38,10 @@ export function startGuidedTour(force = false): void {
   });
 
   activeDriver.drive();
+}
+
+export function startGuidedTour(force = false): void {
+  void runGuidedTour(force);
 }
 
 export function restartGuidedTour(): void {
@@ -48,7 +59,7 @@ export function GuidedTourMount() {
 
     const timer = window.setTimeout(() => {
       startGuidedTour(false);
-    }, 1200);
+    }, 1800);
 
     return () => window.clearTimeout(timer);
   }, []);
