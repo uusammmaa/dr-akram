@@ -121,6 +121,26 @@ export type AfkarIssue = {
   order?: number;
 };
 
+export type FaqEntry = {
+  _id: string;
+  _updatedAt?: string;
+  questionEn?: string;
+  questionUr?: string;
+  answerEn?: string;
+  answerUr?: string;
+  topic?: string;
+  status?: "pending" | "published" | "private";
+  submitterName?: string;
+  submitterPhone?: string;
+  submitterEmail?: string;
+  language?: "ur" | "en" | "both";
+  answeredAt?: string;
+  featured?: boolean;
+  order?: number;
+  slug?: { current: string };
+  aiReady?: boolean;
+};
+
 export type FeaturedHomeItem = {
   id: string;
   kind: "book" | "honor";
