@@ -4,6 +4,7 @@ import type {
   AboutPage,
   AfkarIssue,
   Book,
+  FaqEntry,
   Honor,
   Lecture,
   Organization,
@@ -72,6 +73,23 @@ const latestLecturesQuery = `*[_type == "lecture"] | order(publishedAt desc, ord
   _id, titleEn, titleUr, youtubeUrl, category, publishedAt
 }`;
 
+const faqFields = `
+  _id, _updatedAt, questionEn, questionUr, answerEn, answerUr, topic,
+  featured, order, slug, answeredAt
+`;
+
+const publishedFaqQuery = `*[_type == "faqEntry" && status == "published"] | order(order asc, answeredAt desc){
+  ${faqFields}
+}`;
+
+const featuredFaqQuery = `*[_type == "faqEntry" && status == "published" && featured == true] | order(order asc, answeredAt desc)[0...3]{
+  ${faqFields}
+}`;
+
+const faqBySlugQuery = `*[_type == "faqEntry" && status == "published" && slug.current == $slug][0]{
+  ${faqFields}
+}`;
+
 export const getSiteSettings = cache(async (): Promise<SiteSettings | null> =>
   fetchSanity<SiteSettings>(siteSettingsQuery)
 );
@@ -114,6 +132,18 @@ export const getFeaturedHonors = cache(async (): Promise<Honor[]> =>
 
 export const getLatestLectures = cache(async (): Promise<Lecture[]> =>
   (await fetchSanity<Lecture[]>(latestLecturesQuery)) ?? []
+);
+
+export const getPublishedFaqEntries = cache(async (): Promise<FaqEntry[]> =>
+  (await fetchSanity<FaqEntry[]>(publishedFaqQuery)) ?? []
+);
+
+export const getFeaturedFaqEntries = cache(async (): Promise<FaqEntry[]> =>
+  (await fetchSanity<FaqEntry[]>(featuredFaqQuery)) ?? []
+);
+
+export const getFaqEntryBySlug = cache(async (slug: string): Promise<FaqEntry | null> =>
+  fetchSanity<FaqEntry>(faqBySlugQuery, { slug })
 );
 
 export const getCurrentOrganizations = cache(async (): Promise<Organization[]> => {

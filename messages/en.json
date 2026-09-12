@@ -116,6 +116,32 @@
     "current": "Current",
     "former": "Former"
   },
+  "questions": {
+    "title": "Questions & Answers",
+    "searchPlaceholder": "Search questions…",
+    "allTopics": "All topics",
+    "topics": {
+      "Islamic Economics": "Islamic Economics",
+      "Dars / Quran": "Dars / Quran",
+      "Lectures": "Lectures",
+      "Books": "Books",
+      "General": "General"
+    },
+    "disclaimer": "For personal matters, contact via WhatsApp — published answers are general guidance.",
+    "emptyAll": "No questions published yet. Be the first to ask below.",
+    "emptyFiltered": "No questions match your search or filter.",
+    "askButton": "Ask a question",
+    "askTopic": "Topic",
+    "askQuestion": "Your question",
+    "askName": "Name (optional)",
+    "askPhone": "Phone (optional)",
+    "askEmail": "Email (optional)",
+    "askSubmit": "Submit question",
+    "askSending": "Sending…",
+    "askRequired": "Please choose a topic and write your question",
+    "askSuccess": "Your question has been sent. Dr. Akram will review and answer soon.",
+    "askError": "Could not send your question. Please try again or contact via WhatsApp."
+  },
   "contact": {
     "title": "Contact",
     "phone": "Phone",

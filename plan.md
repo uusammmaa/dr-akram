@@ -20,6 +20,7 @@
 ## 2. Confirmed Roles & Career
 
 ### Academic
+
 - **Retired** Professor of Economics & former **Principal**, Government College of Science, Wahdat Road, Lahore (retired 14 Oct 2020)
 - **Former** Head of Economics Department, Govt. College of Science
 - **Current (part-time):** Lecturer at **University of the Punjab** — **Islamic Economics** (some semesters)
@@ -27,6 +28,7 @@
 - Writer of books for M.A./M.Sc., M.Com., B.Com Hons., B.A./B.Sc., I.Com., F.A.
 
 ### Leadership & organizations
+
 | Role | Organization | Status |
 |---|---|---|
 | **Chairman / Director** | AFAQ (Association for Academic Quality) | Current |
@@ -38,11 +40,13 @@
 | **Board Member** | Al-Balagh Trust | Current |
 
 ### Services he offers (all equally important on site)
+
 1. **Dars-e-Quran** — available to whoever contacts him
 2. **Islamic finance / economics advice**
 3. **Lectures & speaking engagements** — physical and online, by invitation
 
 ### Reference links
+
 - AFAQ Board: https://afaq.edu.pk/board-of-directors/
 - Tanzeem-e-Asatiza: https://www.tapak.pk/
 - AFAQ: https://afaq.edu.pk/
@@ -52,6 +56,7 @@
 ## 3. Website Goals (confirmed)
 
 **Purpose:** A modern, bilingual personal/professional website where visitors can:
+
 - Learn who he is and trust his credentials
 - Browse his books and writings
 - See **reading recommendations** — books he suggests students and visitors should read
@@ -159,7 +164,9 @@ Home
 #### Practical install list (minimal `package.json`)
 
 ```bash
+
 # Core styling & components
+
 pnpm add tailwindcss @tailwindcss/typography tailwind-merge clsx class-variance-authority
 pnpm add lucide-react sonner vaul embla-carousel-react
 pnpm add framer-motion lenis @formkit/auto-animate
@@ -169,9 +176,11 @@ pnpm add next-themes
 pnpm add @vercel/analytics @vercel/speed-insights
 
 # shadcn/ui — init via CLI, pulls in @radix-ui/* per component
+
 pnpm dlx shadcn@latest init
 
 # Optional “wow” (3D hero, extra parallax — lazy-loaded, all viewports)
+
 pnpm add @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-parallax
 ```
 
@@ -240,11 +249,13 @@ pnpm add @react-three/fiber @react-three/drei gsap @gsap/react react-scroll-para
 The site must remain **fully usable and beautiful** on phones — responsive layout, touch-friendly controls, flawless Urdu RTL — while embracing rich motion and visual polish.
 
 #### Responsive targets
+
 - Works on screens as small as **320px** wide
 - No layout breaks in Urdu RTL on small screens
 - Hero, sections, and carousels animate smoothly on **mobile and desktop**
 
 #### What we will do
+
 | Area | Approach |
 |---|---|
 | **Layout** | Mobile-first CSS — design for phone first, scale up for desktop |
@@ -260,12 +271,14 @@ The site must remain **fully usable and beautiful** on phones — responsive lay
 | **Contact** | **Sticky WhatsApp + Call buttons** always visible on mobile |
 
 #### Priority mobile flows (must be one-tap easy)
+
 1. **Call** → `tel:` link
 2. **WhatsApp** → `wa.me` link with pre-filled greeting
 3. **Send invitation** → short contact form (few fields only)
 4. **Watch lecture** → tap thumbnail, then loads video
 
 #### Testing plan before launch
+
 - Test on **320px** and **375px** screen widths
 - Test Urdu RTL layout on small screen
 - Test hero parallax + section animations on a real phone (smooth, no broken layout)
@@ -292,6 +305,7 @@ The site must remain **fully usable and beautiful** on phones — responsive lay
 > **Goal:** Father opens Sanity on his phone and **never feels lost**. Two layers: (1) a **one-time interactive tour** on first login, and (2) a permanent **Help section** he can open anytime — **English-only Studio UI**. Urdu is for **visitor-facing** website content only (`/ur` routes, `messages/ur.json`, CMS fields like `bioUr`, `titleUr`).
 
 **Design principles:**
+
 - Large text (min 18px in Studio help UI), simple steps, no jargon
 - **English-only** sidebar labels, Help desk, tour, and gray field hints — content fields still labeled e.g. `Title (Urdu)` so he knows which visitor language he is editing
 - Mobile-first — he will admin from WhatsApp-era Android phones
@@ -303,6 +317,7 @@ The site must remain **fully usable and beautiful** on phones — responsive lay
 **Library:** `driver.js` — lightweight step overlay, touch-friendly, no heavy bundle.
 
 **When it runs:**
+
 - Automatically on **first login** to Sanity Studio
 - Again if he taps **Restart tour** in Help
 - Stored flag: `tourCompleted` in browser localStorage + optional Sanity user preference
@@ -354,6 +369,7 @@ Each step spotlights the real UI element (`data-tour="..."` attributes on desk s
 | **Something went wrong** | Help → Contact support | WhatsApp link to son *(pre-filled message)* |
 
 **Help content source:**
+
 - **Launch:** Static English copy in code (`sanity/help/tasks.ts`, `sanity/help/tour.ts`) — version-controlled, fast
 - **Post-launch (optional):** `helpArticle` documents in Sanity — son can edit tips without redeploying
 
@@ -455,6 +471,7 @@ Father may save a draft answer while still `pending`; only **Publish** moves to 
 **Public site shows only** `status: published`. **`private`** = personal question, not listed. **`pending`** = inbox for father in Sanity.
 
 **Studio views:**
+
 - **Inbox** — `pending` questions (answer queue)
 - **Published FAQ** — live on site
 - **AI corpus** — `published` + `aiReady: true` *(Phase 5)*
@@ -496,9 +513,13 @@ Father may save a draft answer while still `pending`; only **Publish** moves to 
 **Optional install (Phase 5 only — not Phase 1):**
 
 ```bash
+
 # Phase 5 — add when corpus is ready
+
 pnpm add ai @ai-sdk/openai          # Vercel AI SDK
+
 # + vector DB client (Pinecone etc.) — TBD at Phase 5
+
 ```
 
 #### Rules (non-negotiable)
@@ -765,6 +786,7 @@ Inject via `<script type="application/ld+json">` in Server Component — `src/co
 #### Sitemap & robots
 
 **`sitemap.ts`:**
+
 - Static routes × 2 locales (`en`, `ur`)
 - After Phase 4: dynamic `faqEntry` slugs where `status == "published"` × 2 locales
 - `lastModified` from Sanity `_updatedAt` where available
@@ -823,6 +845,7 @@ Father does **not** need Search Console access for v1.
 - Paid SEO tools / rank tracking
 
 ### What stays in code (rarely changes)
+
 - Site layout, design, navigation
 - About page **layout** (timeline UI, sections) — **copy lives in CMS** (`aboutPage` singleton)
 - Language system
@@ -836,6 +859,7 @@ Father does **not** need Search Console access for v1.
 **Layout reference:** Techwind **`index-personal.html`** (`techwind-330/.../HTML/Landing/src/index-personal.html`) — port patterns into Next.js with **green/gold palette** (not Techwind purple). Reuse: floating hero intro card, wave section divider, services card grid, experience timeline, full-width CTA band, image grids (→ books/honors). Skip: client logo strip, developer skill bars, freelancer copy.
 
 **Visual elements:**
+
 - Large professional portrait on homepage — upload in Site Settings
 - Warm, trustworthy palette (deep green / gold accents / off-white — Islamic scholarly without being dated)
 - Urdu: **Noto Nastaliq Urdu** via `next/font` (single subset weight)
@@ -845,6 +869,7 @@ Father does **not** need Search Console access for v1.
 - **Mobile-first layout** — phone layout is the primary design, not an afterthought
 
 **Mobile UI specifics:**
+
 - Fixed **bottom action bar** on phone: Call · WhatsApp · Contact
 - Single-column layout; no horizontal scrolling ever
 - Big readable text (min 16px body, larger headings)
@@ -869,6 +894,7 @@ Father does **not** need Search Console access for v1.
 *Phase 1c shipped rows 1–5 + 8 with placeholders for 6–7. Phase 2 (done) wired rows 4, 6–7 to CMS; Q&A teasers in row 7 deferred to Phase 4.*
 
 **Books page design:**
+
 - **Two tabs** at top — large, thumb-friendly: **میری کتابیں / My Books** · **مطالعہ کی تجویز / Recommended Reading**
 - Same card grid for both tabs; recommendation cards show **author** + short **"Why Dr. Akram recommends this"** quote *(truncated on card, full on tap)*
 - **My Books tab:** filter chips by level (M.A., B.Com., etc.)
@@ -878,6 +904,7 @@ Father does **not** need Search Console access for v1.
 - **Services → Islamic Economics Consultation** links here: *"See books Dr. Akram recommends"*
 
 **Q&A page design (سوالات و جوابات):**
+
 - Clean FAQ accordion — question headline → expand Dr. Akram’s answer (`prose`, RTL for Urdu)
 - Filter chips: Islamic Economics · Dars / Quran · Lectures · Books · General
 - Search bar at top *(keyword at launch; semantic in Phase 5)*
@@ -888,6 +915,7 @@ Father does **not** need Search Console access for v1.
 - **Phase 5d only:** optional “Ask AI” chat — lazy-loaded, cites source Q&A, WhatsApp fallback
 
 **Honors & Awards page design:**
+
 - Proud but dignified — trophy case / hall of recognition feel, not boastful
 - **Photo grid** — honors display uploaded photos as-is; consistent card layout via site CSS
 - **Grid layout:** 2 columns on phone, 3–4 on desktop
@@ -898,6 +926,7 @@ Father does **not** need Search Console access for v1.
 - Gold accent borders on featured items — matches site palette
 
 **Suggested tagline (draft — approve or edit):**
+
 - EN: *"Scholar of Islamic Economics · Educator · Author"*
 - UR: *"اسلامی معاشیات کے ماہر · استاد · مصنف"*
 
@@ -965,6 +994,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 ## 8. Content Checklist
 
 ### Ready now ✅
+
 - [x] Full name confirmed
 - [x] All roles & organizations confirmed
 - [x] PhD field confirmed (Economics / Islamic Economics)
@@ -986,6 +1016,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 - [x] Domain strategy: **`drmianakram.pk`** primary + **`drmianakram.com`** optional redirect (§7)
 
 ### Still needed before / during build 🔲
+
 - [ ] **Professional photo** (high-res JPEG/PNG for Site Settings portrait)
 - [ ] **Phone number** (for public display)
 - [ ] **WhatsApp number** (may be same as phone)
@@ -1003,6 +1034,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 - [ ] **SEO meta descriptions** — short EN + UR blurbs for Google/WhatsApp previews in **Site Settings** *(§5.6; son can draft from bio for father’s approval)*
 
 ### Nice-to-have (can add after launch)
+
 - [ ] CV / resume PDF download
 - [ ] Testimonials from students/colleagues
 - [ ] Social media links (if any)
@@ -1187,6 +1219,7 @@ Check availability: [.pk via PKNIC registrar](https://pknic.net.pk) · [.com via
 **Reference (local, gitignored):** `techwind-330/techwind-330/Techwind_v3.3.0/HTML/Landing/src/index-personal.html`
 
 **Design rules:**
+
 - Map Techwind `primary` / purple → site `--brand` / `--gold` (see `globals.css`)
 - **Keep:** hero floating card, wave divider, services grid, experience timeline, CTA band, featured image grid, contact CTA
 - **Drop:** client logo strip (Amazon/Google), developer skill bars, typewriter name, “Hire me” / freelancer copy, 6-service grid (use **3** only)
@@ -1859,6 +1892,7 @@ Phase 6   → Weekly briefs (private)
 **Phases 1, 1c, 1b, 2, 3 (engineering) complete.** **Phase 4** next (public Q&A page, ask form, individual question URLs). Then manual deploy (3.10) + domain (3.11).
 
 **Sanity (father / developer) — seed content:**
+
 1. **Site Settings** → tagline, phone, WhatsApp, email, portrait → **Publish**
 2. **About Page** → bio EN+UR, career milestones → **Publish**
 3. **My Books** + **Recommended Reading** — at least 1 each (with covers)
@@ -1940,6 +1974,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 ### Task-by-task guide
 
 #### Update your homepage photo or contact numbers
+
 **Where:** Site Settings
 
 - **Photo:** Upload JPEG/PNG → Save → Publish.  
@@ -1947,6 +1982,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 - **SEO description (Urdu + English):** Short summary of who you are — appears when someone shares the website link on WhatsApp or Google. Keep under ~2 lines each language.
 
 #### Update your biography or career timeline
+
 **Where:** About Page
 
 1. **Biography** — write or edit Urdu + English text (like a short intro for students and visitors).  
@@ -1954,6 +1990,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 3. Save → About page on the website updates within ~1 minute.
 
 #### Add a book you wrote
+
 **Where:** Books → **My Books** → Create
 
 1. Title (Urdu + English)  
@@ -1962,6 +1999,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 4. Turn **Featured** ON to show on homepage  
 
 #### Suggest a book for others to read
+
 **Where:** Books → **Recommended Reading** → Create
 
 1. Title + **Author name**  
@@ -1972,6 +2010,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 6. **Featured** → homepage “Dr. Akram recommends” teaser  
 
 #### Add a shield, trophy, or certificate
+
 **Where:** Honors & Awards → Create
 
 1. Upload photo (JPEG/PNG)  
@@ -1980,12 +2019,14 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 4. **Featured** → homepage carousel → Save → Publish  
 
 #### Add a lecture video
+
 **Where:** Lectures → Create
 
 - Paste **YouTube link only** — thumbnail comes automatically.  
 - Add title and description. No need to upload video files.
 
 #### Add an Afkar-e-Muallim issue
+
 **Where:** Afkar Issues → Create
 
 - Cover: upload issue cover image  
@@ -1993,6 +2034,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 - Month / year  
 
 #### Add or update an organization logo
+
 **Where:** Organizations → Create or edit
 
 - **Best:** Download official logo from org website → **direct upload**  
@@ -2000,6 +2042,7 @@ All photos and covers use **standard Sanity upload** — pick a JPG or PNG and u
 - Use official logo file when possible; otherwise upload a clean PNG/JPG  
 
 #### Answer a visitor’s question
+
 **Where:** Q&A → **Inbox**
 
 1. Open a **pending** question (email notifies you when new ones arrive)  
@@ -2012,6 +2055,7 @@ You can also add FAQ entries manually: Q&A → Create *(question + answer, no vi
 **Later (son enables):** AI may **suggest a draft answer** from similar past Q&A — you always review before Publish.
 
 #### Weekly video topics & scripts (Content Studio)
+
 **Where:** **Your email** (+ WhatsApp reminder from Phase 6c) every **Monday** — sent **directly to you**, no one else in between.
 
 1. You receive **2 topics** for the week:  
