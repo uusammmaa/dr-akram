@@ -10,6 +10,7 @@ import { Footer } from "@/components/Footer";
 import { MobileBottomBar } from "@/components/MobileBottomBar";
 import { ContactDrawerProvider } from "@/components/ContactDrawerProvider";
 import { LocaleHtmlAttributes } from "@/components/LocaleHtmlAttributes";
+import { SmoothScroll } from "@/components/motion/SmoothScroll";
 import { getSiteSettings } from "@/lib/sanity/queries";
 
 export const metadata: Metadata = {
@@ -47,14 +48,16 @@ export default async function LocaleLayout({
       >
         <NextIntlClientProvider messages={messages}>
           <ContactDrawerProvider>
-            <Header />
-            <main className="flex-1 pb-20 md:pb-0">{children}</main>
-            <Footer />
-            <MobileBottomBar
-              phone={settings?.phone}
-              whatsapp={settings?.whatsapp}
-            />
-            <Toaster richColors position="top-center" />
+            <SmoothScroll>
+              <Header />
+              <main className="flex-1 pb-20 md:pb-0">{children}</main>
+              <Footer />
+              <MobileBottomBar
+                phone={settings?.phone}
+                whatsapp={settings?.whatsapp}
+              />
+              <Toaster richColors position="top-center" />
+            </SmoothScroll>
           </ContactDrawerProvider>
         </NextIntlClientProvider>
       </div>

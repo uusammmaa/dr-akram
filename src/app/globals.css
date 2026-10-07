@@ -185,6 +185,14 @@
   --sidebar-accent-foreground: #1b4332;
   --sidebar-border: #e0d8cc;
   --sidebar-ring: #1b4332;
+  --site-header-height: 4.5rem;
+  --mobile-bar-height: 4.75rem;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --mobile-bar-height: 0px;
+  }
 }
 
 @layer base {

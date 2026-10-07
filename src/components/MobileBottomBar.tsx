@@ -20,7 +20,10 @@ export function MobileBottomBar({ phone, whatsapp }: MobileBottomBarProps) {
   const whatsappLink = whatsapp?.trim() ? whatsappHref(whatsapp) : undefined;
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card md:hidden">
+    <div
+      data-mobile-bottom-bar
+      className="fixed inset-x-0 bottom-0 z-40 border-t border-border bg-card md:hidden"
+    >
       <div className="mx-auto grid max-w-6xl grid-cols-3 divide-x divide-border">
         {phoneHref ? (
           <a

@@ -39,7 +39,10 @@ export function ContactDrawerProvider({ children }: { children: ReactNode }) {
       <Drawer.Root open={open} onOpenChange={setOpen}>
         <Drawer.Portal>
           <Drawer.Overlay className="fixed inset-0 z-50 bg-black/40" />
-          <Drawer.Content className="fixed inset-x-0 bottom-0 z-50 mt-24 flex max-h-[85vh] flex-col rounded-t-2xl bg-background px-4 pb-8 outline-none">
+          <Drawer.Content
+            data-lenis-prevent
+            className="fixed inset-x-0 bottom-0 z-50 mt-24 flex max-h-[85vh] flex-col rounded-t-2xl bg-background px-4 pb-8 outline-none"
+          >
             <div className="mx-auto mt-3 h-1.5 w-12 shrink-0 rounded-full bg-border" />
             <Drawer.Title className="mt-4 text-lg font-semibold text-brand">
               {t("formTitle")}
