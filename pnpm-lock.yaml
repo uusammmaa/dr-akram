@@ -77,9 +77,6 @@ importers:
       react-dom:
         specifier: 19.1.0
         version: 19.1.0(react@19.1.0)
-      react-scroll-parallax:
-        specifier: ^3.5.0
-        version: 3.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       resend:
         specifier: ^6.12.4
         version: 6.12.4
@@ -3230,9 +3227,6 @@ packages:
   before-after-hook@4.0.0:
     resolution: {integrity: sha512-q6tR3RPqIB1pMiTRMFcZwuG5T8vwp+vUvEG0vuI6B+Rikh5BfPp2fQ82c925FOs+b0lcFQ8CFrL+KbilfZFhOQ==}
 
-  bezier-easing@2.1.0:
-    resolution: {integrity: sha512-gbIqZ/eslnUFC1tjEvtz0sgx+xTK20wDnYMIA27VA04R7w6xxXQPZDbibjA9DTWZRA2CXtwHykkVzlCaAJAZig==}
-
   bidi-js@1.0.3:
     resolution: {integrity: sha512-RKshQI1R3YQ+n9YJz2QQ147P66ELpa1FQEg20Dk8oW9t2KgLbpDLLp9aGZ7y8WHSshDknG0bknqGw5/tyCs5tw==}
 
@@ -5650,10 +5644,6 @@ packages:
   pako@0.2.9:
     resolution: {integrity: sha512-NUcwaKxUxWrZLpDG+z/xZaCgQITkA/Dv4V/T6bw7VON6l1Xz/VnrBqrYjZQ12TamKHzITTfOEIYUj48y2KXImA==}
 
-  parallax-controller@1.7.1:
-    resolution: {integrity: sha512-facVMEBnUynzMN7hCSqyNpF6uyCpVIl4XAUyTR9D8q2JlhgyPY6bZtj/OkFk3+Cpka1TnYCppQb8BzDWHtSaZg==}
-    engines: {node: '>=12'}
-
   parallel-transform@1.2.0:
     resolution: {integrity: sha512-P2vSmIu38uIlvdcU7fDkyrxj33gTUy/ABO5ZUbGowxNCopBq/OoD42bP4UmMrJoPyk4Uqf0mu3mtWBhHCZD8yg==}
 
@@ -6018,13 +6008,6 @@ packages:
     peerDependencies:
       react: ^18.3 || >=19.0.0-0
       rxjs: ^7
-
-  react-scroll-parallax@3.5.0:
-    resolution: {integrity: sha512-cUyBTFfTMA/4jweZB4j06LQnUQdZlGgVKX2hmZ5a/BuHZsnp85MEo6ygD2otCQH734VJ9xXPVZ3WfiAiF2TesQ==}
-    engines: {node: '>=10'}
-    peerDependencies:
-      react: ^16.8.0-0 || >=17.0.1 || ^18.0.0 || ^19.0.0
-      react-dom: ^16.8.0-0 || >=17.0.1 || ^18.0.0 || ^19.0.0
 
   react-style-singleton@2.2.3:
     resolution: {integrity: sha512-b6jSvxvVnyptAiLjbkWLE/lOnR4lfTtDAl+eUC7RZy+QQWc6wRzIV2CE6xBuMmDxc2qIihtDCZD5NPOFl7fRBQ==}
@@ -10515,8 +10498,6 @@ snapshots:
 
   before-after-hook@4.0.0: {}
 
-  bezier-easing@2.1.0: {}
-
   bidi-js@1.0.3:
     dependencies:
       require-from-string: 2.0.2
@@ -13133,10 +13114,6 @@ snapshots:
 
   pako@0.2.9: {}
 
-  parallax-controller@1.7.1:
-    dependencies:
-      bezier-easing: 2.1.0
-
   parallel-transform@1.2.0:
     dependencies:
       cyclist: 1.0.2
@@ -13476,12 +13453,6 @@ snapshots:
       react-compiler-runtime: 1.0.0(react@19.1.0)
       rxjs: 7.8.2
       use-effect-event: 2.0.3(react@19.1.0)
-
-  react-scroll-parallax@3.5.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
-    dependencies:
-      parallax-controller: 1.7.1
-      react: 19.1.0
-      react-dom: 19.1.0(react@19.1.0)
 
   react-style-singleton@2.2.3(@types/react@19.2.17)(react@19.1.0):
     dependencies:

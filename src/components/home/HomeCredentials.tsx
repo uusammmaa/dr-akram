@@ -18,7 +18,10 @@ export function HomeCredentials({ portraitSrc }: HomeCredentialsProps) {
   const resolvedPortrait = portraitSrc ?? PORTRAIT_SRC;
 
   return (
-    <section id="about" className="home-section bg-background">
+    <section
+      id="about"
+      className="home-section scroll-mt-[var(--site-header-height)] bg-background"
+    >
       <div className="mx-auto max-w-6xl px-4">
         <FadeIn>
           <SectionHeading

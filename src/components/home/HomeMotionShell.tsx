@@ -1,6 +1,5 @@
 "use client";
 
-import { ParallaxProvider } from "react-scroll-parallax";
 import { HomeHero } from "@/components/home/HomeHero";
 import { HomeCredentials } from "@/components/home/HomeCredentials";
 import { HomeServices } from "@/components/home/HomeServices";
@@ -37,22 +36,20 @@ export function HomeMotionShell({
   latestLectures,
 }: HomeMotionShellProps) {
   return (
-    <ParallaxProvider>
-      <div className="overflow-x-hidden">
-        <HomeHero
-          locale={locale}
-          tagline={tagline}
-          portraitSrc={portraitSrc}
-          portraitBlur={portraitBlur}
-        />
-        <HomeCredentials portraitSrc={portraitSrc} />
-        <HomeServices />
-        <HomeTimeline locale={locale} milestones={milestones} />
-        <HomeCtaBand />
-        <HomeFeaturedGrid items={featuredItems} imageBlurs={featuredBlurs} />
-        <HomeLatestSection locale={locale} lectures={latestLectures} />
-        <HomeContactCta />
-      </div>
-    </ParallaxProvider>
+    <div className="overflow-x-clip">
+      <HomeHero
+        locale={locale}
+        tagline={tagline}
+        portraitSrc={portraitSrc}
+        portraitBlur={portraitBlur}
+      />
+      <HomeCredentials portraitSrc={portraitSrc} />
+      <HomeServices />
+      <HomeTimeline locale={locale} milestones={milestones} />
+      <HomeCtaBand />
+      <HomeFeaturedGrid items={featuredItems} imageBlurs={featuredBlurs} />
+      <HomeLatestSection locale={locale} lectures={latestLectures} />
+      <HomeContactCta />
+    </div>
   );
 }

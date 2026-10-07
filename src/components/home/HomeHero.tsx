@@ -1,10 +1,13 @@
 "use client";
 
+import { useRef } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
+import { useGSAP } from "@gsap/react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { Parallax } from "react-scroll-parallax";
 import { Link } from "@/i18n/navigation";
 import { PORTRAIT_SRC } from "@/lib/site-images";
 import type { HomeHeroProps } from "@/lib/home-types";
@@ -20,15 +23,45 @@ export function HomeHero({
 }: HomeHeroProps) {
   const t = useTranslations();
   const prefersReducedMotion = useReducedMotion();
+  const sectionRef = useRef<HTMLElement>(null);
+  const portraitRef = useRef<HTMLDivElement>(null);
   const resolvedTagline = tagline ?? t("common.tagline");
   const resolvedPortrait = portraitSrc ?? PORTRAIT_SRC;
   const imageProps = portraitBlur
     ? { placeholder: "blur" as const, blurDataURL: portraitBlur }
     : {};
 
+  useGSAP(
+    () => {
+      if (prefersReducedMotion || !portraitRef.current || !sectionRef.current) {
+        return;
+      }
+
+      gsap.registerPlugin(ScrollTrigger);
+      gsap.fromTo(
+        portraitRef.current,
+        { yPercent: -6 },
+        {
+          yPercent: 6,
+          ease: "none",
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
+          },
+        }
+      );
+    },
+    { scope: sectionRef, dependencies: [prefersReducedMotion] }
+  );
+
   return (
-    <section className="hero-circles relative min-h-[90vh] overflow-hidden">
-      <div className="absolute inset-0">
+    <section
+      ref={sectionRef}
+      className="hero-circles relative min-h-[calc(100svh-var(--site-header-height))]"
+    >
+      <div className="absolute inset-0 overflow-hidden">
         {prefersReducedMotion ? (
           <Image
             src={resolvedPortrait}
@@ -40,7 +73,10 @@ export function HomeHero({
             {...imageProps}
           />
         ) : (
-          <Parallax speed={-12} className="relative h-[115%] w-full">
+          <div
+            ref={portraitRef}
+            className="absolute -inset-x-[10%] -top-[14%] -bottom-[14%]"
+          >
             <Image
               src={resolvedPortrait}
               alt={t("common.siteName")}
@@ -50,12 +86,12 @@ export function HomeHero({
               className="object-cover object-[center_28%]"
               {...imageProps}
             />
-          </Parallax>
+          </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-brand/85 via-brand/70 to-brand/90" />
       </div>
 
-      <div className="relative mx-auto flex min-h-[90vh] max-w-6xl flex-col justify-center px-4 py-20">
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-var(--site-header-height))] max-w-6xl flex-col justify-center px-4 pt-8 pb-[calc(var(--mobile-bar-height)+6.5rem)] sm:pt-12 sm:pb-[calc(var(--mobile-bar-height)+7.5rem)] md:pt-16 md:pb-32 [@media(max-height:720px)]:pt-4 [@media(max-height:720px)]:pb-[calc(var(--mobile-bar-height)+5.5rem)]">
         <motion.h1
           className={cn(
             "max-w-3xl text-3xl font-bold leading-tight text-brand-foreground sm:text-4xl lg:text-5xl",
@@ -70,7 +106,7 @@ export function HomeHero({
 
         <motion.div
           className={cn(
-            "mt-8 max-w-md rounded-2xl border border-brand-foreground/20 bg-card/95 p-6 shadow-xl backdrop-blur-sm sm:max-w-lg",
+            "mt-4 max-w-md rounded-2xl border border-brand-foreground/20 bg-card/95 p-4 shadow-xl backdrop-blur-sm sm:mt-8 sm:max-w-lg sm:p-6 [@media(max-height:720px)]:mt-3 [@media(max-height:720px)]:p-3",
             locale === "ur" ? "ms-auto" : "me-auto sm:me-0"
           )}
           initial={prefersReducedMotion ? false : { opacity: 0, y: 32 }}
@@ -86,7 +122,7 @@ export function HomeHero({
           <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
             {t("home.intro")}
           </p>
-          <div className="mt-5 flex flex-wrap gap-3">
+          <div className="mt-5 flex flex-wrap gap-3 [@media(max-height:720px)]:mt-3">
             <Button
               render={<Link href="/contact" />}
               className="tap-target bg-brand text-brand-foreground hover:bg-brand/90"
@@ -106,14 +142,16 @@ export function HomeHero({
 
       <a
         href="#about"
-        className="absolute bottom-24 start-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1 text-brand-foreground/80 transition-colors hover:text-brand-foreground rtl:translate-x-1/2"
+        className="absolute start-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1 text-brand-foreground/80 transition-colors hover:text-brand-foreground bottom-[calc(var(--mobile-bar-height)+3.25rem)] sm:bottom-[calc(var(--mobile-bar-height)+4.25rem)] md:bottom-24 rtl:translate-x-1/2"
         aria-label={t("home.scrollDown")}
       >
         <span className="text-xs">{t("home.scrollDown")}</span>
-        <ChevronDown className="size-5 animate-bounce" />
+        <ChevronDown
+          className={cn("size-5", !prefersReducedMotion && "animate-bounce")}
+        />
       </a>
 
-      <div className="absolute inset-x-0 bottom-0 text-background">
+      <div className="pointer-events-none absolute inset-x-0 bottom-[var(--mobile-bar-height)] z-0 text-background md:bottom-0">
         <WaveDivider />
       </div>
     </section>
