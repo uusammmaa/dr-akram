@@ -12,14 +12,15 @@ type SmoothScrollProps = {
 
 const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 
-function scrollIsLocked() {
-  const locksBackground = (element: Element) => {
-    const overflowY = getComputedStyle(element).overflowY;
-    return overflowY === "hidden" || overflowY === "clip";
-  };
+function inlineOverflowLocks(element: HTMLElement) {
+  const value = element.style.overflowY || element.style.overflow;
+  return value === "hidden" || value === "clip";
+}
 
+function scrollIsLocked() {
   return (
-    locksBackground(document.documentElement) || locksBackground(document.body)
+    inlineOverflowLocks(document.documentElement) ||
+    inlineOverflowLocks(document.body)
   );
 }
 
@@ -86,6 +87,9 @@ export function SmoothScroll({ children }: SmoothScrollProps) {
       if (!document.getElementById(id)) return;
 
       event.preventDefault();
+      if (window.location.hash !== href) {
+        history.pushState(null, "", href);
+      }
       lenis.scrollTo(href);
     };
 
