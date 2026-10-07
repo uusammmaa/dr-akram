@@ -1,4 +1,4 @@
-import imageUrlBuilder from "@sanity/image-url";
+import { createImageUrlBuilder } from "@sanity/image-url";
 import { getSanityClient } from "@/lib/sanity/client";
 import type { SanityImage } from "@/lib/sanity/types";
 
@@ -16,7 +16,7 @@ export function sanityImageUrl(
     return "";
   }
 
-  let url = imageUrlBuilder(sanityClient)
+  let url = createImageUrlBuilder(sanityClient)
     .image(source)
     .auto("format")
     .quality(85);

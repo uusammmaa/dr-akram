@@ -10,17 +10,32 @@ import { HomeCtaBand } from "@/components/home/HomeCtaBand";
 import { HomeFeaturedGrid } from "@/components/home/HomeFeaturedGrid";
 import { HomeLatestSection } from "@/components/home/HomeLatestSection";
 import { HomeContactCta } from "@/components/home/HomeContactCta";
+import type {
+  CareerMilestoneItem,
+  FeaturedHomeItem,
+  Lecture,
+} from "@/lib/sanity/types";
 
 type HomeMotionShellProps = {
   locale: string;
   tagline?: string;
   portraitSrc?: string;
+  portraitBlur?: string;
+  milestones?: CareerMilestoneItem[];
+  featuredItems?: FeaturedHomeItem[];
+  featuredBlurs?: Record<string, string>;
+  latestLectures?: Lecture[];
 };
 
 export function HomeMotionShell({
   locale,
   tagline,
   portraitSrc,
+  portraitBlur,
+  milestones,
+  featuredItems,
+  featuredBlurs,
+  latestLectures,
 }: HomeMotionShellProps) {
   return (
     <LenisProvider>
@@ -30,13 +45,14 @@ export function HomeMotionShell({
             locale={locale}
             tagline={tagline}
             portraitSrc={portraitSrc}
+            portraitBlur={portraitBlur}
           />
           <HomeCredentials portraitSrc={portraitSrc} />
           <HomeServices />
-          <HomeTimeline />
+          <HomeTimeline locale={locale} milestones={milestones} />
           <HomeCtaBand />
-          <HomeFeaturedGrid />
-          <HomeLatestSection />
+          <HomeFeaturedGrid items={featuredItems} imageBlurs={featuredBlurs} />
+          <HomeLatestSection locale={locale} lectures={latestLectures} />
           <HomeContactCta />
         </div>
       </ParallaxProvider>
