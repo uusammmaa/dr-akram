@@ -97,6 +97,7 @@ export default async function AboutPage({ params }: Props) {
           src={portraitSrc}
           alt={t("common.siteName")}
           fill
+          priority
           sizes="(max-width: 768px) 80vw, 320px"
           placeholder={portraitBlur ? "blur" : "empty"}
           blurDataURL={portraitBlur}

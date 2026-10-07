@@ -63,7 +63,10 @@ export function CareerTimeline({ milestones, locale, variant = "page" }: Props) 
           if (!title) return null;
           return (
             <li key={item._key} className="timeline-item relative">
-              <span className="absolute -start-[1.6rem] top-1 flex size-3 rounded-full bg-brand" />
+              <span
+                aria-hidden
+                className="absolute top-1.5 size-2.5 rounded-full border-2 border-background bg-gold start-[calc(-1.5rem-1px)] -translate-x-1/2 rtl:translate-x-1/2"
+              />
               {item.year && (
                 <span className="text-sm font-semibold text-gold">{item.year}</span>
               )}
