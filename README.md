@@ -33,33 +33,37 @@ pnpm start
 | `NEXT_PUBLIC_SANITY_PROJECT_ID` | Yes | Sanity project |
 | `NEXT_PUBLIC_SANITY_DATASET` | Yes | Usually `production` |
 | `SANITY_API_TOKEN` | Studio write / server | API token with read (or read+write) |
-| `NEXT_PUBLIC_SITE_URL` | Production | Canonical URLs, OG, sitemap (e.g. `https://drmianakram.pk`) |
+| `NEXT_PUBLIC_SITE_URL` | Production | Canonical URLs, OG, sitemap. Production is `https://drmianakram.com` |
 | `RESEND_API_KEY` | Contact form | Resend API key |
-| `RESEND_FROM_EMAIL` | Contact form | Verified sender (e.g. `contact@drmianakram.pk`) |
+| `RESEND_FROM_EMAIL` | Contact form | Verified sender. `onboarding@resend.dev` only delivers to the Resend account owner |
 
-## Deploy to Vercel (Phase 3.10)
+Copy `.env.example` to `.env.local` for local secrets. `.env.local` is gitignored. Do not commit API tokens, the WordPress password, or the Hostinger login.
 
-1. Connect GitHub repo to Vercel.
-2. Set all env vars above for **Production** and **Preview**.
-3. In [Sanity manage](https://www.sanity.io/manage) → API → CORS origins, add:
-   - `http://localhost:3000` (dev)
-   - `https://*.vercel.app` (preview)
-   - `https://drmianakram.pk` (production)
-4. Deploy; verify `/en`, `/ur`, and `/studio` on preview URL.
-5. Point `drmianakram.pk` DNS to Vercel after content review (Phase 3.11).
+## Live site
 
-## Google Search Console (Phase 3.7f)
+| | |
+|---|---|
+| Public site | https://drmianakram.com (`/en` and `/ur`) |
+| Studio | https://drmianakram.com/studio |
+| Hosting | Vercel project `dr-akram`, production branch `main` |
+| DNS | Hostinger. `A` records for `@` and `www` point to `76.76.21.21` |
+| Sanity project | `5ce34emc`, dataset `production` |
+| Editor invite | `akram151060@gmail.com` (Google sign-in). Guide: [docs/how-to-update-the-website.md](docs/how-to-update-the-website.md) |
 
-After production deploy with `NEXT_PUBLIC_SITE_URL` set:
+`drmianakram.pk` is not registered. Namecheap hosting is not used for this site.
 
-1. Add property `https://drmianakram.pk` in [Google Search Console](https://search.google.com/search-console).
-2. Verify via DNS TXT or HTML (Vercel supports both).
-3. Submit sitemap: `https://drmianakram.pk/sitemap.xml`
-4. Optionally add `drmianakram.com` as redirect property if registered.
-5. Monitor Coverage and Core Web Vitals (also in Vercel Speed Insights).
+Sanity CORS origins, with credentials allowed: `http://localhost:3000`, `http://localhost:3333`, `https://drmianakram.com`, `https://www.drmianakram.com`.
+
+## Google Search Console
+
+After the production domain is verified:
+
+1. Add property `https://drmianakram.com` in [Google Search Console](https://search.google.com/search-console).
+2. Verify via DNS TXT or HTML.
+3. Submit sitemap: `https://drmianakram.com/sitemap.xml`.
 
 ## Project plan
 
 Full build phases: [plan.md](./plan.md).
 
-**Current status:** Phases 1, 1c, 1b, 2, and **3** complete (CMS UX, SEO, Resend contact, analytics). Next: **Phase 4** (public Q&A).
+**Current status:** The site is live on `drmianakram.com`. Public pages still show test content until it is replaced in Studio.

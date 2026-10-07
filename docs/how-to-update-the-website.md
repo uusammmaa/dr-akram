@@ -7,8 +7,9 @@ The editing screen is in English. The website itself is in English and Urdu.
 ## Open the editing screen
 
 1. Go to [drmianakram.com/studio](https://drmianakram.com/studio).
-2. Sign in with the account that was set up for you.
-3. The left menu is the list of sections.
+2. Choose **Google**.
+3. Sign in with **akram151060@gmail.com**. Accept the invitation email first if you have not already.
+4. The left menu is the list of sections.
 
 A short tour may start the first time. You can open **Help** in the left menu any time.
 
