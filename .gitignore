@@ -44,3 +44,6 @@ next-env.d.ts
 # purchased / reference templates (not part of the app)
 /techwind-330/
 techwind-330.rar
+
+# local review notes
+/.review/
