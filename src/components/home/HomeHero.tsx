@@ -59,7 +59,7 @@ export function HomeHero({
   return (
     <section
       ref={sectionRef}
-      className="hero-circles relative min-h-[calc(100svh-var(--site-header-height))]"
+      className="hero-circles relative flex min-h-[calc(100svh-var(--site-header-height))] flex-col"
     >
       <div className="absolute inset-0 overflow-hidden">
         {prefersReducedMotion ? (
@@ -91,10 +91,10 @@ export function HomeHero({
         <div className="absolute inset-0 bg-gradient-to-b from-brand/85 via-brand/70 to-brand/90" />
       </div>
 
-      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-var(--site-header-height))] max-w-6xl flex-col justify-center px-4 pt-8 pb-[calc(var(--mobile-bar-height)+6.5rem)] sm:pt-12 sm:pb-[calc(var(--mobile-bar-height)+7.5rem)] md:pt-16 md:pb-32 [@media(max-height:720px)]:pt-4 [@media(max-height:720px)]:pb-[calc(var(--mobile-bar-height)+5.5rem)]">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 py-6 sm:py-10 [@media(max-height:640px)]:py-3">
         <motion.h1
           className={cn(
-            "max-w-3xl text-3xl font-bold leading-tight text-brand-foreground sm:text-4xl lg:text-5xl",
+            "max-w-3xl text-2xl font-bold leading-tight text-brand-foreground min-[400px]:text-3xl sm:text-4xl lg:text-5xl",
             locale === "ur" && "font-urdu leading-relaxed"
           )}
           initial={prefersReducedMotion ? false : { opacity: 0, x: -32 }}
@@ -106,7 +106,7 @@ export function HomeHero({
 
         <motion.div
           className={cn(
-            "mt-4 max-w-md rounded-2xl border border-brand-foreground/20 bg-card/95 p-4 shadow-xl backdrop-blur-sm sm:mt-8 sm:max-w-lg sm:p-6 [@media(max-height:720px)]:mt-3 [@media(max-height:720px)]:p-3",
+            "mt-4 max-w-md rounded-2xl border border-brand-foreground/20 bg-card/95 p-4 shadow-xl backdrop-blur-sm sm:mt-8 sm:max-w-lg sm:p-6 [@media(max-height:640px)]:mt-2 [@media(max-height:640px)]:p-3",
             locale === "ur" ? "ms-auto" : "me-auto sm:me-0"
           )}
           initial={prefersReducedMotion ? false : { opacity: 0, y: 32 }}
@@ -119,10 +119,10 @@ export function HomeHero({
           <p className="mt-2 text-base font-medium text-brand">
             {resolvedTagline}
           </p>
-          <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+          <p className="mt-3 text-sm leading-relaxed text-muted-foreground [@media(max-height:640px)]:mt-2 [@media(max-height:640px)]:leading-snug">
             {t("home.intro")}
           </p>
-          <div className="mt-5 flex flex-wrap gap-3 [@media(max-height:720px)]:mt-3">
+          <div className="mt-5 flex flex-wrap gap-3 [@media(max-height:640px)]:mt-3">
             <Button
               render={<Link href="/contact" />}
               className="tap-target bg-brand text-brand-foreground hover:bg-brand/90"
@@ -142,7 +142,7 @@ export function HomeHero({
 
       <a
         href="#about"
-        className="absolute start-1/2 z-10 flex -translate-x-1/2 flex-col items-center gap-1 text-brand-foreground/80 transition-colors hover:text-brand-foreground bottom-[calc(var(--mobile-bar-height)+3.25rem)] sm:bottom-[calc(var(--mobile-bar-height)+4.25rem)] md:bottom-24 rtl:translate-x-1/2"
+        className="relative z-10 mx-auto mb-[calc(var(--mobile-bar-height)+0.75rem)] flex flex-col items-center gap-1 text-brand-foreground/80 transition-colors hover:text-brand-foreground md:mb-20"
         aria-label={t("home.scrollDown")}
       >
         <span className="text-xs">{t("home.scrollDown")}</span>
